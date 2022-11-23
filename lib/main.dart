@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -30,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       //Login Screen
       home: Login(),
     );
