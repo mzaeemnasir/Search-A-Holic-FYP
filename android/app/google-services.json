@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "915941234935",
+    "project_id": "searchaholic-86248",
+    "storage_bucket": "searchaholic-86248.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915941234935:android:c7784fa6132f97b4311bf2",
+        "android_client_info": {
+          "package_name": "com.example.searchaholic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915941234935-18ao0pq321lo8hdeh2acbqh9essb1mel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeAuqTXFXec3UHa6NFLC9GHaD4IK7RXUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915941234935-18ao0pq321lo8hdeh2acbqh9essb1mel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
