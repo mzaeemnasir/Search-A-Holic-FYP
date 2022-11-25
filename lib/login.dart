@@ -3,6 +3,7 @@
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
 
 // Importing the required packages
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +25,6 @@ class LoginScreen extends State<Login> {
   var email = TextEditingController();
   var password = TextEditingController();
 
-  // Setting Minimum Size of the Window
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,14 +36,6 @@ class LoginScreen extends State<Login> {
             width: MediaQuery.of(context).size.width * 0.5,
             height: MediaQuery.of(context).size.height,
             color: Colors.white,
-            // Creating 6 Rows in the Left Container
-            // 1.  Login Text
-            // 2. Email Text Field
-            // 3. Password Text Field
-            // 4. Forget Password Text Label
-            // 5. Login Button
-            // 6. Create Account Text Label
-
             child: Expanded(
               child: Column(
                 children: [
@@ -51,7 +43,7 @@ class LoginScreen extends State<Login> {
 
                   // 1. Login Text
                   Container(
-                    margin: EdgeInsets.only(top: 100),
+                    margin: EdgeInsets.only(top: 80),
                     child: Text(
                       "Login",
                       style: GoogleFonts.montserrat(
@@ -60,7 +52,7 @@ class LoginScreen extends State<Login> {
                   ),
                   // 2. Email Text Field
                   Container(
-                    margin: EdgeInsets.only(top: 50),
+                    margin: EdgeInsets.only(top: 30),
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: TextField(
                       controller: email,
@@ -85,11 +77,26 @@ class LoginScreen extends State<Login> {
                   // 4. Forget Password Text Label
                   Container(
                     margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Forget Password?",
+                    // Setting the Alignment to Right
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    alignment: Alignment.centerRight,
+                    // Clickable Text
+                    child: RichText(
+                        text: TextSpan(
+                      text: "Forget?",
                       style: GoogleFonts.montserrat(
-                          fontSize: 16, fontWeight: FontWeight.w300),
-                    ),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.blue),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print("Forget Password- Page");
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => ForgetPassword()));
+                        },
+                    )),
                   ),
                   // 5. Login Button
                   Container(
@@ -98,10 +105,6 @@ class LoginScreen extends State<Login> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          // On Presssing Display the Current Dimension of the Screen
-                          print(MediaQuery.of(context).size.width);
-                          print(MediaQuery.of(context).size.height);
-
                           //  On Press Show Loading Animation in the Login Button
                           setState(() {
                             // Validate the Email and Password
@@ -136,10 +139,27 @@ class LoginScreen extends State<Login> {
                   // 6. Create Account Text Label
                   Container(
                     margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Dont have Account? Create One",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 16, fontWeight: FontWeight.w300),
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                          text: "Don't have Account?",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: " Create one!",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.blue),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => {
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()))
+                                        print("Sign Up - Up Page")
+                                      })
+                          ]),
                     ),
                   ),
                 ], // End of Column Children
@@ -149,19 +169,36 @@ class LoginScreen extends State<Login> {
 
           // Right Container
           Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.height,
-            color: Color.fromRGBO(53, 108, 254, 1),
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.height,
+              color: Color.fromRGBO(53, 108, 254, 1),
 
-            // Setting up a Logo in the Center
-            child: Center(
-              child: Image.asset(
-                'images/logo.png',
-                height: MediaQuery.of(context).size.height * 0.55,
-                width: MediaQuery.of(context).size.width * 0.55,
-              ),
-            ),
-          )
+              // Setting up a Logo in the Center
+              child: Expanded(
+                  child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 40),
+                    child: Text(
+                      "Welcome To\nSearchaholic!",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Center(
+                      child: Image.asset(
+                        'images/logo.png',
+                        height: MediaQuery.of(context).size.height * 0.42,
+                        width: MediaQuery.of(context).size.width * 0.42,
+                      ),
+                    ),
+                  ),
+                ],
+              )))
         ], // End of Row Children (Right Container)
       ),
     );
@@ -202,21 +239,19 @@ class LoginCheck {
   // Function to check the Login
   void checkLogin() {
     // Checking the Login Credentials From Firebase
-    var result = Flutter_api().check_login(email.text, password.text);
-
-    // Waiting for the Result
-    result.whenComplete(() => result.then((value) => {
+    Flutter_api().check_login(email.text, password.text).then((value) => {
           if (value == true)
             {
               print("Setting Shared Preferences"),
               System().setLogin(email.text, password.text).then((value) => {
-                    print("Shared Preferences Set"),
-                  })
+                    print("Shared Preferences Set")
+                    //  Navigator.pushReplacement(
+                  }),
             }
           else
             {
               print("Invalid Login"),
             }
-        }));
+        });
   }
 }
