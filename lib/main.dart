@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -24,6 +26,13 @@ void main() async {
   }
 
   runApp(MyApp());
+  doWhenWindowReady(() {
+    const initialSize = Size(1000, 600);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 // MY APP CLASS

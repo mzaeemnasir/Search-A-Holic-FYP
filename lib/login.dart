@@ -3,12 +3,14 @@
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
 
 // Importing the required packages
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:searchaholic/firebase_.dart';
+import 'package:searchaholic/registration.dart';
 import 'package:searchaholic/system.dart';
 // Login Screen
 
@@ -156,8 +158,11 @@ class LoginScreen extends State<Login> {
                                     color: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => {
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()))
-                                        print("Sign Up - Up Page")
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SignUp()),
+                                        ),
                                       })
                           ]),
                     ),
@@ -177,6 +182,12 @@ class LoginScreen extends State<Login> {
               child: Expanded(
                   child: Column(
                 children: [
+                  WindowTitleBarBox(
+                    child: Row(children: [
+                      Expanded(child: Container()),
+                      WindowButtons()
+                    ]),
+                  ),
                   Container(
                     margin: EdgeInsets.only(top: 40),
                     child: Text(
@@ -201,6 +212,34 @@ class LoginScreen extends State<Login> {
               )))
         ], // End of Row Children (Right Container)
       ),
+    );
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MinimizeWindowButton(
+          colors: WindowButtonColors(
+            mouseOver: Colors.blue,
+            iconNormal: Colors.white,
+          ),
+        ),
+        MaximizeWindowButton(
+          colors: WindowButtonColors(
+            mouseOver: Colors.blue,
+            iconNormal: Colors.white,
+          ),
+        ),
+        CloseWindowButton(
+          colors: WindowButtonColors(
+            iconNormal: Colors.white,
+            mouseOver: Colors.red,
+          ),
+        ),
+      ],
     );
   }
 }
