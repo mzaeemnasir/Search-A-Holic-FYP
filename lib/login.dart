@@ -1,13 +1,14 @@
 // Login Screen
 
-// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names
+// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
 
 // Importing the required packages
 import 'package:flutter/material.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:email_validator/email_validator.dart';
-
+import 'package:searchaholic/firebase_.dart';
+import 'package:searchaholic/system.dart';
 // Login Screen
 
 // ignore: use_key_in_widget_constructors
@@ -23,6 +24,7 @@ class LoginScreen extends State<Login> {
   var email = TextEditingController();
   var password = TextEditingController();
 
+  // Setting Minimum Size of the Window
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,6 +109,7 @@ class LoginScreen extends State<Login> {
                             if (object.Validator() == "valid") {
                               // If Valid then Navigate to the Home Screen
                               print("Valid");
+                              object.checkLogin();
                             } else {
                               // If Invalid then Show the Error Message
                               if (object.Validator() == "emptyEmail" ||
@@ -199,5 +202,21 @@ class LoginCheck {
   // Function to check the Login
   void checkLogin() {
     // Checking the Login Credentials From Firebase
+    var result = Flutter_api().check_login(email.text, password.text);
+
+    // Waiting for the Result
+    result.whenComplete(() => result.then((value) => {
+          if (value == true)
+            {
+              print("Setting Shared Preferences"),
+              System().setLogin(email.text, password.text).then((value) => {
+                    print("Shared Preferences Set"),
+                  })
+            }
+          else
+            {
+              print("Invalid Login"),
+            }
+        }));
   }
 }
