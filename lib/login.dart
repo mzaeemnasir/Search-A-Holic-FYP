@@ -217,6 +217,8 @@ class LoginScreen extends State<Login> {
 }
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
