@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:searchaholic/registration.dart';
 
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       //Login Screen
-      home: Login(),
+      home: SignUp(),
     );
   }
 }
