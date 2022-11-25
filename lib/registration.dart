@@ -16,7 +16,137 @@ class _SignUpState extends State<SignUp> {
           // Left Side
           Container(
             width: MediaQuery.of(context).size.width * 0.5,
-            color: Colors.red,
+            color: Colors.white,
+            child: Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.116,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        "Registration",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Text Field Email
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.087,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Email",
+                        hintStyle: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(width: 0.15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Store Name
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.045,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Store Name",
+                        hintStyle: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(width: 0.15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Store Location
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.045,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Store Location",
+                        hintStyle: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(width: 0.15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Store Manager's  Number
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.045,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Phone Number",
+                        hintStyle: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(width: 0.15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Password (with eye icon)
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.045,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        hintStyle: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(width: 0.15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Register Button
+                  Container(),
+                  // Already have an account? Txt
+                  Container(),
+                  // Login Button
+                  Container(),
+                ],
+              ),
+            ),
           ),
           // Right Side
           Container(
@@ -50,6 +180,7 @@ class _SignUpState extends State<SignUp> {
                     child: Image.asset(
                       'images/registration.jpg',
                       fit: BoxFit.contain,
+                      height: MediaQuery.of(context).size.height * 0.5,
                     ),
                   ),
                   // Txt Field Container
