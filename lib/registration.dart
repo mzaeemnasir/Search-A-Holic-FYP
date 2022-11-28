@@ -1,5 +1,4 @@
-// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks, unused_import, library_private_types_in_public_api, use_key_in_widget_constructors, sort_child_properties_last
-
+import 'package:flutter/services.dart';
 import 'package:searchaholic/imports.dart';
 
 class SignUp extends StatefulWidget {
@@ -20,7 +19,7 @@ class _SignUpState extends State<SignUp> {
             child: Expanded(
               child: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.116,
                     child: Align(
                       alignment: Alignment.bottomCenter,
@@ -44,12 +43,12 @@ class _SignUpState extends State<SignUp> {
                         hintText: "Email",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
-                          color: Colors.grey[300],
+                          color: Colors.grey[450],
                           fontWeight: FontWeight.w500,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(width: 0.15),
+                          borderSide: const BorderSide(width: 0.15),
                         ),
                       ),
                     ),
@@ -57,7 +56,7 @@ class _SignUpState extends State<SignUp> {
                   // Store Name
                   Container(
                     margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.045,
+                      top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextField(
@@ -65,12 +64,12 @@ class _SignUpState extends State<SignUp> {
                         hintText: "Store Name",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
-                          color: Colors.grey[300],
+                          color: Colors.grey[450],
                           fontWeight: FontWeight.w500,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(width: 0.15),
+                          borderSide: const BorderSide(width: 0.15),
                         ),
                       ),
                     ),
@@ -78,7 +77,7 @@ class _SignUpState extends State<SignUp> {
                   // Store Location
                   Container(
                     margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.045,
+                      top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextField(
@@ -86,12 +85,12 @@ class _SignUpState extends State<SignUp> {
                         hintText: "Store Location",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
-                          color: Colors.grey[300],
+                          color: Colors.grey[450],
                           fontWeight: FontWeight.w500,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(width: 0.15),
+                          borderSide: const BorderSide(width: 0.15),
                         ),
                       ),
                     ),
@@ -99,7 +98,7 @@ class _SignUpState extends State<SignUp> {
                   // Store Manager's  Number
                   Container(
                     margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.045,
+                      top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextField(
@@ -107,12 +106,12 @@ class _SignUpState extends State<SignUp> {
                         hintText: "Phone Number",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
-                          color: Colors.grey[300],
+                          color: Colors.grey[450],
                           fontWeight: FontWeight.w500,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(width: 0.15),
+                          borderSide: const BorderSide(width: 0.15),
                         ),
                       ),
                     ),
@@ -120,30 +119,91 @@ class _SignUpState extends State<SignUp> {
                   // Password (with eye icon)
                   Container(
                     margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.045,
+                      top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextField(
+                      obscureText: true,
+                      maxLength: 18,
+                      // validation
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[a-zA-Z0-9]'),
+                        ),
+                      ],
                       decoration: InputDecoration(
                         hintText: "Password",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
-                          color: Colors.grey[300],
+                          color: Colors.grey[450],
                           fontWeight: FontWeight.w500,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(width: 0.15),
+                          borderSide: const BorderSide(width: 0.15),
+                        ),
+                        suffixIcon: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.grey[450],
                         ),
                       ),
                     ),
                   ),
                   // Register Button
-                  Container(),
-                  // Already have an account? Txt
-                  Container(),
-                  // Login Button
-                  Container(),
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        "Register",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // LOGIN INSTEAD Button
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        "Already have account? Login",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -151,20 +211,20 @@ class _SignUpState extends State<SignUp> {
           // Right Side
           Container(
             width: MediaQuery.of(context).size.width * 0.5,
-            color: Color.fromRGBO(53, 108, 254, 1),
+            color: const Color.fromRGBO(53, 108, 254, 1),
             child: Expanded(
               child: Column(
                 children: [
                   WindowTitleBarBox(
                     child: Row(children: [
                       Expanded(child: Container()),
-                      WindowButtons()
+                      const WindowButtons()
                     ]),
                   ),
                   // Txt Field
                   Container(
                     height: MediaQuery.of(context).size.height * 0.119,
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: Text(
                       "Sign up",
                       style: GoogleFonts.montserrat(
@@ -176,7 +236,8 @@ class _SignUpState extends State<SignUp> {
                   ),
                   // Image Container
                   Container(
-                    margin: EdgeInsets.only(top: 10),
+                    margin: const EdgeInsets.only(top: 10),
+                    color: const Color.fromRGBO(53, 108, 254, 1),
                     child: Image.asset(
                       'images/registration.jpg',
                       fit: BoxFit.contain,
@@ -185,7 +246,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   // Txt Field Container
                   Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: Text(
                       'Welcome to SearchAHolic',
                       style: GoogleFonts.montserrat(
@@ -208,6 +269,8 @@ class _SignUpState extends State<SignUp> {
 }
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
