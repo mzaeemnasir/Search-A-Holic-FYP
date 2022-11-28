@@ -2,15 +2,28 @@ import 'package:flutter/services.dart';
 import 'package:searchaholic/imports.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  var email = TextEditingController();
+  var storeName = TextEditingController();
+  var storeLocationLat = TextEditingController();
+  var storeLocationLong = TextEditingController();
+  var phoneNumber = TextEditingController();
+  var password = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
+        key: _formKey,
         children: [
           // Left Side
           Container(
@@ -38,7 +51,25 @@ class _SignUpState extends State<SignUp> {
                       top: MediaQuery.of(context).size.height * 0.087,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextField(
+                    child: TextFormField(
+                      controller: email,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else {
+                          RegExp regExp = RegExp(
+                            r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                            caseSensitive: false,
+                            multiLine: false,
+                          );
+
+                          if (!regExp.hasMatch(value)) {
+                            // Make input field red
+                            return 'Please enter a valid email address';
+                          }
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         hintText: "Email",
                         hintStyle: GoogleFonts.montserrat(
@@ -59,7 +90,7 @@ class _SignUpState extends State<SignUp> {
                       top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextField(
+                    child: TextFormField(
                       decoration: InputDecoration(
                         hintText: "Store Name",
                         hintStyle: GoogleFonts.montserrat(
@@ -80,7 +111,7 @@ class _SignUpState extends State<SignUp> {
                       top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextField(
+                    child: TextFormField(
                       decoration: InputDecoration(
                         hintText: "Store Location",
                         hintStyle: GoogleFonts.montserrat(
@@ -101,7 +132,23 @@ class _SignUpState extends State<SignUp> {
                       top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else {
+                          RegExp regExp = RegExp(
+                            r"^[0-9]{10}$",
+                            caseSensitive: false,
+                            multiLine: false,
+                          );
+                          if (!regExp.hasMatch(value)) {
+                            // Make input field red
+                            return 'Please enter a valid phone number';
+                          }
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         hintText: "Phone Number",
                         hintStyle: GoogleFonts.montserrat(
@@ -122,15 +169,27 @@ class _SignUpState extends State<SignUp> {
                       top: MediaQuery.of(context).size.height * 0.025,
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextField(
+                    child: TextFormField(
                       obscureText: true,
                       maxLength: 18,
                       // validation
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'[a-zA-Z0-9]'),
-                        ),
-                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        } else {
+                          RegExp regExp = RegExp(
+                            r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+                            caseSensitive: false,
+                            multiLine: false,
+                          );
+                          if (!regExp.hasMatch(value)) {
+                            // Make input field red
+                            return 'Please enter a valid password';
+                          }
+                        }
+                        return null;
+                      },
+
                       decoration: InputDecoration(
                         hintText: "Password",
                         hintStyle: GoogleFonts.montserrat(
@@ -157,7 +216,16 @@ class _SignUpState extends State<SignUp> {
                     width: MediaQuery.of(context).size.width * 0.37,
                     height: MediaQuery.of(context).size.height * 0.06,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        if (_formKey.currentState!.validate()) {
+                          // If the form is valid, display a snackbar. In the real world,
+                          // you'd often call a server or save the information in a database.
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Processing Data')),
+                          );
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         shape: RoundedRectangleBorder(
