@@ -37,7 +37,15 @@ class Flutter_api {
     }
   }
 
-  // Adding a New Manager
-  // Future<bool> add_manager(String email, String storeName, String longitude,
-  //     String latitude, String phoneNumber, String password) async {}
+  // Registration
+  Future<bool> register(String email, String storeName, String Location,
+      String phNo, String password) async {
+    // Splitting the Location
+    List<String> location = Location.split(",");
+    String lat = location[0];
+    String long = location[1];
+
+    // Checking if the email is already registered
+    final managers = Firestore.instance.collection('managers');
+  }
 }

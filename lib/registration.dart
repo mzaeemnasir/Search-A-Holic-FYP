@@ -17,13 +17,10 @@ class _SignUpState extends State<SignUp> {
   var phoneNumber = TextEditingController();
   var password = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
-        key: _formKey,
         children: [
           // Left Side
           Container(
@@ -149,6 +146,10 @@ class _SignUpState extends State<SignUp> {
                         }
                         return null;
                       },
+                      //allow only numbers
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: InputDecoration(
                         hintText: "Phone Number",
                         hintStyle: GoogleFonts.montserrat(
@@ -217,14 +218,16 @@ class _SignUpState extends State<SignUp> {
                     height: MediaQuery.of(context).size.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () {
+                        print("Register Button Pressed");
                         // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          // If the form is valid, display a snackbar. In the real world,
-                          // you'd often call a server or save the information in a database.
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
-                          );
-                        }
+                        // if (_formKey.currentState!.validate()) {
+                        //   // If the form is valid, display a snackbar. In the real world,
+                        //   // you'd often call a server or save the information in a database.+
+                        //   print("Form is valid");
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(content: Text('Processing Data')),
+                        //   );
+                        // }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
