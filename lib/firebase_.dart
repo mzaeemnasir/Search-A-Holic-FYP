@@ -46,6 +46,28 @@ class Flutter_api {
     String long = location[1];
 
     // Checking if the email is already registered
-    final managers = Firestore.instance.collection('managers');
+    final managers = Firestore.instance.collection(email);
+
+    // Checking for the document with the email
+    if (await managers.document(email).exists) {
+      print(await managers.document(email));
+      print("Email Already Registered");
+      return Future<bool>.value(false);
+    } else {
+      // Creating a new document with the email
+      final manager = managers.document("Store Details");
+      print("Created New Document");
+      // Adding the data to the document
+      await manager.set({
+        'email': email,
+        'storeName': storeName,
+        'lat': lat,
+        'long': long,
+        'phNo': phNo,
+        'password': password,
+      });
+      print("Data Added");
+      return Future<bool>.value(true);
+    }
   }
 }

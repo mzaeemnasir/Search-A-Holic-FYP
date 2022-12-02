@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
 
 class SignUp extends StatefulWidget {
@@ -88,6 +89,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextFormField(
+                      controller: storeName,
                       decoration: InputDecoration(
                         hintText: "Store Name",
                         hintStyle: GoogleFonts.montserrat(
@@ -109,6 +111,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextFormField(
+                      controller: storeLocationLong,
                       decoration: InputDecoration(
                         hintText: "Store Location",
                         hintStyle: GoogleFonts.montserrat(
@@ -130,6 +133,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextFormField(
+                      controller: phoneNumber,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
@@ -174,6 +178,7 @@ class _SignUpState extends State<SignUp> {
                       obscureText: true,
                       maxLength: 18,
                       // validation
+                      controller: password,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
@@ -228,6 +233,12 @@ class _SignUpState extends State<SignUp> {
                         //     const SnackBar(content: Text('Processing Data')),
                         //   );
                         // }
+                        Flutter_api().register(
+                            email.text,
+                            storeName.text,
+                            storeLocationLong.text,
+                            phoneNumber.text,
+                            password.text);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
