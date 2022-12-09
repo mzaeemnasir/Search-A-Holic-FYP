@@ -3,6 +3,8 @@
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
 
 // Importing the required packages
+import 'dart:ffi';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +116,7 @@ class LoginScreen extends State<Login> {
                             if (object.Validator() == "valid") {
                               // If Valid then Navigate to the Home Screen
                               print("Valid");
-                              object.checkLogin();
+                              object.checkLogin(context);
                             } else {
                               // If Invalid then Show the Error Message
                               if (object.Validator() == "emptyEmail" ||
@@ -278,16 +280,22 @@ class LoginCheck {
   }
 
   // Function to check the Login
-  void checkLogin() {
+  void checkLogin(BuildContext context) {
     // Checking the Login Credentials From Firebase
     Flutter_api().check_login(email.text, password.text).then((value) => {
           if (value == true)
             {
+              print(value),
               print("Setting Shared Preferences"),
-              System().setLogin(email.text, password.text).then((value) => {
-                    print("Shared Preferences Set")
-                    //  Navigator.pushReplacement(
-                  }),
+              System().setLogin(email.text, password.text).then(
+                    (value) => {
+                      print("Login File Set"),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUp()),
+                      ),
+                    },
+                  ),
             }
           else
             {

@@ -71,6 +71,23 @@ flutter:
   assets:
     - images/logo.png
     - images/registration.jpg
+    - images/analytics_icon.png
+    - images/categories_icon.png
+    - images/dashboard_icon.png
+    - images/orders_icon.png
+    - images/products_icon.png
+    - images/profile_icon.png
+    - images/revenue_icon.png
+    - images/sale_icon.png
+    - images/sales_icon.png
+    - images/settings_icon.png
+    - images/sidebarLogo.png
+    - images/newOrder.png
+    - images/searchProduct.png
+    - images/addProduct.png
+    - images/addCategory.png
+    - images/viewOrders.png
+    - images/report.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -17,9 +17,9 @@ class Flutter_api {
   // checking login of members
   Future<bool> check_login(String email, String password) async {
     // Getting the User Collection
-    final managers = Firestore.instance.collection('managers');
+    final managers = Firestore.instance.collection(email);
 
-    final manager = managers.document(email);
+    final manager = managers.document("Store Details");
     print("Got Managers");
     // Getting the Data from the Document
     try {
