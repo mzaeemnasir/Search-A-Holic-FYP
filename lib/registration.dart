@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/services.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
@@ -297,12 +299,6 @@ class _SignUpState extends State<SignUp> {
             child: Expanded(
               child: Column(
                 children: [
-                  WindowTitleBarBox(
-                    child: Row(children: [
-                      Expanded(child: Container()),
-                      const WindowButtons()
-                    ]),
-                  ),
                   // Txt Field
                   Container(
                     height: MediaQuery.of(context).size.height * 0.119,
@@ -346,36 +342,6 @@ class _SignUpState extends State<SignUp> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class WindowButtons extends StatelessWidget {
-  const WindowButtons({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        MinimizeWindowButton(
-          colors: WindowButtonColors(
-            mouseOver: Colors.blue,
-            iconNormal: Colors.white,
-          ),
-        ),
-        MaximizeWindowButton(
-          colors: WindowButtonColors(
-            mouseOver: Colors.blue,
-            iconNormal: Colors.white,
-          ),
-        ),
-        CloseWindowButton(
-          colors: WindowButtonColors(
-            iconNormal: Colors.white,
-            mouseOver: Colors.red,
-          ),
-        ),
-      ],
     );
   }
 }

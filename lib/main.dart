@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:searchaholic/registration.dart';
+import 'package:searchaholic/homePage.dart';
 
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
@@ -16,35 +15,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firestore.initialize(project_id); // Establishing connection with Firestore
 
-  // Setting up the Window Size
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    await DesktopWindow.setMinWindowSize(const Size(1000, 600));
-  }
-
   if (Platform.isWindows) {
-    await DesktopWindow.setWindowSize(const Size(1000, 600));
+    // await DesktopWindow.setWindowSize(const Size(1000, 600));
+    await DesktopWindow.setMinWindowSize(const Size(1000, 600));
     createFilesAndFolders();
   }
-
   runApp(MyApp());
-  doWhenWindowReady(() {
-    const initialSize = Size(1000, 600);
-    appWindow.minSize = initialSize;
-    appWindow.size = initialSize;
-    appWindow.alignment = Alignment.center;
-    appWindow.show();
-  });
 }
 
-// MY APP CLASS
+// MY APP CLASSs
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      //Login Screen
-      home: SignUp(),
+      home: Login(),
     );
   }
 }
@@ -53,7 +40,6 @@ class MyApp extends StatelessWidget {
 void createFilesAndFolders() async {
   // Creating A Folder in the Document Directory
   Directory directory = await getApplicationDocumentsDirectory();
-  print(directory.path);
   String path = directory.path;
   Directory folder = Directory('$path/SeachAHolic');
 
