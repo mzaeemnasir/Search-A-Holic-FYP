@@ -5,6 +5,8 @@ import 'package:firedart/firedart.dart';
 
 const api_key = "AIzaSyCjZK5ojHcJQh8Sr0sdMG0Nlnga4D94FME";
 const project_id = "searchaholic-86248";
+// const api_key = "AIzaSyBg4u6aeIDzvj4ZfPSnTGAzNBDR5sbui_U";
+// const project_id = "searchaholic-3f04a";
 
 class Flutter_api {
   // Main Function
@@ -21,6 +23,7 @@ class Flutter_api {
 
     final manager = managers.document("Store Details");
     print("Got Managers");
+    print(await manager.get());
     // Getting the Data from the Document
     try {
       final data = await manager.get();

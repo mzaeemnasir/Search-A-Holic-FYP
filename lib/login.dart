@@ -1,16 +1,8 @@
 // Login Screen
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
-// Importing the required packages
-
-import 'package:flutter/gestures.dart';
-import 'package:searchaholic/dashboard.dart';
-import 'package:searchaholic/imports.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:searchaholic/firebase_.dart';
-import 'package:searchaholic/registration.dart';
-import 'package:searchaholic/system.dart';
 // Login Screen
 
+import 'package:searchaholic/imports.dart';
 // ignore: use_key_in_widget_constructors
 
 class Login extends StatefulWidget {
@@ -23,6 +15,14 @@ class LoginScreen extends State<Login> {
   // VARIABLES
   var email = TextEditingController();
   var password = TextEditingController();
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
+
+  void onClickFun(RoundedLoadingButtonController btnController) async {
+    Timer(Duration(seconds: 3), () {
+      _btnController.success();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +102,9 @@ class LoginScreen extends State<Login> {
                       margin: EdgeInsets.only(top: 20, left: 150, right: 150),
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 50,
-                      child: ElevatedButton(
+                      child: RoundedLoadingButton(
                         onPressed: () {
+                          onClickFun(_btnController);
                           //  On Press Show Loading Animation in the Login Button
                           setState(() {
                             // Validate the Email and Password
@@ -124,10 +125,11 @@ class LoginScreen extends State<Login> {
                             }
                           }); // End of Set State , // End of Set State
                         },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30))),
+                        controller: _btnController,
+                        // style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.blue,
+                        //     shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(30))),
                         child: Text(
                           "Login",
                           style: GoogleFonts.montserrat(

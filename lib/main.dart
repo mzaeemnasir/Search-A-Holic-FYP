@@ -1,13 +1,11 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:searchaholic/homePage.dart';
+// import 'package:searchaholic/homePage.dart';
 
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
-// ignore: constant_identifier_names
 const api_key = "AIzaSyCjZK5ojHcJQh8Sr0sdMG0Nlnga4D94FME";
-// ignore: constant_identifier_names
 const project_id = "searchaholic-86248";
 
 // Showing Hello World in Flutter
@@ -16,7 +14,6 @@ void main() async {
   Firestore.initialize(project_id); // Establishing connection with Firestore
 
   if (Platform.isWindows) {
-    // await DesktopWindow.setWindowSize(const Size(1000, 600));
     await DesktopWindow.setMinWindowSize(const Size(1000, 600));
     createFilesAndFolders();
   }

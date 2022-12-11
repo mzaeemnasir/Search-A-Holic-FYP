@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, library_private_types_in_public_api, avoid_unnecessary_containers, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
+import 'package:searchaholic/sidebar.dart';
 import 'package:searchaholic/textBox.dart';
 
 class Dashboard extends StatefulWidget {
@@ -29,6 +30,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
         body: Row(
       children: [
+        Sidebar(),
         Expanded(
           child: Container(
               child: Padding(
