@@ -50,7 +50,7 @@ class Flutter_api {
 
     // Checking for the document with the email
     if (await managers.document(email).exists) {
-      print(await managers.document(email));
+      print(managers.document(email));
       print("Email Already Registered");
       return Future<bool>.value(false);
     } else {
