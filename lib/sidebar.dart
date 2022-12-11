@@ -350,6 +350,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:searchaholic/product.dart';
+
+import 'dashboard.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({Key? key}) : super(key: key);
@@ -401,7 +404,8 @@ class _SidebarState extends State<Sidebar> {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () {
-                      print("Dashboard Button Pressed");
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Dashboard()));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -449,7 +453,10 @@ class _SidebarState extends State<Sidebar> {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () {
-                      print("Products Button Pressed");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Product()),
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

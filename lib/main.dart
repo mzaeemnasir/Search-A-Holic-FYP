@@ -2,6 +2,8 @@
 
 // import 'package:searchaholic/homePage.dart';
 
+import 'package:searchaholic/product.dart';
+
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
+      home: Product(),
     );
   }
 }
