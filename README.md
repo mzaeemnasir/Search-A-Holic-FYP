@@ -1,4 +1,4 @@
-# searchaholic
+# Search A Holic
 
 A new Flutter project.
 
