@@ -34,7 +34,7 @@ class LoginScreen extends State<Login> {
           Container(
             width: MediaQuery.of(context).size.width * 0.5,
             height: MediaQuery.of(context).size.height,
-            color: Colors.white,
+            color: Color.fromRGBO(250, 250, 250, 255),
             child: Expanded(
               child: Column(
                 children: [
@@ -42,7 +42,7 @@ class LoginScreen extends State<Login> {
 
                   // 1. Login Text
                   Container(
-                    margin: EdgeInsets.only(top: 80),
+                    margin: EdgeInsets.only(top: 160),
                     child: Text(
                       "Login",
                       style: GoogleFonts.montserrat(
@@ -51,7 +51,7 @@ class LoginScreen extends State<Login> {
                   ),
                   // 2. Email Text Field
                   Container(
-                    margin: EdgeInsets.only(top: 30),
+                    margin: EdgeInsets.only(top: 50),
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: TextField(
                       controller: email,
@@ -63,7 +63,7 @@ class LoginScreen extends State<Login> {
                   ),
                   // 3. Password Text Field
                   Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 25),
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: TextField(
                       controller: password,
@@ -86,7 +86,7 @@ class LoginScreen extends State<Login> {
                       style: GoogleFonts.montserrat(
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
-                          color: Colors.blue),
+                          color: Color.fromRGBO(53, 108, 254, 1)),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           print("Forget Password- Page");
@@ -99,7 +99,7 @@ class LoginScreen extends State<Login> {
                   ),
                   // 5. Login Button
                   Container(
-                      margin: EdgeInsets.only(top: 20, left: 150, right: 150),
+                      margin: EdgeInsets.only(top: 30, left: 150, right: 150),
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 50,
                       child: RoundedLoadingButton(
@@ -133,13 +133,15 @@ class LoginScreen extends State<Login> {
                         child: Text(
                           "Login",
                           style: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w300),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
                       )),
 
                   // 6. Create Account Text Label
                   Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 15),
                     alignment: Alignment.center,
                     child: RichText(
                       text: TextSpan(
@@ -154,7 +156,7 @@ class LoginScreen extends State<Login> {
                                 style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w300,
-                                    color: Colors.blue),
+                                    color: Color.fromRGBO(53, 108, 254, 1)),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => {
                                         Navigator.push(
@@ -175,16 +177,32 @@ class LoginScreen extends State<Login> {
           Container(
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height,
-              color: Color.fromRGBO(53, 108, 254, 1),
+              //color: Colors.white,
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(53, 108, 254, 1),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(740),
+                    bottomLeft: Radius.circular(640),
+                  )),
 
               // Setting up a Logo in the Center
               child: Expanded(
                   child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 40),
+                    margin: EdgeInsets.only(top: 120, left: 90),
                     child: Text(
-                      "Welcome To\nSearchaholic!",
+                      "Welcome to",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 0),
+                    child: Text(
+                      "Searchaholic!",
                       style: GoogleFonts.montserrat(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
