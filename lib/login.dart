@@ -13,13 +13,15 @@ class Login extends StatefulWidget {
 
 class LoginScreen extends State<Login> {
   // VARIABLES
+
+  bool _isObscure = true;
   var email = TextEditingController();
   var password = TextEditingController();
   final RoundedLoadingButtonController _btnController =
       RoundedLoadingButtonController();
 
   void onClickFun(RoundedLoadingButtonController btnController) async {
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 2), () {
       _btnController.success();
     });
   }
@@ -62,17 +64,30 @@ class LoginScreen extends State<Login> {
                     ),
                   ),
                   // 3. Password Text Field
+
                   Container(
                     margin: EdgeInsets.only(top: 25),
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: TextField(
+                      obscureText: _isObscure,
                       controller: password,
+                      cursorColor: Color.fromRGBO(53, 108, 254, 1),
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
                           hintText: "Password",
                           hintStyle: GoogleFonts.montserrat(
                               fontSize: 16, fontWeight: FontWeight.w300)),
                     ),
                   ),
+
                   // 4. Forget Password Text Label
                   Container(
                     margin: EdgeInsets.only(top: 20),
@@ -105,6 +120,7 @@ class LoginScreen extends State<Login> {
                       child: RoundedLoadingButton(
                         onPressed: () {
                           onClickFun(_btnController);
+
                           //  On Press Show Loading Animation in the Login Button
                           setState(() {
                             // Validate the Email and Password
@@ -123,9 +139,13 @@ class LoginScreen extends State<Login> {
                                 print("Please Enter a Valid Email");
                               }
                             }
-                          }); // End of Set State , // End of Set State
+                          });
+
+                          // End of Set State , // End of Set State
                         },
+
                         controller: _btnController,
+                        color: Color.fromRGBO(53, 108, 254, 1),
                         // style: ElevatedButton.styleFrom(
                         //     backgroundColor: Colors.blue,
                         //     shape: RoundedRectangleBorder(
