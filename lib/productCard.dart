@@ -1,18 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:searchaholic/imports.dart';
+import 'package:searchaholic/product.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({Key? key, required this.product}) : super(key: key);
   final Map<String, dynamic> product;
-  // // Products has elements
-  //   {
-  //         "name": "Product 1",
-  //         "price": "100",
-  //         "quantity": "10",
-  //         "description": "Product 1 Description"
-  //       },
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class ProductCard extends StatelessWidget {
               margin: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.01,
               ),
-              width: MediaQuery.of(context).size.width * 0.075,
+              width: MediaQuery.of(context).size.width * 0.055,
               child: SizedBox(
                 child: Text(
                   product['name'],
@@ -48,12 +44,28 @@ class ProductCard extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.04,
+              ),
+              transformAlignment: Alignment.center,
+              alignment: Alignment.center,
+              child: Text(
+                "Id: ${product['id']}",
+                style: const TextStyle(
+                  fontFamily: "Montserrat",
+                  color: Color.fromARGB(255, 74, 135, 249),
+                  fontWeight: FontWeight.w100,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.06,
               ),
               transformAlignment: Alignment.center,
               alignment: Alignment.center,
-              child: const Text(
-                "# 1231231",
+              child: Text(
+                'Qty: ' + product['quantity'].toString(),
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   color: Color.fromARGB(255, 74, 135, 249),
@@ -68,24 +80,8 @@ class ProductCard extends StatelessWidget {
               ),
               transformAlignment: Alignment.center,
               alignment: Alignment.center,
-              child: const Text(
-                "Quantity: 10",
-                style: TextStyle(
-                  fontFamily: "Montserrat",
-                  color: Color.fromARGB(255, 74, 135, 249),
-                  fontWeight: FontWeight.w100,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.06,
-              ),
-              transformAlignment: Alignment.center,
-              alignment: Alignment.center,
-              child: const Text(
-                "Rs. 500",
+              child: Text(
+                "Rs. ${product['price']}",
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   color: Color.fromARGB(255, 231, 79, 87),
@@ -110,7 +106,7 @@ class ProductCard extends StatelessWidget {
                   transformAlignment: Alignment.center,
                   child: TextButton(
                     onPressed: () {
-                      print("Edit Button Pressed");
+                      print(product["id"]);
                     },
                     child: Text(
                       "Edit",
@@ -141,7 +137,49 @@ class ProductCard extends StatelessWidget {
                   transformAlignment: Alignment.center,
                   child: TextButton(
                     onPressed: () {
-                      print("Delete Button Pressed");
+                      // Delete product
+                      var productID = product["id"];
+                      // Are you sure?
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Are you sure?"),
+                            content: Text("This action cannot be undone."),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  // Delete product
+                                  if (deleteProduct(productID) == true) {
+                                    // Update list
+                                    // Toast
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Product deleted, "),
+                                      ),
+                                    );
+                                    Navigator.of(context).pop();
+                                  }
+                                  // Show snackbar
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Product deleted"),
+                                    ),
+                                  );
+                                },
+                                child: Text("Delete"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: Text(
                       "Delete",
@@ -160,5 +198,30 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> deleteProduct(String id) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    // Deleting the Product from Firestore
+    try {
+      await Firestore.instance
+          .collection(email)
+          .document("Product")
+          .collection("products")
+          .document(id)
+          .delete();
+
+      return Future.value(true);
+    } catch (e) {
+      print(e);
+      return Future.value(false);
+    }
   }
 }
