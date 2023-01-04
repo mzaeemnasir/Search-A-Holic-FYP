@@ -3,6 +3,8 @@
 // Login Screen
 
 import 'package:searchaholic/imports.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
 // ignore: use_key_in_widget_constructors
 
 class Login extends StatefulWidget {
@@ -14,6 +16,7 @@ class Login extends StatefulWidget {
 class LoginScreen extends State<Login> {
   // VARIABLES
 
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool _isObscure = true;
   var email = TextEditingController();
   var password = TextEditingController();
@@ -38,157 +41,174 @@ class LoginScreen extends State<Login> {
             height: MediaQuery.of(context).size.height,
             color: Color.fromRGBO(250, 250, 250, 255),
             child: Expanded(
-              child: Column(
-                children: [
-                  // Variable to store the Login Email and Password
+              child: Form(
+                key: formkey,
+                child: Column(
+                  children: [
+                    // Variable to store the Login Email and Password
 
-                  // 1. Login Text
-                  Container(
-                    margin: EdgeInsets.only(top: 160),
-                    child: Text(
-                      "Login",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 32, fontWeight: FontWeight.bold),
+                    // 1. Login Text
+                    Container(
+                      margin: EdgeInsets.only(top: 160),
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  // 2. Email Text Field
-                  Container(
-                    margin: EdgeInsets.only(top: 50),
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: TextField(
-                      controller: email,
-                      decoration: InputDecoration(
-                          hintText: "Email",
-                          hintStyle: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w300)),
-                    ),
-                  ),
-                  // 3. Password Text Field
-
-                  Container(
-                    margin: EdgeInsets.only(top: 25),
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: TextField(
-                      obscureText: _isObscure,
-                      controller: password,
-                      cursorColor: Color.fromRGBO(53, 108, 254, 1),
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              icon: Icon(_isObscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                              onPressed: () {
-                                setState(() {
-                                  _isObscure = !_isObscure;
-                                });
-                              }),
-                          hintText: "Password",
-                          hintStyle: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w300)),
-                    ),
-                  ),
-
-                  // 4. Forget Password Text Label
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    // Setting the Alignment to Right
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    alignment: Alignment.centerRight,
-                    // Clickable Text
-                    child: RichText(
-                        text: TextSpan(
-                      text: "Forget?",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Color.fromRGBO(53, 108, 254, 1)),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          print("Forget Password- Page");
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => ForgetPassword()));
-                        },
-                    )),
-                  ),
-                  // 5. Login Button
-                  Container(
-                      margin: EdgeInsets.only(top: 30, left: 150, right: 150),
+                    // 2. Email Text Field
+                    Container(
+                      margin: EdgeInsets.only(top: 50),
                       width: MediaQuery.of(context).size.width * 0.4,
-                      height: 50,
-                      child: RoundedLoadingButton(
-                        onPressed: () {
-                          onClickFun(_btnController);
+                      child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: email,
+                        decoration: InputDecoration(
+                            hintText: "Email",
+                            hintStyle: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w300)),
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(errorText: 'Email Required'),
+                            EmailValidator(
+                                errorText: 'Please enter a valid Email')
+                          ],
+                        ),
+                      ),
+                    ),
+                    // 3. Password Text Field
 
-                          //  On Press Show Loading Animation in the Login Button
-                          setState(() {
-                            // Validate the Email and Password
-                            var object = LoginCheck(email, password);
-                            if (object.Validator() == "valid") {
-                              // If Valid then Navigate to the Home Screen
-                              print("Valid");
-                              object.checkLogin(context);
-                            } else {
-                              // If Invalid then Show the Error Message
-                              if (object.Validator() == "emptyEmail" ||
-                                  object.Validator() == "emptyPassword") {
-                                print("Please Enter the Email and Password");
-                              }
-                              if (object.Validator() == "invalidEmail") {
-                                print("Please Enter a Valid Email");
-                              }
-                            }
-                          });
+                    Container(
+                      margin: EdgeInsets.only(top: 25),
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: TextFormField(
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(errorText: 'Password Required'),
+                          ],
+                        ),
+                        obscureText: _isObscure,
+                        controller: password,
+                        cursorColor: Color.fromRGBO(53, 108, 254, 1),
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                icon: Icon(_isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                }),
+                            hintText: "Password",
+                            hintStyle: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w300)),
+                      ),
+                    ),
 
-                          // End of Set State , // End of Set State
-                        },
-
-                        controller: _btnController,
-                        color: Color.fromRGBO(53, 108, 254, 1),
-                        // style: ElevatedButton.styleFrom(
-                        //     backgroundColor: Colors.blue,
-                        //     shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(30))),
-                        child: Text(
-                          "Login",
-                          style: GoogleFonts.montserrat(
+                    // 4. Forget Password Text Label
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      // Setting the Alignment to Right
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      alignment: Alignment.centerRight,
+                      // Clickable Text
+                      child: RichText(
+                          text: TextSpan(
+                        text: "Forget?",
+                        style: GoogleFonts.montserrat(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,
-                          ),
-                        ),
+                            color: Color.fromRGBO(53, 108, 254, 1)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            print("Forget Password- Page");
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => ForgetPassword()));
+                          },
                       )),
+                    ),
+                    // 5. Login Button
+                    Container(
+                        margin: EdgeInsets.only(top: 30, left: 150, right: 150),
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: 50,
+                        child: RoundedLoadingButton(
+                          onPressed: () {
+                            formkey.currentState?.validate();
+                            onClickFun(_btnController);
 
-                  // 6. Create Account Text Label
-                  Container(
-                    margin: EdgeInsets.only(top: 15),
-                    alignment: Alignment.center,
-                    child: RichText(
-                      text: TextSpan(
-                          text: "Don't have Account?",
-                          style: GoogleFonts.montserrat(
+                            //  On Press Show Loading Animation in the Login Button
+                            setState(() {
+                              // Validate the Email and Password
+                              var object = LoginCheck(email, password);
+                              if (object.Validator() == "valid") {
+                                // If Valid then Navigate to the Home Screen
+                                print("Valid");
+                                object.checkLogin(context);
+                              } else {
+                                // If Invalid then Show the Error Message
+                                if (object.Validator() == "emptyEmail" ||
+                                    object.Validator() == "emptyPassword") {
+                                  print("Please Enter the Email and Password");
+                                }
+                                if (object.Validator() == "invalidEmail") {
+                                  print("Please Enter a Valid Email");
+                                }
+                              }
+                            });
+
+                            // End of Set State , // End of Set State
+                          },
+
+                          controller: _btnController,
+                          color: Color.fromRGBO(53, 108, 254, 1),
+                          // style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Colors.blue,
+                          //     shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(30))),
+                          child: Text(
+                            "Login",
+                            style: GoogleFonts.montserrat(
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
-                              color: Colors.black),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: " Create one!",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color.fromRGBO(53, 108, 254, 1)),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () => {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => SignUp()),
-                                        ),
-                                      })
-                          ]),
+                            ),
+                          ),
+                        )),
+
+                    // 6. Create Account Text Label
+                    Container(
+                      margin: EdgeInsets.only(top: 15),
+                      alignment: Alignment.center,
+                      child: RichText(
+                        text: TextSpan(
+                            text: "Don't have Account?",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: " Create one!",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: Color.fromRGBO(53, 108, 254, 1)),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => SignUp()),
+                                          ),
+                                        })
+                            ]),
+                      ),
                     ),
-                  ),
-                ], // End of Column Children
+                  ], // End of Column Children
+                ),
               ),
             ),
           ),
@@ -269,9 +289,9 @@ class LoginCheck {
       return "emptyPassword"; // Error Message
     }
     // If Email is not Valid
-    else if (!EmailValidator.validate(email.text)) {
-      return "invalidEmail"; // Error Message
-    }
+    //else if (!EmailValidator.validate(email.text)) {
+    //return "invalidEmail"; // Error Message
+    //}
     // If Email and Password is Valid
     else {
       return "valid"; // Error Message

@@ -9,7 +9,6 @@ export 'package:rounded_loading_button/rounded_loading_button.dart';
 export 'dart:async';
 export 'package:flutter/gestures.dart';
 export 'package:searchaholic/dashboard.dart';
-export 'package:email_validator/email_validator.dart';
 export 'package:searchaholic/firebase_.dart';
 export 'package:searchaholic/registration.dart';
 export 'package:searchaholic/system.dart';

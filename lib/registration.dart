@@ -20,6 +20,7 @@ class _SignUpState extends State<SignUp> {
   var phoneNumber = TextEditingController();
   var password = TextEditingController();
   bool _isObscure = true;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,270 +32,290 @@ class _SignUpState extends State<SignUp> {
             width: MediaQuery.of(context).size.width * 0.5,
             color: Colors.white,
             child: Expanded(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.116,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        "Registration",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Text Field Email
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.087,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextFormField(
-                      controller: email,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        } else {
-                          RegExp regExp = RegExp(
-                            r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                            caseSensitive: false,
-                            multiLine: false,
-                          );
-
-                          if (!regExp.hasMatch(value)) {
-                            // Make input field red
-                            return 'Please enter a valid email address';
-                          }
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Email",
-                        hintStyle: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          color: Colors.grey[450],
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 0.15),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Store Name
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextFormField(
-                      controller: storeName,
-                      decoration: InputDecoration(
-                        hintText: "Store Name",
-                        hintStyle: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          color: Colors.grey[450],
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 0.15),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Store Location
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextFormField(
-                      controller: storeLocationLong,
-                      decoration: InputDecoration(
-                        hintText: "Store Location",
-                        hintStyle: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          color: Colors.grey[450],
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 0.15),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Store Manager's  Number
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextFormField(
-                      controller: phoneNumber,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        } else {
-                          RegExp regExp = RegExp(
-                            r"^[0-9]{10}$",
-                            caseSensitive: false,
-                            multiLine: false,
-                          );
-                          if (!regExp.hasMatch(value)) {
-                            // Make input field red
-                            return 'Please enter a valid phone number';
-                          }
-                        }
-                        return null;
-                      },
-                      //allow only numbers
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "Phone Number",
-                        hintStyle: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          color: Colors.grey[450],
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 0.15),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Password (with eye icon)
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    child: TextFormField(
-                      obscureText: _isObscure,
-                      maxLength: 18,
-                      // validation
-                      controller: password,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        } else {
-                          RegExp regExp = RegExp(
-                            r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
-                            caseSensitive: false,
-                            multiLine: false,
-                          );
-                          if (!regExp.hasMatch(value)) {
-                            // Make input field red
-                            return 'Please enter a valid password';
-                          }
-                        }
-                        return null;
-                      },
-
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            icon: Icon(_isObscure
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              setState(() {
-                                _isObscure = !_isObscure;
-                              });
-                            }),
-                        hintText: "Password",
-                        hintStyle: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          color: Colors.grey[450],
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 0.15),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Register Button
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        print("Register Button Pressed");
-                        // Validate returns true if the form is valid, or false otherwise.
-                        // if (_formKey.currentState!.validate()) {
-                        //   // If the form is valid, display a snackbar. In the real world,
-                        //   // you'd often call a server or save the information in a database.+
-                        //   print("Form is valid");
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(content: Text('Processing Data')),
-                        //   );
-                        // }
-                        Flutter_api().register(
-                            email.text,
-                            storeName.text,
-                            storeLocationLong.text,
-                            phoneNumber.text,
-                            password.text);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(53, 108, 254, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "Register",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // LOGIN INSTEAD Button
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.37,
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Login(),
+              child: Form(
+                key: formkey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.116,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          "Registration",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(53, 108, 254, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        "Already have account? Login",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    // Text Field Email
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        controller: email,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email Required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid email address';
+                            }
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Store Name
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Name required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^[a-z A-Z]",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid name';
+                            }
+                          }
+                          return null;
+                        },
+                        controller: storeName,
+                        decoration: InputDecoration(
+                          hintText: "Store Name",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Store Location
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        controller: storeLocationLong,
+                        decoration: InputDecoration(
+                          hintText: "Store Location",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Store Manager's  Number
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        controller: phoneNumber,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Phone number required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^[0-9]{10}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid phone number';
+                            }
+                          }
+                          return null;
+                        },
+                        //allow only numbers
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                          hintText: "Phone Number",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Password (with eye icon)
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        obscureText: _isObscure,
+                        maxLength: 18,
+                        // validation
+                        controller: password,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid password';
+                            }
+                          }
+                          return null;
+                        },
+
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
+                          hintText: "Password",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Register Button
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print("Register Button Pressed");
+                          // Validate returns true if the form is valid, or false otherwise.
+                          // if (_formKey.currentState!.validate()) {
+                          //   // If the form is valid, display a snackbar. In the real world,
+                          //   // you'd often call a server or save the information in a database.+
+                          //   print("Form is valid");
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     const SnackBar(content: Text('Processing Data')),
+                          //   );
+                          // }
+                          formkey.currentState?.validate();
+                          Flutter_api().register(
+                              email.text,
+                              storeName.text,
+                              storeLocationLong.text,
+                              phoneNumber.text,
+                              password.text);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(53, 108, 254, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Register",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // LOGIN INSTEAD Button
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Login(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(53, 108, 254, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Already have account? Login",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
