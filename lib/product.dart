@@ -139,6 +139,7 @@ class _Product extends State<Product> {
         .collection(email)
         .document("Product")
         .collection("products")
+        .orderBy("name")
         .get();
 
     setState(() {
