@@ -19,6 +19,7 @@ class _SignUpState extends State<SignUp> {
   var storeLocationLong = TextEditingController();
   var phoneNumber = TextEditingController();
   var password = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +178,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.37,
                     child: TextFormField(
-                      obscureText: true,
+                      obscureText: _isObscure,
                       maxLength: 18,
                       // validation
                       controller: password,
@@ -199,6 +200,15 @@ class _SignUpState extends State<SignUp> {
                       },
 
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                            icon: Icon(_isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            }),
                         hintText: "Password",
                         hintStyle: GoogleFonts.montserrat(
                           fontSize: 15,
@@ -208,10 +218,6 @@ class _SignUpState extends State<SignUp> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(width: 0.15),
-                        ),
-                        suffixIcon: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.grey[450],
                         ),
                       ),
                     ),
@@ -243,7 +249,7 @@ class _SignUpState extends State<SignUp> {
                             password.text);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Color.fromRGBO(53, 108, 254, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -274,7 +280,7 @@ class _SignUpState extends State<SignUp> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Color.fromRGBO(53, 108, 254, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -302,7 +308,7 @@ class _SignUpState extends State<SignUp> {
                   // Txt Field
                   Container(
                     height: MediaQuery.of(context).size.height * 0.119,
-                    margin: const EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 60),
                     child: Text(
                       "Sign up",
                       style: GoogleFonts.montserrat(

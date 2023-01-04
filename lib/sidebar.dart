@@ -428,7 +428,7 @@ class _SidebarState extends State<Sidebar> {
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontWeight: FontWeight.w500,
-                            fontSize: MediaQuery.of(context).size.width / 45,
+                            fontSize: MediaQuery.of(context).size.width / 60,
                           ),
                         )
                       ],
@@ -479,7 +479,7 @@ class _SidebarState extends State<Sidebar> {
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontWeight: FontWeight.w500,
-                            fontSize: MediaQuery.of(context).size.width / 45,
+                            fontSize: MediaQuery.of(context).size.width / 60,
                           ),
                         )
                       ],
@@ -527,7 +527,7 @@ class _SidebarState extends State<Sidebar> {
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontWeight: FontWeight.w500,
-                            fontSize: MediaQuery.of(context).size.width / 45,
+                            fontSize: MediaQuery.of(context).size.width / 60,
                           ),
                         )
                       ],
@@ -575,7 +575,7 @@ class _SidebarState extends State<Sidebar> {
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontWeight: FontWeight.w500,
-                            fontSize: MediaQuery.of(context).size.width / 45,
+                            fontSize: MediaQuery.of(context).size.width / 60,
                           ),
                         )
                       ],
@@ -624,7 +624,7 @@ class _SidebarState extends State<Sidebar> {
                             style: TextStyle(
                               fontFamily: "Montserrat",
                               fontWeight: FontWeight.w500,
-                              fontSize: MediaQuery.of(context).size.width / 45,
+                              fontSize: MediaQuery.of(context).size.width / 60,
                             ),
                           )
                         ],
