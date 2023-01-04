@@ -16,11 +16,23 @@ class Product extends StatefulWidget {
 
 class _Product extends State<Product> {
   List<Object> products = [];
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getProducts();
+    _searchController.addListener(_searchControllerFun);
+  }
+
+  _searchControllerFun() {
+    print(_searchController.text);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,7 +52,7 @@ class _Product extends State<Product> {
                   Padding(padding: EdgeInsets.only(top: 20)),
                   Padding(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.087,
+                      top: MediaQuery.of(context).size.height * 0.057,
                     ),
                     child: Text("Products",
                         style: TextStyle(
@@ -49,9 +61,49 @@ class _Product extends State<Product> {
                           fontSize: MediaQuery.of(context).size.width / 45,
                         )),
                   ),
+                  Padding(padding: EdgeInsets.only(top: 25)),
+                  Container(
+                    // Search Bar
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.015,
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Color.fromARGB(255, 74, 135, 249),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.087,
+                      top: MediaQuery.of(context).size.height * 0.017,
                     ),
                     child: Container(
                         height: MediaQuery.of(context).size.height * 0.73,
