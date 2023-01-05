@@ -26,6 +26,7 @@ class _SignUpState extends State<SignUp> {
 
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
   void showAlert() {
     QuickAlert.show(
       context: context,
