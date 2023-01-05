@@ -24,8 +24,16 @@ class LoginScreen extends State<Login> {
       RoundedLoadingButtonController();
 
   void onClickFun(RoundedLoadingButtonController btnController) async {
-    Timer(Duration(seconds: 2), () {
+    Timer(Duration(seconds: 3), () {
       _btnController.success();
+    });
+  }
+
+  void onClickFun2(RoundedLoadingButtonController btnController) async {
+    Timer(Duration(seconds: 2), () {
+      _btnController.error();
+      Future.delayed(Duration(seconds: 1));
+      _btnController.reset();
     });
   }
 
@@ -138,8 +146,6 @@ class LoginScreen extends State<Login> {
                         child: RoundedLoadingButton(
                           onPressed: () {
                             formkey.currentState?.validate();
-                            onClickFun(_btnController);
-
                             //  On Press Show Loading Animation in the Login Button
                             setState(() {
                               // Validate the Email and Password
@@ -148,14 +154,19 @@ class LoginScreen extends State<Login> {
                                 // If Valid then Navigate to the Home Screen
                                 print("Valid");
                                 object.checkLogin(context);
+
+                                onClickFun(_btnController);
                               } else {
                                 // If Invalid then Show the Error Message
                                 if (object.Validator() == "emptyEmail" ||
                                     object.Validator() == "emptyPassword") {
+                                  onClickFun2(_btnController);
+
                                   print("Please Enter the Email and Password");
                                 }
                                 if (object.Validator() == "invalidEmail") {
                                   print("Please Enter a Valid Email");
+                                  onClickFun2(_btnController);
                                 }
                               }
                             });

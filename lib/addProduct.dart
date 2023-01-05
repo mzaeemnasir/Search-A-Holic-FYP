@@ -112,46 +112,6 @@ class _AddProduct extends State<AddProduct> {
                       hint: Text("Select Product Visibility"),
                     ),
                   ),
-                  // Cancel and Add Product Buttons
-                  Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.057,
-                            top: MediaQuery.of(context).size.height * 0.057),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Cancel"),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.057,
-                            left: MediaQuery.of(context).size.width * 0.47),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Add Product to Database
-                            if (_productName.text == "" ||
-                                _productPrice.text == "" ||
-                                _productQty.text == "" ||
-                                _productType.text == "") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Please fill all the fields"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            } else {
-                              print("Add Product to Database");
-                            }
-                          },
-                          child: Text("Add Product"),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
