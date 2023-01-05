@@ -61,7 +61,6 @@ class _Product extends State<Product> {
                           fontSize: MediaQuery.of(context).size.width / 45,
                         )),
                   ),
-                  const Padding(padding: EdgeInsets.only(top: 25)),
                   Container(
                     // Search Bar
                     height: MediaQuery.of(context).size.height * 0.06,
@@ -99,6 +98,43 @@ class _Product extends State<Product> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/addProduct');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: const Color.fromARGB(255, 74, 135, 249),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            const Padding(padding: EdgeInsets.only(left: 5)),
+                            Text(
+                              "Add Product",
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600,
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 55,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
