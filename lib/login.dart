@@ -30,8 +30,9 @@ class LoginScreen extends State<Login> {
   }
 
   void onClickFun2(RoundedLoadingButtonController btnController) async {
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       _btnController.error();
+      Future.delayed(Duration(seconds: 1));
       _btnController.reset();
     });
   }
