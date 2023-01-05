@@ -2,6 +2,7 @@
 
 // Path: lib\addProduct.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'imports.dart';
 
@@ -13,85 +14,143 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProduct extends State<AddProduct> {
+  // Controllers for the TextFields
+  TextEditingController _productName = TextEditingController();
+  TextEditingController _productPrice = TextEditingController();
+  TextEditingController _productQty = TextEditingController();
+  TextEditingController _productType = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          const Sidebar(),
+          Sidebar(),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.04,
-                right: MediaQuery.of(context).size.width * 0.04,
-              ),
+              padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.057,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057),
                     child: Text("Add Product",
                         style: TextStyle(
                           fontFamily: "Montserrat",
+                          fontSize: 30,
                           fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                          color: const Color(0xff000000),
                         )),
                   ),
-                  const Padding(padding: EdgeInsets.only(top: 20)),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.92,
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x29000000),
-                          offset: Offset(0, 3),
-                          blurRadius: 6,
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      maxLength: 15,
+                      controller: _productName,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Product Name',
+                        hintMaxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _productPrice,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Product Price',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      controller: _productQty,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Product Quantity',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.057),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    // Options [Public or Private]
+                    child: DropdownButtonFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      items: const [
+                        DropdownMenuItem(
+                          child: Text("Public"),
+                          value: "Public",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Private"),
+                          value: "Private",
                         ),
                       ],
+                      onChanged: (value) {
+                        _productType.text = value.toString();
+                        print(value);
+                        print(_productType.text);
+                      },
+                      hint: Text("Select Product Visibility"),
                     ),
-                    child: Column(
-                      children: [
-                        const Padding(padding: EdgeInsets.only(top: 20)),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.04,
-                            right: MediaQuery.of(context).size.width * 0.04,
-                          ),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.84,
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            decoration: BoxDecoration(
-                              color: const Color(0xfff2f2f2),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.04,
-                              ),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Product Name",
-                                  hintStyle: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: const Color(0xff000000),
-                                  ),
+                  ),
+                  // Cancel and Add Product Buttons
+                  Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.057,
+                            top: MediaQuery.of(context).size.height * 0.057),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Cancel"),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.057,
+                            left: MediaQuery.of(context).size.width * 0.47),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Add Product to Database
+                            if (_productName.text == "" ||
+                                _productPrice.text == "" ||
+                                _productQty.text == "" ||
+                                _productType.text == "") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please fill all the fields"),
+                                  backgroundColor: Colors.red,
                                 ),
-                              ),
-                            ),
-                          ),
+                              );
+                            } else {
+                              print("Add Product to Database");
+                            }
+                          },
+                          child: Text("Add Product"),
                         ),
-                        const Padding(padding: EdgeInsets.only(top: 20)),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
