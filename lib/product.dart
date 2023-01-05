@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firedart/firedart.dart';
 import 'package:firedart/firestore/firestore.dart';
+import 'package:searchaholic/addProduct.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:searchaholic/productCard.dart';
 import 'package:searchaholic/sidebar.dart';
@@ -61,7 +62,6 @@ class _Product extends State<Product> {
                           fontSize: MediaQuery.of(context).size.width / 45,
                         )),
                   ),
-                  const Padding(padding: EdgeInsets.only(top: 25)),
                   Container(
                     // Search Bar
                     height: MediaQuery.of(context).size.height * 0.06,
@@ -99,6 +99,43 @@ class _Product extends State<Product> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: // Adding Button (Add Product)
+                        Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: const Color.fromARGB(255, 74, 135, 249),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context, // Adding Product
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddProduct())).then((value) =>
+                                getProducts()); // Refreshing the Page (R
+                          },
+                          child: const Text(
+                            "Add Product",
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
