@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firedart/firedart.dart';
 import 'package:firedart/firestore/firestore.dart';
+import 'package:searchaholic/addProduct.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:searchaholic/productCard.dart';
 import 'package:searchaholic/sidebar.dart';
@@ -101,38 +102,38 @@ class _Product extends State<Product> {
                     ),
                   ),
                   Container(
-                    child: Padding(
+                    alignment: Alignment.centerLeft,
+                    child: // Adding Button (Add Product)
+                        Padding(
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.025,
+                        top: MediaQuery.of(context).size.height * 0.03,
                       ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/addProduct');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color.fromARGB(255, 74, 135, 249),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: const Color.fromARGB(255, 74, 135, 249),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.add,
-                              color: Colors.white,
+                          onPressed: () {
+                            Navigator.push(
+                                context, // Adding Product
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddProduct())).then((value) =>
+                                getProducts()); // Refreshing the Page (R
+                          },
+                          child: const Text(
+                            "Add Product",
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
                             ),
-                            const Padding(padding: EdgeInsets.only(left: 5)),
-                            Text(
-                              "Add Product",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w600,
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 55,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
