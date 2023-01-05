@@ -3,6 +3,7 @@
 import 'package:flutter/services.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
+import 'package:quickalert/quickalert.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -21,6 +22,23 @@ class _SignUpState extends State<SignUp> {
   var password = TextEditingController();
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  void showAlert() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Oops...',
+      text: 'Invalid credentials!!',
+    );
+  }
+
+  void showAlert1() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: 'Yahoooo...',
+      text: 'Registration successful!!',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -260,13 +278,18 @@ class _SignUpState extends State<SignUp> {
                           //     const SnackBar(content: Text('Processing Data')),
                           //   );
                           // }
-                          formkey.currentState?.validate();
-                          Flutter_api().register(
-                              email.text,
-                              storeName.text,
-                              storeLocationLong.text,
-                              phoneNumber.text,
-                              password.text);
+                          if (formkey.currentState!.validate()) {
+                            Flutter_api().register(
+                                email.text,
+                                storeName.text,
+                                storeLocationLong.text,
+                                phoneNumber.text,
+                                password.text);
+                            showAlert1();
+                          } else {
+                            print("error");
+                            showAlert();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromRGBO(53, 108, 254, 1),
