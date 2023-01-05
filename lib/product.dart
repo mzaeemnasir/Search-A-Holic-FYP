@@ -24,6 +24,7 @@ class _Product extends State<Product> {
     super.initState();
     getProducts();
     _searchController.addListener(_searchControllerFun);
+    products.clear();
   }
 
   _searchControllerFun() {
@@ -120,11 +121,11 @@ class _Product extends State<Product> {
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context, // Adding Product
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddProduct())).then((value) =>
-                                getProducts()); // Refreshing the Page (R
+                                    context, // Adding Product
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AddProduct()))
+                                .then((value) => getProducts());
                           },
                           child: const Text(
                             "Add Product",
@@ -143,8 +144,10 @@ class _Product extends State<Product> {
                       top: MediaQuery.of(context).size.height * 0.017,
                     ),
                     child: Container(
-                        height: MediaQuery.of(context).size.height * 0.73,
+                        height: MediaQuery.of(context).size.height * 0.650,
                         child: ListView.builder(
+                          // clear the list before adding the new data
+
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             return ProductCard(
@@ -176,9 +179,11 @@ class _Product extends State<Product> {
         .collection(email)
         .document("Product")
         .collection("products")
+        .orderBy("productName", descending: false)
         .get();
 
     setState(() {
+      products.clear();
       // adding Temp Data to the List
       data.forEach((element) {
         // spliting the Document ID to get the Product ID
@@ -186,7 +191,7 @@ class _Product extends State<Product> {
           "id": element.id,
           "name": element['productName'],
           "price": element['productPrice'],
-          "quantity": element['totalNumberofItemsInStock'],
+          "quantity": element['productQty'],
         };
         products.add(data);
       });

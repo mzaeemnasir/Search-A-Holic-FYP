@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, camel_case_types, non_constant_identifier_names
 // ignore_for_file: constant_identifier_names
+import 'dart:convert';
+
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -71,6 +73,35 @@ class Flutter_api {
       });
       print("Data Added");
       return Future<bool>.value(true);
+    }
+  }
+
+  Future<bool> addProduct(String productName, String productPrice,
+      String productQty, String productType) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    try {
+      // Adding the product to the database
+      await Firestore.instance
+          .collection(email)
+          .document("Product")
+          .collection("products")
+          .add({
+        'productName': productName,
+        'productPrice': productPrice,
+        'productQty': productQty,
+        'productType': productType,
+      });
+      return Future<bool>.value(true);
+    } catch (e) {
+      print("Not Connected to the Internet");
+      return Future<bool>.value(false);
     }
   }
 }

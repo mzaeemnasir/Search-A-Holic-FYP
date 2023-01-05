@@ -22,6 +22,7 @@ class _SignUpState extends State<SignUp> {
   var password = TextEditingController();
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
   void showAlert() {
     QuickAlert.show(
       context: context,
