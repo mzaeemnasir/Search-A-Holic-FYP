@@ -29,14 +29,6 @@ class LoginScreen extends State<Login> {
     });
   }
 
-  void onClickFun2(RoundedLoadingButtonController btnController) async {
-    Timer(Duration(seconds: 2), () {
-      _btnController.error();
-      Future.delayed(Duration(seconds: 1));
-      _btnController.reset();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,13 +152,13 @@ class LoginScreen extends State<Login> {
                                 // If Invalid then Show the Error Message
                                 if (object.Validator() == "emptyEmail" ||
                                     object.Validator() == "emptyPassword") {
-                                  onClickFun2(_btnController);
+                                  //onClickFun2(_btnController);
 
                                   print("Please Enter the Email and Password");
                                 }
                                 if (object.Validator() == "invalidEmail") {
                                   print("Please Enter a Valid Email");
-                                  onClickFun2(_btnController);
+                                  //onClickFun2(_btnController);
                                 }
                               }
                             });
