@@ -154,12 +154,11 @@ class _AddProduct extends State<AddProduct> {
                               left: MediaQuery.of(context).size.width * 0.062),
                           child: ElevatedButton(
                             onPressed: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => const Product()));
-
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Product()));
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red,

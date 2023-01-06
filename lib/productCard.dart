@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:convert';
 
 import 'package:firedart/firestore/firestore.dart';
@@ -153,17 +155,20 @@ class ProductCard extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
                                   // Delete product
                                   if (deleteProduct(productID) == true) {
                                     // Update list
                                     // Toast
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                         content: Text("Product deleted, "),
                                       ),
                                     );
-                                    Navigator.of(context).pop();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Product()));
                                   }
                                   // Show snackbar
                                   ScaffoldMessenger.of(context).showSnackBar(
