@@ -29,7 +29,7 @@ class Flutter_api {
     // Getting the Data from the Document
     try {
       final data = await manager.get();
-      if (data['password'] == password) {
+      if (data['password'] == password && data['email'] == email) {
         print("Login Successful");
         return Future<bool>.value(true);
       } else {

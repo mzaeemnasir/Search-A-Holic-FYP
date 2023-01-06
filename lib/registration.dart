@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:email_otp/email_otp.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -14,12 +15,15 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool otpst = false;
   var email = TextEditingController();
   var storeName = TextEditingController();
   var storeLocationLat = TextEditingController();
   var storeLocationLong = TextEditingController();
   var phoneNumber = TextEditingController();
   var password = TextEditingController();
+  var otp = TextEditingController();
+
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
@@ -39,6 +43,53 @@ class _SignUpState extends State<SignUp> {
       title: 'Yahoooo...',
       text: 'Registration successful!!',
     );
+  }
+
+  void showOtpSuccess() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: 'Yahoooo...',
+      text: 'OTP verified',
+    );
+  }
+
+  void showOtpFailure() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Opps!!',
+      text: 'OTP was not verified',
+    );
+  }
+
+  EmailOTP myauth = EmailOTP();
+  void sendOTP() async {
+    myauth.setConfig(
+        appEmail: "Searchaholic@gmail.com",
+        appName: "Searchaholic",
+        userEmail: email.text,
+        otpLength: 4,
+        otpType: OTPType.digitsOnly);
+    var res = await myauth.sendOTP();
+    if (res) {
+      print("otp sent");
+    } else {
+      print("otp didnt sent");
+    }
+  }
+
+  void verifyOtp() async {
+    var res = await myauth.verifyOTP(otp: otp.text);
+    if (res) {
+      setState(() {
+        otpst = true;
+        print("otp true");
+      });
+      print("verfied");
+    } else {
+      print("otp didnt verified");
+    }
   }
 
   @override
@@ -71,7 +122,7 @@ class _SignUpState extends State<SignUp> {
                     // Text Field Email
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.057,
+                        top: MediaQuery.of(context).size.height * 0.027,
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
@@ -110,7 +161,7 @@ class _SignUpState extends State<SignUp> {
                     // Store Name
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.025,
+                        top: MediaQuery.of(context).size.height * 0.015,
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
@@ -148,7 +199,7 @@ class _SignUpState extends State<SignUp> {
                     // Store Location
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.025,
+                        top: MediaQuery.of(context).size.height * 0.015,
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
@@ -170,7 +221,7 @@ class _SignUpState extends State<SignUp> {
                     // Store Manager's  Number
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.025,
+                        top: MediaQuery.of(context).size.height * 0.015,
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
@@ -212,7 +263,7 @@ class _SignUpState extends State<SignUp> {
                     // Password (with eye icon)
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.025,
+                        top: MediaQuery.of(context).size.height * 0.015,
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
@@ -260,6 +311,45 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.0005,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.20,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: TextFormField(
+                        controller: otp,
+                        decoration: InputDecoration(
+                          hintText: "Enter OTP",
+                          suffixIcon: TextButton(
+                            child: const Text("Send OTP"),
+                            onPressed: () => sendOTP(),
+                          ),
+                          suffix: TextButton(
+                              child: const Text("Verify"),
+                              onPressed: () => {
+                                    verifyOtp(),
+                                    if (otpst)
+                                      {
+                                        showOtpSuccess(),
+                                      }
+                                    else
+                                      {
+                                        showOtpFailure(),
+                                      }
+                                  }),
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 10,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
                     // Register Button
                     Container(
                       margin: EdgeInsets.only(
@@ -270,6 +360,7 @@ class _SignUpState extends State<SignUp> {
                       child: ElevatedButton(
                         onPressed: () {
                           print("Register Button Pressed");
+
                           // Validate returns true if the form is valid, or false otherwise.
                           // if (_formKey.currentState!.validate()) {
                           //   // If the form is valid, display a snackbar. In the real world,
@@ -279,14 +370,19 @@ class _SignUpState extends State<SignUp> {
                           //     const SnackBar(content: Text('Processing Data')),
                           //   );
                           // }
+
                           if (formkey.currentState!.validate()) {
-                            Flutter_api().register(
-                                email.text,
-                                storeName.text,
-                                storeLocationLong.text,
-                                phoneNumber.text,
-                                password.text);
-                            showAlert1();
+                            if (otpst) {
+                              Flutter_api().register(
+                                  email.text,
+                                  storeName.text,
+                                  storeLocationLong.text,
+                                  phoneNumber.text,
+                                  password.text);
+                              showAlert1();
+                            } else {
+                              showOtpFailure();
+                            }
                           } else {
                             print("error");
                             showAlert();

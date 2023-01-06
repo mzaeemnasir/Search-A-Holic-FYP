@@ -45,6 +45,7 @@ dependencies:
   cloud_firestore: ^4.3.1
   form_field_validator: ^1.1.0
   quickalert: ^1.0.1
+  email_otp: ^1.0.4
 
 dev_dependencies:
   flutter_test:

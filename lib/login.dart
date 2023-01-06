@@ -2,6 +2,8 @@
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
 // Login Screen
 
+import 'dart:ffi';
+
 import 'package:searchaholic/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -36,6 +38,8 @@ class LoginScreen extends State<Login> {
       _btnController.reset();
     });
   }
+
+  void myalert() {}
 
   @override
   Widget build(BuildContext context) {
@@ -147,27 +151,28 @@ class LoginScreen extends State<Login> {
                           onPressed: () {
                             formkey.currentState?.validate();
                             //  On Press Show Loading Animation in the Login Button
-                            setState(() {
+                            setState(() async {
                               // Validate the Email and Password
+                              var object_flutterApi = Flutter_api();
                               var object = LoginCheck(email, password);
-                              if (object.Validator() == "valid") {
+
+                              if (object.Validator() == "emptyEmail" ||
+                                  object.Validator() == "emptyPassword") {
+                                // If Invalid then Show the Error Message
+                                print("Please Enter the Email and Password");
+                                onClickFun2(_btnController);
+                              } else if (await object_flutterApi.check_login(
+                                      email.text, password.text) ==
+                                  true) {
                                 // If Valid then Navigate to the Home Screen
                                 print("Valid");
                                 object.checkLogin(context);
-
                                 onClickFun(_btnController);
-                              } else {
-                                // If Invalid then Show the Error Message
-                                if (object.Validator() == "emptyEmail" ||
-                                    object.Validator() == "emptyPassword") {
-                                  onClickFun2(_btnController);
-
-                                  print("Please Enter the Email and Password");
-                                }
-                                if (object.Validator() == "invalidEmail") {
-                                  print("Please Enter a Valid Email");
-                                  onClickFun2(_btnController);
-                                }
+                              } else if (await object_flutterApi.check_login(
+                                      email.text, password.text) ==
+                                  false) {
+                                myalert();
+                                onClickFun2(_btnController);
                               }
                             });
 
@@ -289,7 +294,6 @@ class LoginCheck {
   LoginCheck(this.email, this.password);
 
   // Validating Email and Password
-
   String Validator() {
     // If Email is Empty
     if (email.text == "") {
@@ -299,6 +303,7 @@ class LoginCheck {
     else if (password.text == "") {
       return "emptyPassword"; // Error Message
     }
+
     // If Email is not Valid
     //else if (!EmailValidator.validate(email.text)) {
     //return "invalidEmail"; // Error Message
@@ -329,7 +334,7 @@ class LoginCheck {
             }
           else
             {
-              print("Invalid Login"),
+              print("invalid Login"),
             }
         });
   }
