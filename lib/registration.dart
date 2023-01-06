@@ -186,7 +186,7 @@ class _SignUpState extends State<SignUp> {
                             return 'Name required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[a-z A-Z]",
+                              r"^[A-Za-z\s]*$",
                               caseSensitive: false,
                               multiLine: false,
                             );
