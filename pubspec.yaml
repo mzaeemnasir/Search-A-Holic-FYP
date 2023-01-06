@@ -91,6 +91,7 @@ flutter:
     - images/viewOrders.png
     - images/report.png
     - images/password_recover.jpg
+    - images/logout_icon3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
