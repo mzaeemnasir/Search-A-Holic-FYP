@@ -1,6 +1,8 @@
 // Add Product Page
 
 // Path: lib\EditProduct.dart
+import 'package:firedart/firedart.dart';
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -9,8 +11,10 @@ import 'imports.dart';
 
 class EditProduct extends StatefulWidget {
   String productID = "";
+  String email = "";
   // Get the Product ID in the Constructor
-  EditProduct({Key? key, required this.productID}) : super(key: key);
+  EditProduct({Key? key, required this.productID, required this.email})
+      : super(key: key);
 
   @override
   _EditProduct createState() => _EditProduct();
@@ -19,20 +23,29 @@ class EditProduct extends StatefulWidget {
 class _EditProduct extends State<EditProduct> {
   // Get the Product ID
   String productID = "";
+  String email = "";
   List<Object> products = [];
-
-  @override
-  // Update State
-  void initState() {
-    super.initState();
-    productID = widget.productID;
-  }
 
   // Controllers for the TextFields
   TextEditingController _productName = TextEditingController();
   TextEditingController _productPrice = TextEditingController();
   TextEditingController _productQty = TextEditingController();
   TextEditingController _productType = TextEditingController();
+
+  @override
+  // Update State
+  void initState() {
+    super.initState();
+    productID = widget.productID;
+    email = widget.email;
+    getProduct(productID, email).then((value) => {
+          setState(() {
+            print("RRRRRRRRRRRR");
+            print(value["name"]);
+            print(value["price"]);
+          })
+        });
+  }
 
   void showAlert() {
     QuickAlert.show(
@@ -216,4 +229,17 @@ class _EditProduct extends State<EditProduct> {
   Future<bool> EditProduct() async {
     return Future<bool>.value(true);
   }
+}
+
+Future<Document> getProduct(String productID, String email) async {
+  List<Object> product = [];
+  print(email);
+  print(productID);
+  var data = await Firestore.instance
+      .collection(email)
+      .document('Product')
+      .collection('products')
+      .document(productID)
+      .get();
+  return Future<Document>.value(data);
 }
