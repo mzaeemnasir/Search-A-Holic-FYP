@@ -354,6 +354,7 @@ import 'package:searchaholic/login.dart';
 import 'package:searchaholic/product.dart';
 //import 'package:alert/alert.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:searchaholic/profile.dart';
 
 import 'dashboard.dart';
 
@@ -684,7 +685,8 @@ class _SidebarState extends State<Sidebar> {
                 0),
             child: ListTile(
                 onTap: () {
-                  print("You pressed Profile");
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => profile()));
                 },
                 leading: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.036,
