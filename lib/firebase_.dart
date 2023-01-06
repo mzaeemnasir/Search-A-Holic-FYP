@@ -22,10 +22,12 @@ class Flutter_api {
   Future<bool> check_login(String email, String password) async {
     // Getting the User Collection
     final managers = Firestore.instance.collection(email);
+    print(managers);
 
     final manager = managers.document("Store Details");
+    print(manager);
     print("Got Managers");
-    print(await manager.get());
+
     // Getting the Data from the Document
     try {
       final data = await manager.get();
