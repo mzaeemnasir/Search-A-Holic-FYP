@@ -38,10 +38,26 @@ class _SignUpState extends State<SignUp> {
 
   void showAlert1() {
     QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        title: 'Yahoooo...',
+        text: 'Registration successful!!',
+        confirmBtnText: 'Ok',
+        onConfirmBtnTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Login(),
+            ),
+          );
+        });
+  }
+
+  void showOtpSentSuccess() {
+    QuickAlert.show(
       context: context,
       type: QuickAlertType.success,
-      title: 'Yahoooo...',
-      text: 'Registration successful!!',
+      text: 'OTP Successfully sent!',
     );
   }
 
@@ -79,8 +95,8 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  void verifyOtp() async {
-    var res = await myauth.verifyOTP(otp: otp.text);
+  void verifyOtp() {
+    var res = myauth.verifyOTP(otp: otp.text);
     if (res) {
       setState(() {
         otpst = true;
@@ -231,7 +247,7 @@ class _SignUpState extends State<SignUp> {
                             return 'Phone number required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[0-9]{10}$",
+                              r"^[0-9]{11}$",
                               caseSensitive: false,
                               multiLine: false,
                             );
@@ -322,9 +338,14 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           hintText: "Enter OTP",
                           suffixIcon: TextButton(
-                            child: const Text("Send OTP"),
-                            onPressed: () => sendOTP(),
-                          ),
+                              child: const Text("Send OTP"),
+                              onPressed: () => {
+                                    if (formkey.currentState!.validate())
+                                      {
+                                        sendOTP(),
+                                        showOtpSentSuccess(),
+                                      }
+                                  }),
                           suffix: TextButton(
                               child: const Text("Verify"),
                               onPressed: () => {
@@ -333,9 +354,13 @@ class _SignUpState extends State<SignUp> {
                                       {
                                         showOtpSuccess(),
                                       }
-                                    else
+                                    else if (otpst == false)
                                       {
                                         showOtpFailure(),
+                                      }
+                                    else
+                                      {
+                                        print("failure"),
                                       }
                                   }),
                           hintStyle: GoogleFonts.montserrat(
@@ -379,6 +404,10 @@ class _SignUpState extends State<SignUp> {
                                   storeLocationLong.text,
                                   phoneNumber.text,
                                   password.text);
+                              setState(() {
+                                otpst = false;
+                              });
+
                               showAlert1();
                             } else {
                               showOtpFailure();
