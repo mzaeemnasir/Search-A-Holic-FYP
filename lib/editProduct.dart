@@ -6,6 +6,7 @@ import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'imports.dart';
 
@@ -24,7 +25,6 @@ class _EditProduct extends State<EditProduct> {
   // Get the Product ID
   String productID = "";
   String email = "";
-  List<Object> products = [];
 
   // Controllers for the TextFields
   TextEditingController _productName = TextEditingController();
@@ -40,9 +40,11 @@ class _EditProduct extends State<EditProduct> {
     email = widget.email;
     getProduct(productID, email).then((value) => {
           setState(() {
-            print("RRRRRRRRRRRR");
-            print(value["name"]);
-            print(value["price"]);
+            var doc = value[0];
+            _productName.text = doc['productName'];
+            _productPrice.text = doc['productPrice'];
+            _productQty.text = doc['productQty'];
+            _productType.value = TextEditingValue(text: doc['productType']);
           })
         });
   }
@@ -197,20 +199,36 @@ class _EditProduct extends State<EditProduct> {
                           child: ElevatedButton(
                             onPressed: () {
                               // Add Product to the Database
-                              EditProduct().then((value) {
-                                if (value) {
-                                  showAlert1();
-                                } else {
-                                  showAlert();
-                                }
-                              });
+                              updateProduct(
+                                      _productName.text,
+                                      _productPrice.text,
+                                      _productQty.text,
+                                      _productType.text,
+                                      email,
+                                      productID)
+                                  .then((value) => {
+                                        if (value)
+                                          {
+                                            showAlert1(),
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Product(),
+                                              ),
+                                            ),
+                                          }
+                                        else
+                                          {
+                                            showAlert(),
+                                          }
+                                      });
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.blue,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
-                            child: const Text("Add",
+                            child: const Text("Update",
                                 style: TextStyle(color: Colors.white)),
                           ),
                         ),
@@ -231,15 +249,33 @@ class _EditProduct extends State<EditProduct> {
   }
 }
 
-Future<Document> getProduct(String productID, String email) async {
-  List<Object> product = [];
-  print(email);
-  print(productID);
+Future<bool> updateProduct(String name, String price, String qty, String type,
+    String email, String productID) async {
+  // Updating the Product
+  await Firestore.instance
+      .collection(email)
+      .document('Product')
+      .collection('products')
+      .document(productID)
+      .update({
+    'productName': name,
+    'productPrice': price,
+    'productQty': qty,
+    'productType': type,
+  });
+  print("Product Updated");
+  return Future<bool>.value(true);
+}
+
+Future<List> getProduct(String productID, String email) async {
+  List product = [];
   var data = await Firestore.instance
       .collection(email)
       .document('Product')
       .collection('products')
       .document(productID)
-      .get();
-  return Future<Document>.value(data);
+      .get()
+      .then((value) => {product.add(value)});
+
+  return Future<List>.value(product);
 }

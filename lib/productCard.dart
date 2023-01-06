@@ -154,11 +154,11 @@ class ProductCard extends StatelessWidget {
                                 child: Text("Cancel"),
                               ),
                               TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   // Delete product
-                                  if (deleteProduct(productID) == true) {
-                                    // Update list
-                                    // Toast
+                                  if (await deleteProduct(productID) == true) {
+                                    Navigator.pop(context);
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text("Product deleted, "),
@@ -170,12 +170,6 @@ class ProductCard extends StatelessWidget {
                                             builder: (context) =>
                                                 const Product()));
                                   }
-                                  // Show snackbar
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Product deleted"),
-                                    ),
-                                  );
                                 },
                                 child: const Text("Delete"),
                               ),
