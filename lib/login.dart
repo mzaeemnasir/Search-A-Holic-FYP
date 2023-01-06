@@ -1,9 +1,7 @@
-// Login Screen
-// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print, non_constant_identifier_names, unrelated_type_equality_checks
-// Login Screen
+import 'dart:convert';
 
-import 'dart:ffi';
-import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -24,6 +22,19 @@ class LoginScreen extends State<Login> {
   var password = TextEditingController();
   final RoundedLoadingButtonController _btnController =
       RoundedLoadingButtonController();
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginFile().then((value) {
+      if (value == true) {
+        getDetails().then((value) {
+          email.text = value[0];
+          password.text = value[1];
+        });
+      }
+    });
+  }
 
   void onClickFun(RoundedLoadingButtonController btnController) async {
     Timer(Duration(seconds: 3), () {
@@ -185,6 +196,8 @@ class LoginScreen extends State<Login> {
                                 object.checkLogin(context);
                                 onClickFun(_btnController);
                                 myalert1();
+                                await updateLoginFile(
+                                    email.text, password.text);
                               } else if (await object_flutterApi.check_login(
                                       email.text, password.text) ==
                                   false) {
@@ -331,6 +344,7 @@ class LoginCheck {
     }
   }
 
+  //Checking the Login File in Shared Preferences
   // Function to check the Login
   void checkLogin(BuildContext context) {
     // Checking the Login Credentials From Firebase
@@ -355,4 +369,50 @@ class LoginCheck {
             }
         });
   }
+}
+
+// Updating the Login File
+Future<bool> updateLoginFile(String email, String password) async {
+  // Getting the Login File
+  Directory directory = await getApplicationDocumentsDirectory();
+  String path = directory.path;
+  Directory folder = Directory('$path/SeachAHolic');
+  File file = File('$path/SeachAHolic/user.json');
+
+  // Updating the Login File
+  if (await folder.exists() && file.existsSync()) {
+    print("Login File Exists");
+    file.writeAsStringSync(
+        '{"email": "$email", "password": "$password"}'); // Writing the File
+    print("user.json Updated");
+    return Future<bool>.value(true);
+  } else {
+    return Future<bool>.value(false);
+  }
+}
+
+Future<bool> checkLoginFile() async {
+  // Getting the Login File
+  Directory directory = await getApplicationDocumentsDirectory();
+  String path = directory.path;
+  Directory folder = Directory('$path/SeachAHolic');
+  File file = File('$path/SeachAHolic/user.json');
+
+  // Checking the Login File
+  if (await folder.exists() && file.existsSync()) {
+    print("Login File Exists");
+    return Future<bool>.value(true);
+  } else {
+    return Future<bool>.value(false);
+  }
+}
+
+//getting Email and Password from the file
+Future<List> getDetails() async {
+  Directory directory = await getApplicationDocumentsDirectory();
+  String path = directory.path;
+  File file = File('$path/SeachAHolic/user.json');
+
+  var data = jsonDecode(file.readAsStringSync());
+  return Future<List>.value([data['email'], data['password']]);
 }
