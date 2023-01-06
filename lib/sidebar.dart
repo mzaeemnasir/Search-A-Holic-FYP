@@ -718,6 +718,7 @@ class _SidebarState extends State<Sidebar> {
                   QuickAlert.show(
                     context: context,
                     type: QuickAlertType.confirm,
+                    animType: QuickAlertAnimType.scale,
                     text: 'Do you want to logout',
                     confirmBtnText: 'Yes',
                     onConfirmBtnTap: () {
@@ -728,6 +729,7 @@ class _SidebarState extends State<Sidebar> {
                     },
                     cancelBtnText: 'No',
                     confirmBtnColor: Colors.green,
+                    titleColor: Colors.red,
                   );
                 },
                 leading: SizedBox(
