@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
