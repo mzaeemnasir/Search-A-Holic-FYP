@@ -28,7 +28,21 @@ class _Product extends State<Product> {
   }
 
   _searchControllerFun() {
-    print(_searchController.text);
+    if (_searchController.text != "") {
+      setState(() {
+        // Filter the products
+        products = products
+            .where((element) =>
+                element.toString().contains(_searchController.text))
+            .toList();
+        print(products);
+      });
+    } else {
+      setState(() {
+        products.clear();
+        getProducts();
+      });
+    }
   }
 
   @override

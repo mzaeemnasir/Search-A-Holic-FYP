@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:firedart/firestore/firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:searchaholic/product.dart';
 
@@ -37,7 +35,7 @@ class ProductCard extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w400,
-                    fontSize: MediaQuery.of(context).size.width / 75,
+                    fontSize: MediaQuery.of(context).size.width / 100,
                   ),
                 ),
               ),
@@ -169,12 +167,12 @@ class ProductCard extends StatelessWidget {
                                   }
                                   // Show snackbar
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text("Product deleted"),
                                     ),
                                   );
                                 },
-                                child: Text("Delete"),
+                                child: const Text("Delete"),
                               ),
                             ],
                           );
@@ -218,6 +216,7 @@ class ProductCard extends StatelessWidget {
           .document(id)
           .delete();
 
+      // Reload the content of the list in the previous page
       return Future.value(true);
     } catch (e) {
       print(e);
