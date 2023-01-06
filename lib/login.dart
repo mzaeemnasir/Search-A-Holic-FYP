@@ -39,6 +39,8 @@ class LoginScreen extends State<Login> {
     });
   }
 
+  void myalert() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,24 +153,26 @@ class LoginScreen extends State<Login> {
                             //  On Press Show Loading Animation in the Login Button
                             setState(() async {
                               // Validate the Email and Password
-                              var obj1 = Flutter_api();
+                              var object_flutterApi = Flutter_api();
                               var object = LoginCheck(email, password);
+
                               if (object.Validator() == "emptyEmail" ||
                                   object.Validator() == "emptyPassword") {
                                 // If Invalid then Show the Error Message
                                 print("Please Enter the Email and Password");
                                 onClickFun2(_btnController);
-                              } else if (object.Validator() == "valid") {
+                              } else if (await object_flutterApi.check_login(
+                                      email.text, password.text) ==
+                                  true) {
                                 // If Valid then Navigate to the Home Screen
                                 print("Valid");
                                 object.checkLogin(context);
-                                if (await obj1.check_login(
-                                        email.text, password.text) ==
-                                    false) {
-                                  onClickFun2(_btnController);
-                                } else {
-                                  onClickFun(_btnController);
-                                }
+                                onClickFun(_btnController);
+                              } else if (await object_flutterApi.check_login(
+                                      email.text, password.text) ==
+                                  false) {
+                                myalert();
+                                onClickFun2(_btnController);
                               }
                             });
 
