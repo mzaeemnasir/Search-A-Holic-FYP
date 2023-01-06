@@ -3,7 +3,7 @@
 // Login Screen
 
 import 'dart:ffi';
-
+import 'package:quickalert/quickalert.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -39,7 +39,23 @@ class LoginScreen extends State<Login> {
     });
   }
 
-  void myalert() {}
+  void myalert() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Login Faild',
+      text: 'Wrong Email or Password',
+    );
+  }
+
+  void myalert1() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: 'Login Successful',
+      text: '',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +184,7 @@ class LoginScreen extends State<Login> {
                                 print("Valid");
                                 object.checkLogin(context);
                                 onClickFun(_btnController);
+                                myalert1();
                               } else if (await object_flutterApi.check_login(
                                       email.text, password.text) ==
                                   false) {
