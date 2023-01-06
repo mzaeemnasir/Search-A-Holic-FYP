@@ -350,7 +350,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:searchaholic/login.dart';
 import 'package:searchaholic/product.dart';
+//import 'package:alert/alert.dart';
+import 'package:quickalert/quickalert.dart';
 
 import 'dashboard.dart';
 
@@ -681,7 +684,7 @@ class _SidebarState extends State<Sidebar> {
                 0),
             child: ListTile(
                 onTap: () {
-                  print("Profile Button Pressed");
+                  print("You pressed Profile");
                 },
                 leading: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.036,
@@ -692,6 +695,48 @@ class _SidebarState extends State<Sidebar> {
                 ),
                 title: Text(
                   "Profile",
+                  style: TextStyle(
+                    color: Color.fromRGBO(248, 249, 250, 1),
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: MediaQuery.of(context).size.width / 55,
+                  ),
+                )),
+          ),
+
+          /// Logout
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.03,
+                0,
+                MediaQuery.of(context).size.width * 0.04,
+                0),
+            child: ListTile(
+                onTap: () {
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.confirm,
+                    text: 'Do you want to logout',
+                    confirmBtnText: 'Yes',
+                    onConfirmBtnTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+                    cancelBtnText: 'No',
+                    confirmBtnColor: Colors.green,
+                  );
+                },
+                leading: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.036,
+                  width: MediaQuery.of(context).size.height * 0.036,
+                  child: Image(
+                    image: AssetImage("images/logout_icon3.png"),
+                  ),
+                ),
+                title: Text(
+                  "Logout",
                   style: TextStyle(
                     color: Color.fromRGBO(248, 249, 250, 1),
                     fontFamily: "Montserrat",

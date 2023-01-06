@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:searchaholic/forgetPassword.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -161,11 +162,12 @@ class LoginScreen extends State<Login> {
                             color: Color.fromRGBO(53, 108, 254, 1)),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            print("Forget Password- Page");
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => ForgetPassword()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Forget(),
+                              ),
+                            );
                           },
                       )),
                     ),
