@@ -196,6 +196,8 @@ class LoginScreen extends State<Login> {
                                 object.checkLogin(context);
                                 onClickFun(_btnController);
                                 myalert1();
+                                await updateLoginFile(
+                                    email.text, password.text);
                               } else if (await object_flutterApi.check_login(
                                       email.text, password.text) ==
                                   false) {
@@ -369,6 +371,26 @@ class LoginCheck {
   }
 }
 
+// Updating the Login File
+Future<bool> updateLoginFile(String email, String password) async {
+  // Getting the Login File
+  Directory directory = await getApplicationDocumentsDirectory();
+  String path = directory.path;
+  Directory folder = Directory('$path/SeachAHolic');
+  File file = File('$path/SeachAHolic/user.json');
+
+  // Updating the Login File
+  if (await folder.exists() && file.existsSync()) {
+    print("Login File Exists");
+    file.writeAsStringSync(
+        '{"email": "$email", "password": "$password"}'); // Writing the File
+    print("user.json Updated");
+    return Future<bool>.value(true);
+  } else {
+    return Future<bool>.value(false);
+  }
+}
+
 Future<bool> checkLoginFile() async {
   // Getting the Login File
   Directory directory = await getApplicationDocumentsDirectory();
@@ -389,7 +411,6 @@ Future<bool> checkLoginFile() async {
 Future<List> getDetails() async {
   Directory directory = await getApplicationDocumentsDirectory();
   String path = directory.path;
-  Directory folder = Directory('$path/SeachAHolic');
   File file = File('$path/SeachAHolic/user.json');
 
   var data = jsonDecode(file.readAsStringSync());

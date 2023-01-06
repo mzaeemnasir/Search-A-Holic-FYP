@@ -1,15 +1,15 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, prefer_interpolation_to_compose_strings, prefer_const_constructors, must_be_immutable, sized_box_for_whitespace
 
 import 'dart:convert';
 
 import 'package:firedart/firestore/firestore.dart';
+import 'package:searchaholic/editProduct.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:searchaholic/product.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  ProductCard({Key? key, required this.product}) : super(key: key);
   final Map<String, dynamic> product;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,7 +106,7 @@ class ProductCard extends StatelessWidget {
                   transformAlignment: Alignment.center,
                   child: TextButton(
                     onPressed: () {
-                      print(product["id"]);
+                      navigate(context, product["id"]);
                     },
                     child: Text(
                       "Edit",
@@ -203,10 +203,35 @@ class ProductCard extends StatelessWidget {
     );
   }
 
+  void navigate(context, productID) {
+    print("Navigating to edit product page...");
+    getEmail().then((value) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProduct(
+            productID: productID,
+            email: value,
+          ),
+        ),
+      );
+    });
+  }
+
+  Future<String> getEmail() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    return Future<String>.value(email);
+  }
+
   Future<bool> deleteProduct(String id) async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
-    Directory folder = Directory('$path/SeachAHolic');
 
     // getting the email from the user.json file
     File file = File('$path/SeachAHolic/user.json');

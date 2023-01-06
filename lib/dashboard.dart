@@ -5,7 +5,9 @@ import 'package:searchaholic/sidebar.dart';
 import 'package:searchaholic/textBox.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  Dashboard({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -15,6 +17,12 @@ class _DashboardState extends State<Dashboard> {
   var revenue = 0.0;
   var sale = 0.0;
   var orders = 0.0;
+  String email = "";
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // Importing Images For the Text Boxes
   AssetImage newOrder = AssetImage("images/newOrder.png");
