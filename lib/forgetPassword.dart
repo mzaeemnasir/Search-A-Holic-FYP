@@ -360,7 +360,7 @@ class _ForgetState extends State<Forget> {
           // Right Side
           Container(
             width: MediaQuery.of(context).size.width * 0.5,
-            color: const Color.fromRGBO(53, 108, 254, 1),
+            color: const Color.fromRGBO(8, 92, 228, 1),
             child: Expanded(
               child: Column(
                 children: [
@@ -382,7 +382,7 @@ class _ForgetState extends State<Forget> {
                     margin: const EdgeInsets.only(top: 10),
                     color: const Color.fromRGBO(53, 108, 254, 1),
                     child: Image.asset(
-                      'images/registration.jpg',
+                      'images/password_recover.jpg',
                       fit: BoxFit.contain,
                       height: MediaQuery.of(context).size.height * 0.5,
                     ),
@@ -391,7 +391,7 @@ class _ForgetState extends State<Forget> {
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: Text(
-                      'Welcome to SearchAHolic',
+                      'Welcome to SearchaHolic',
                       style: GoogleFonts.montserrat(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
