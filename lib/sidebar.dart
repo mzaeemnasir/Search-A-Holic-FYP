@@ -355,6 +355,7 @@ import 'package:searchaholic/product.dart';
 //import 'package:alert/alert.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:searchaholic/profile.dart';
+import 'package:searchaholic/forgetPassword.dart';
 
 import 'dashboard.dart';
 
@@ -702,6 +703,36 @@ class _SidebarState extends State<Sidebar> {
                     fontFamily: "Montserrat",
                     fontWeight: FontWeight.w400,
                     fontSize: MediaQuery.of(context).size.width / 55,
+                  ),
+                )),
+          ),
+
+          ///Password Change
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.03,
+                0,
+                MediaQuery.of(context).size.width * 0.04,
+                0),
+            child: ListTile(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Forget()));
+                },
+                leading: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.036,
+                  width: MediaQuery.of(context).size.height * 0.036,
+                  child: Image(
+                    image: AssetImage("images/p1.png"),
+                  ),
+                ),
+                title: Text(
+                  "Change Password",
+                  style: TextStyle(
+                    color: Color.fromRGBO(248, 249, 250, 1),
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: MediaQuery.of(context).size.width / 70,
                   ),
                 )),
           ),

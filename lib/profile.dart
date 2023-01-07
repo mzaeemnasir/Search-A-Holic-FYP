@@ -22,7 +22,7 @@ class _profileState extends State<profile> {
   dynamic Email;
   dynamic Phone_number;
   dynamic address_l1, address_l2;
-  dynamic password;
+  //dynamic password;
 
   ///getting profile data from databae
   Future getprofile() async {
@@ -45,7 +45,7 @@ class _profileState extends State<profile> {
       Phone_number = data2['phNo'];
       address_l1 = data2['lat'];
       address_l2 = data2['long'];
-      password = data2['password'];
+      //password = data2['password'];
     });
   }
 
@@ -74,10 +74,10 @@ class _profileState extends State<profile> {
                         fontFamily: "Montserrat",
                         fontWeight: FontWeight.w500,
                         color: Color.fromARGB(255, 255, 255, 255),
-                        fontSize: MediaQuery.of(context).size.width / 20,
+                        fontSize: MediaQuery.of(context).size.width / 13,
                       )),
                 ),
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.32,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -177,30 +177,6 @@ class _profileState extends State<profile> {
                     ),
                     child: Text(
                       "  Email :                        $Email",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500,
-                        fontSize: MediaQuery.of(context).size.width / 50,
-                      ),
-                    )),
-              ),
-
-              ///Password
-              Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.057),
-                width: MediaQuery.of(context).size.width * 0.6,
-                // Options [Public or Private]
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    border:
-                        Border.all(color: Color.fromARGB(255, 92, 154, 241))),
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height,
-                    ),
-                    child: Text(
-                      "  Password :                  $password",
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontWeight: FontWeight.w500,
