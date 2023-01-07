@@ -120,7 +120,7 @@ class _AddProduct extends State<AddProduct> {
                             return 'Price required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[0-9]$",
+                              r"^[0-9]*$",
                               caseSensitive: false,
                               multiLine: false,
                             );
@@ -151,7 +151,7 @@ class _AddProduct extends State<AddProduct> {
                             return 'Quantity required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[0-9]$",
+                              r"^[0-9]*$",
                               caseSensitive: false,
                               multiLine: false,
                             );
