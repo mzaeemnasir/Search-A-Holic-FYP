@@ -295,8 +295,9 @@ class _newOrderState extends State<newOrder> {
                               ),
                               child: SizedBox(
                                 child: TextField(
+                                  keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    hintText: "User Email",
+                                    hintText: "User Phone Number",
                                     hintStyle: TextStyle(
                                         fontFamily: "NTR",
                                         color: Colors.black,
@@ -318,7 +319,7 @@ class _newOrderState extends State<newOrder> {
                                 onPressed: () {
                                   // Sending the Order to the Database
                                 },
-                                child: Text("Confirm"),
+                                child: Text("Checkout"),
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.blue,
                                   onPrimary: Colors.white,
