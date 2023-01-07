@@ -2,6 +2,8 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:convert';
 
+import 'package:alert/alert.dart';
+
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -104,6 +106,51 @@ class Flutter_api {
     } catch (e) {
       print("Not Connected to the Internet");
       return Future<bool>.value(false);
+    }
+  }
+
+  ///Email check
+  Future<bool> email_check(String email1) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+    if (email == email) {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }
+  }
+
+  ///change password
+  Future<bool> forget_p(String email1, String password) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+    if (email == email1) {
+      try {
+        // Adding the product to the database
+        await Firestore.instance
+            .collection(email)
+            .document("Store Details")
+            .update({
+          'password': password,
+        });
+        return Future<bool>.value(true);
+      } catch (e) {
+        print("Not Connected to the Internet");
+        return Future<bool>.value(false);
+      }
+    } else {
+      Alert(message: 'Sorry  Email is not Valid').show();
+      return Future<bool>.value(true);
     }
   }
 }

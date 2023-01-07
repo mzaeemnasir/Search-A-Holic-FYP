@@ -13,12 +13,12 @@ class Forget extends StatefulWidget {
 
 class _ForgetState extends State<Forget> {
   bool otpst = false;
-  var email = TextEditingController();
-  var storeName = TextEditingController();
-  var storeLocationLat = TextEditingController();
-  var storeLocationLong = TextEditingController();
-  var phoneNumber = TextEditingController();
-  var password = TextEditingController();
+  var _email = TextEditingController();
+  //var storeName = TextEditingController();
+  //var storeLocationLat = TextEditingController();
+  //var storeLocationLong = TextEditingController();
+  //var phoneNumber = TextEditingController();
+  var _password = TextEditingController();
   var otp = TextEditingController();
 
   bool _isObscure = true;
@@ -81,7 +81,7 @@ class _ForgetState extends State<Forget> {
     myauth.setConfig(
         appEmail: "Searchaholic@gmail.com",
         appName: "Searchaholic",
-        userEmail: email.text,
+        userEmail: _email.text,
         otpLength: 4,
         otpType: OTPType.digitsOnly);
     var res = await myauth.sendOTP();
@@ -142,7 +142,7 @@ class _ForgetState extends State<Forget> {
                       ),
                       width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
-                        controller: email,
+                        controller: _email,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email Required';
@@ -152,6 +152,12 @@ class _ForgetState extends State<Forget> {
                               caseSensitive: false,
                               multiLine: false,
                             );
+
+                            /*if (Flutter_api().email_check(_email.text) ==
+                                true) {
+                              return 'Email address is invalid. Please change Email';
+                              print('hahahahaha');
+                            }*/
 
                             if (!regExp.hasMatch(value)) {
                               // Make input field red
@@ -185,7 +191,7 @@ class _ForgetState extends State<Forget> {
                         obscureText: _isObscure,
                         maxLength: 18,
                         // validation
-                        controller: password,
+                        controller: _password,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Password required';
@@ -284,6 +290,7 @@ class _ForgetState extends State<Forget> {
                       child: ElevatedButton(
                         onPressed: () {
                           print("Change Password Button Pressed");
+                          foget_p();
 
                           if (formkey.currentState!.validate()) {
                             if (otpst) {
@@ -408,5 +415,14 @@ class _ForgetState extends State<Forget> {
         ],
       ),
     );
+  }
+
+  Future<bool> foget_p() async {
+    // Add Product to the Database
+    if (await Flutter_api().forget_p(_email.text, _password.text)) {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }
   }
 }
