@@ -3,6 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'package:searchaholic/textBox.dart';
+import 'package:firedart/firestore/firestore.dart';
+import 'package:firedart/firedart.dart';
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:searchaholic/imports.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({
@@ -14,6 +19,38 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  dynamic Store_name;
+  dynamic Email;
+  dynamic Phone_number;
+  dynamic address_l1, address_l2;
+
+  ///getting profile data from databae
+  Future getprofile() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    // Getting Documents from Firestore
+    var data = Firestore.instance.collection(email);
+    var data1 = data.document('Store Details');
+    var data2 = await data1.get();
+
+    setState(() {
+      Store_name = data2['storeName'];
+      Email = data2['email'];
+      Phone_number = data2['phNo'];
+      address_l1 = data2['lat'];
+      address_l2 = data2['long'];
+    });
+  }
+
+  @override
+// Update State
+
   var revenue = 0.0;
   var sale = 0.0;
   var orders = 0.0;
@@ -21,6 +58,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
+    super.initState();
+    getprofile();
     super.initState();
   }
 
@@ -54,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                     top: MediaQuery.of(context).size.height * 0.087,
                   ),
                   child: Text(
-                    "Store name",
+                    '$Store_name',
                     style: TextStyle(
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.w600,
