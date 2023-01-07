@@ -33,6 +33,15 @@ class _ForgetState extends State<Forget> {
     );
   }
 
+  void showAlert2() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Sorry....',
+      text: 'There is no valid user of this Email',
+    );
+  }
+
   void showAlert1() {
     QuickAlert.show(
         context: context,
@@ -152,13 +161,7 @@ class _ForgetState extends State<Forget> {
                               caseSensitive: false,
                               multiLine: false,
                             );
-
-                            /*if (Flutter_api().email_check(_email.text) ==
-                                true) {
-                              return 'Email address is invalid. Please change Email';
-                              print('hahahahaha');
-                            }*/
-
+                            print(_email);
                             if (!regExp.hasMatch(value)) {
                               // Make input field red
                               return 'Please enter a valid email address';
@@ -244,11 +247,20 @@ class _ForgetState extends State<Forget> {
                           hintText: "Enter OTP",
                           suffixIcon: TextButton(
                               child: const Text("Send OTP"),
-                              onPressed: () => {
-                                    if (formkey.currentState!.validate())
+                              onPressed: () async => {
+                                    if (await Flutter_api()
+                                            .email_check(_email.text) !=
+                                        true)
                                       {
-                                        sendOTP(),
-                                        showOtpSentSuccess(),
+                                        showAlert2(),
+                                      }
+                                    else
+                                      {
+                                        if (formkey.currentState!.validate())
+                                          {
+                                            sendOTP(),
+                                            showOtpSentSuccess(),
+                                          }
                                       }
                                   }),
                           suffix: TextButton(
@@ -292,17 +304,12 @@ class _ForgetState extends State<Forget> {
                           print("Change Password Button Pressed");
                           if (formkey.currentState!.validate()) {
                             if (otpst) {
-                              /*Flutter_api().register(
-                                  email.text,
-                                  storeName.text,
-                                  storeLocationLong.text,
-                                  phoneNumber.text,
-                                  password.text);*/
                               setState(() {
                                 otpst = false;
                               });
 
                               showAlert1();
+                              foget_p();
                             } else {
                               showOtpFailure();
                             }
@@ -310,7 +317,6 @@ class _ForgetState extends State<Forget> {
                             print("error");
                             showAlert();
                           }
-                          foget_p();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromRGBO(53, 108, 254, 1),

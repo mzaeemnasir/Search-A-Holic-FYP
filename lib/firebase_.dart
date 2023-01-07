@@ -118,7 +118,7 @@ class Flutter_api {
     // getting the email from the user.json file
     File file = File('$path/SeachAHolic/user.json');
     String email = jsonDecode(file.readAsStringSync())['email'];
-    if (email == email) {
+    if (email == email1) {
       return Future<bool>.value(true);
     } else {
       return Future<bool>.value(false);
@@ -134,23 +134,18 @@ class Flutter_api {
     // getting the email from the user.json file
     File file = File('$path/SeachAHolic/user.json');
     String email = jsonDecode(file.readAsStringSync())['email'];
-    if (email == email1) {
-      try {
-        // Adding the product to the database
-        await Firestore.instance
-            .collection(email)
-            .document("Store Details")
-            .update({
-          'password': password,
-        });
-        return Future<bool>.value(true);
-      } catch (e) {
-        print("Not Connected to the Internet");
-        return Future<bool>.value(false);
-      }
-    } else {
-      Alert(message: 'Sorry  Email is not Valid').show();
+    try {
+      // Adding the product to the database
+      await Firestore.instance
+          .collection(email)
+          .document("Store Details")
+          .update({
+        'password': password,
+      });
       return Future<bool>.value(true);
+    } catch (e) {
+      print("Not Connected to the Internet");
+      return Future<bool>.value(false);
     }
   }
 }

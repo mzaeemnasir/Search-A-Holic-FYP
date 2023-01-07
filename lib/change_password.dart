@@ -262,7 +262,7 @@ class _changeState extends State<change> {
                                 true) {
                               showAlert1();
                             } else {
-                              change(_password.text);
+                              change(_confirmPassword.text);
                               showAlert2();
                             }
                           }
@@ -401,7 +401,7 @@ class _changeState extends State<change> {
   }
 
   ///change password
-  Future<bool> change(String password) async {
+  Future<bool> change(String password1) async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
     Directory folder = Directory('$path/SeachAHolic');
@@ -415,7 +415,7 @@ class _changeState extends State<change> {
           .collection(email)
           .document("Store Details")
           .update({
-        'password': password,
+        'password': password1,
       });
       return Future<bool>.value(true);
     } catch (e) {
