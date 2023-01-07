@@ -4,6 +4,8 @@ import 'package:firedart/firestore/firestore.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:flutter/material.dart';
 import 'package:searchaholic/sidebar.dart';
+
+import 'editProduct.dart';
 //import 'package:searchaholic/textBox.dart';
 
 class profile extends StatefulWidget {
@@ -20,6 +22,7 @@ class _profileState extends State<profile> {
   dynamic Email;
   dynamic Phone_number;
   dynamic address_l1, address_l2;
+  dynamic password;
 
   ///getting profile data from databae
   Future getprofile() async {
@@ -42,6 +45,7 @@ class _profileState extends State<profile> {
       Phone_number = data2['phNo'];
       address_l1 = data2['lat'];
       address_l2 = data2['long'];
+      password = data2['password'];
     });
   }
 
@@ -69,18 +73,18 @@ class _profileState extends State<profile> {
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(234, 256, 267, 1),
+                        color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: MediaQuery.of(context).size.width / 20,
                       )),
                 ),
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.25,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('images/profile.jpg'),
                     fit: BoxFit.fill,
                   ),
-                  shape: BoxShape.circle,
+                  shape: BoxShape.rectangle,
                 ),
               ),
 
@@ -179,6 +183,57 @@ class _profileState extends State<profile> {
                         fontSize: MediaQuery.of(context).size.width / 50,
                       ),
                     )),
+              ),
+
+              ///Password
+              Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.057),
+                width: MediaQuery.of(context).size.width * 0.6,
+                // Options [Public or Private]
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    border:
+                        Border.all(color: Color.fromARGB(255, 92, 154, 241))),
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height,
+                    ),
+                    child: Text(
+                      "  Password :                  $password",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.w500,
+                        fontSize: MediaQuery.of(context).size.width / 50,
+                      ),
+                    )),
+              ),
+
+              ///Edit Button
+              Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.057),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // print value is updated
+                    print("Profile Updated");
+                    /*Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProduct(
+                                email: '',
+                                productID: '',
+                              )),
+                    );*/
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text("Update",
+                      style: TextStyle(color: Colors.white)),
+                ),
               ),
             ]),
           ),
