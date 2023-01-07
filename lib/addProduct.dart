@@ -235,6 +235,10 @@ class _AddProduct extends State<AddProduct> {
                                   addProduct().then((value) {
                                     if (value) {
                                       showAlert1();
+                                      _productName.clear();
+                                      _productPrice.clear();
+                                      _productQty.clear();
+                                      _productType.clear();
                                     } else {
                                       showAlert();
                                     }
