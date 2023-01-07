@@ -17,8 +17,10 @@ class newOrder extends StatefulWidget {
 
 class _newOrderState extends State<newOrder> {
   final products = [];
-  final selectedProducts = [];
   final searchProducts = [];
+
+  final selectedProducts = [];
+
   int totalBill = 0;
   final quantityController = TextEditingController();
 
@@ -163,7 +165,6 @@ class _newOrderState extends State<newOrder> {
                                         .toString(),
                                     productID: selectedProducts[index]['id']
                                         .toString(),
-                                    buttonPress: () {},
                                   );
                                 },
                               ),
@@ -393,10 +394,6 @@ class _newOrderState extends State<newOrder> {
           ],
         ),
       );
-
-  void buttonPress(productID) {
-    // Removing the product from the list
-  }
 
   void searchQuery(String query) {
     if (query.isNotEmpty) {

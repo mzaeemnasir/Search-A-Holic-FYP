@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:searchaholic/newOrder.dart';
 
 class OrderCard extends StatelessWidget {
   String productName = "";
   String productPrice = "";
   String productQty = "";
   String productID = "";
-  OrderCard(
-      {Key? key,
-      required this.productName,
-      required this.productPrice,
-      required this.productQty,
-      required this.productID,
-      required Null Function() buttonPress})
-      : super(key: key);
+  OrderCard({
+    Key? key,
+    required this.productName,
+    required this.productPrice,
+    required this.productQty,
+    required this.productID,
+  }) : super(key: key);
+
+  // buttonPress
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,12 @@ class OrderCard extends StatelessWidget {
                           hoverColor: Colors.red,
                           child: const Align(child: Text("Delete")),
                           onTap: () {
-                            // Remove product from orderProducts List
+                            // Sending the productID to the delete function
                           }))),
             ],
           ),
         ));
   }
+
+  void buttonPress(int x) {}
 }
