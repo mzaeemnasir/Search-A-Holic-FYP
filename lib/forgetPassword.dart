@@ -127,7 +127,7 @@ class _ForgetState extends State<Forget> {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Text(
-                          "Password Recover",
+                          "Confirm Credentials",
                           style: GoogleFonts.montserrat(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -344,7 +344,7 @@ class _ForgetState extends State<Forget> {
                           ),
                         ),
                         child: Text(
-                          "Already have account? Login",
+                          "Login?",
                           style: GoogleFonts.montserrat(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -369,7 +369,7 @@ class _ForgetState extends State<Forget> {
                     height: MediaQuery.of(context).size.height * 0.119,
                     margin: const EdgeInsets.only(top: 60),
                     child: Text(
-                      "Sign up",
+                      "Change Password",
                       style: GoogleFonts.montserrat(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -391,7 +391,7 @@ class _ForgetState extends State<Forget> {
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: Text(
-                      'Welcome to SearchaHolic',
+                      'SearchaHolic',
                       style: GoogleFonts.montserrat(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
