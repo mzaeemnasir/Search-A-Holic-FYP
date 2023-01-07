@@ -79,7 +79,7 @@ flutter:
     - images/orders_icon.png
     - images/products_icon.png
     - images/profile_icon.png
-    - images/revenue_icon.png
+    - images/revenue_icon.png 
     - images/sale_icon.png
     - images/sales_icon.png
     - images/settings_icon.png
@@ -92,6 +92,7 @@ flutter:
     - images/report.png
     - images/password_recover.jpg
     - images/logout_icon3.png
+    - images/profile.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
