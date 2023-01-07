@@ -262,19 +262,19 @@ class _newOrderState extends State<newOrder> {
                             right: 30,
                           ),
                           child: ListView.builder(
-                            itemCount: products.length,
+                            itemCount: searchProducts.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 // Making a Card for each Product
                                 tileColor:
                                     const Color.fromRGBO(196, 229, 255, 1),
                                 textColor: Colors.black,
-                                title: Text(products[index]['name']),
-                                subtitle:
-                                    Text("Rs. ${products[index]['price']}"),
+                                title: Text(searchProducts[index]['name']),
+                                subtitle: Text(
+                                    "Rs. ${searchProducts[index]['price']}"),
                                 onTap: () {
                                   setState(() {
-                                    OpenDialoge(index);
+                                    OpenDialoge(searchProducts[index]["id"]);
                                   });
                                 },
                               );
@@ -341,14 +341,14 @@ class _newOrderState extends State<newOrder> {
     ]));
   }
 
-  Future OpenDialoge(index) => showDialog(
+  Future OpenDialoge(productID) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text("Product Quantity?"),
           content: TextField(
             controller: quantityController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Quantity",
             ),
           ),
@@ -358,7 +358,7 @@ class _newOrderState extends State<newOrder> {
                 Navigator.pop(context);
                 if (quantityController.text.isNotEmpty) {
                   setState(() {
-                    totalBill += int.parse(quantityController.text);
+                    // Nothing
                   });
                 }
               },
@@ -370,6 +370,8 @@ class _newOrderState extends State<newOrder> {
                 if (quantityController.text.isNotEmpty) {
                   setState(() {
                     // Adding the product to the list
+                    var index = products
+                        .indexWhere((element) => element['id'] == productID);
                     if (selectedProducts.contains(products[index])) {
                       var qty = int.parse(quantityController.text);
                       var i = selectedProducts.indexOf(products[index]);
@@ -397,18 +399,21 @@ class _newOrderState extends State<newOrder> {
   }
 
   void searchQuery(String query) {
-    print(query);
     if (query.isNotEmpty) {
       var data = products.where((element) {
-        var name = element['name'].toLowerCase();
-        print(name);
-        return name.contains(query.toLowerCase());
+        var productName = element['name'].toLowerCase();
+        return productName.contains(query.toLowerCase());
       }).toList();
       setState(() {
-        searchProducts.add(data);
+        searchProducts.clear();
+        searchProducts.addAll(data);
       });
     } else {
-      return null;
+      setState(() {
+        // Clearing the search list
+        searchProducts.clear();
+        searchProducts.addAll(products);
+      });
     }
   }
 
