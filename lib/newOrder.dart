@@ -17,8 +17,10 @@ class newOrder extends StatefulWidget {
 
 class _newOrderState extends State<newOrder> {
   final products = [];
-  final orderProducts = [];
+  final selectedProducts = [];
+  final searchProducts = [];
   int totalBill = 0;
+  final quantityController = TextEditingController();
 
   @override
   void initState() {
@@ -26,8 +28,9 @@ class _newOrderState extends State<newOrder> {
     totalBill = 0;
 
     products.clear();
-    orderProducts.clear();
-
+    searchProducts.clear();
+    searchProducts.clear();
+    quantityController.clear();
     getProducts();
   }
 
@@ -123,7 +126,7 @@ class _newOrderState extends State<newOrder> {
                                               "Are you sure you want to clear the basket?",
                                           onConfirmBtnTap: () {
                                             setState(() {
-                                              orderProducts.clear();
+                                              selectedProducts.clear();
                                               totalBill = 0;
                                               for (var i = 0;
                                                   i < products.length;
@@ -139,6 +142,7 @@ class _newOrderState extends State<newOrder> {
                               ],
                             ),
                           ),
+                          // List View of the Basket
                           Expanded(
                             flex: 8,
                             child: Container(
@@ -146,17 +150,19 @@ class _newOrderState extends State<newOrder> {
                               height: MediaQuery.of(context).size.height,
                               // List View of the Basket
                               child: ListView.builder(
-                                itemCount: orderProducts.length,
+                                itemCount: selectedProducts.length,
                                 itemBuilder: (context, index) {
                                   return OrderCard(
-                                    productName:
-                                        orderProducts[index]['name'].toString(),
-                                    productPrice: orderProducts[index]['price']
+                                    productName: selectedProducts[index]['name']
                                         .toString(),
-                                    productQty: orderProducts[index]['quantity']
+                                    productPrice: selectedProducts[index]
+                                            ['price']
                                         .toString(),
-                                    productID:
-                                        orderProducts[index]['id'].toString(),
+                                    productQty: selectedProducts[index]
+                                            ['quantity']
+                                        .toString(),
+                                    productID: selectedProducts[index]['id']
+                                        .toString(),
                                     buttonPress: () {},
                                   );
                                 },
@@ -247,6 +253,7 @@ class _newOrderState extends State<newOrder> {
                           ),
                         ),
                       ),
+                      // List View of the Products
                       Expanded(
                         flex: 4,
                         child: Padding(
@@ -267,27 +274,7 @@ class _newOrderState extends State<newOrder> {
                                     Text("Rs. ${products[index]['price']}"),
                                 onTap: () {
                                   setState(() {
-                                    if (orderProducts
-                                        .contains(products[index])) {
-                                      // Incrementing the Quantity of the Product
-                                      print("Already in Basket");
-                                      var i = orderProducts
-                                          .indexOf(products[index]);
-                                      //type of quanity
-                                      print("lol");
-                                      orderProducts[i]["quantity"] = (int.parse(
-                                                  orderProducts[i]["quantity"]
-                                                      .toString()) +
-                                              1)
-                                          .toString();
-                                      totalBill += int.parse(
-                                          products[index]['price'].toString());
-                                      print(totalBill);
-                                    } else {
-                                      orderProducts.add(products[index]);
-                                      totalBill += int.parse(
-                                          products[index]['price'].toString());
-                                    }
+                                    OpenDialoge(index);
                                   });
                                 },
                               );
@@ -354,6 +341,57 @@ class _newOrderState extends State<newOrder> {
     ]));
   }
 
+  Future OpenDialoge(index) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Product Quantity?"),
+          content: TextField(
+            controller: quantityController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "Quantity",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                if (quantityController.text.isNotEmpty) {
+                  setState(() {
+                    totalBill += int.parse(quantityController.text);
+                  });
+                }
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                if (quantityController.text.isNotEmpty) {
+                  setState(() {
+                    // Adding the product to the list
+                    if (selectedProducts.contains(products[index])) {
+                      var qty = int.parse(quantityController.text);
+                      var i = selectedProducts.indexOf(products[index]);
+                      selectedProducts[i]['quantity'] += qty;
+                      totalBill += qty * int.parse(products[index]['price']);
+                    } else {
+                      products[index]['quantity'] =
+                          int.parse(quantityController.text);
+                      selectedProducts.add(products[index]);
+                      totalBill += int.parse(quantityController.text) *
+                          int.parse(products[index]['price']);
+                    }
+                    quantityController.clear();
+                  });
+                }
+              },
+              child: const Text("Add"),
+            ),
+          ],
+        ),
+      );
+
   void buttonPress(productID) {
     // Removing the product from the list
   }
@@ -367,14 +405,12 @@ class _newOrderState extends State<newOrder> {
         return name.contains(query.toLowerCase());
       }).toList();
       setState(() {
-        orderProducts.add(data);
+        searchProducts.add(data);
       });
     } else {
       return null;
     }
   }
-
-  void submited(String query) {}
 
   Future getProducts() async {
     Directory directory = await getApplicationDocumentsDirectory();
