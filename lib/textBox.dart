@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:searchaholic/newOrder.dart';
 import 'package:searchaholic/product.dart';
 
 import 'addProduct.dart';
@@ -33,6 +34,10 @@ Expanded textBox(
             if (text == "Search Product") {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const Product()));
+            }
+            if (text == "New Order") {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => newOrder()));
             }
           },
           child: Container(

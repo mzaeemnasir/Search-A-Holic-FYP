@@ -2,8 +2,6 @@
 
 // import 'package:searchaholic/homePage.dart';
 
-import 'package:searchaholic/product.dart';
-
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -68,34 +66,3 @@ void createFilesAndFolders() async {
     print("logs.txt File Created");
   }
 }
-
-
-
-
-
-
-
-
-
-
-/*  Log File Format 
-
-DATE  TIME  USER  ACTION  PRODUCT  QUANTITY  PRICE  TOTAL
-
-For Example:
-2021-01-01  12:00:00  user1  ADD  Product1  10  100  1000
-2021-01-01  12:00:00  user1  EDIT  Product2  10  100  1000
-2021-01-01  12:00:00  user1  DELETE  Product2  10  100  1000
-2021-01-01  12:00:00  user1  UPDATE  Product2  10  100  1000
-2021-01-01  12:00:00  user1  SOLD  Product2  10  100  1000
-2021-01-01  12:00:00  user1  RETURNED  Product2  10  100  1000
-
-
-USER LOGIN FILE FORMAT
-
-{
-  "id": "password1", (encrypted)
-}
-
-
-*/
