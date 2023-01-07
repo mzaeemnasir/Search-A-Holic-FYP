@@ -350,6 +350,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:searchaholic/change_password.dart';
 import 'package:searchaholic/login.dart';
 import 'package:searchaholic/product.dart';
 //import 'package:alert/alert.dart';
@@ -717,7 +718,7 @@ class _SidebarState extends State<Sidebar> {
             child: ListTile(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Forget()));
+                      MaterialPageRoute(builder: (context) => change()));
                 },
                 leading: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.036,
