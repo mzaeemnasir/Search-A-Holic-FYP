@@ -116,12 +116,6 @@ class _newOrderState extends State<newOrder> {
                                                   setState(() {
                                                     selectedProducts.clear();
                                                     totalBill = 0;
-                                                    for (var i = 0;
-                                                        i < products.length;
-                                                        i++) {
-                                                      products[i]['quantity'] =
-                                                          1;
-                                                    }
                                                   });
                                                   Navigator.pop(context);
                                                 },
@@ -156,6 +150,11 @@ class _newOrderState extends State<newOrder> {
                                             // Getting the product ID
                                             // Updating the List View
                                             setState(() {
+                                              // Updating the Total Bill
+                                              totalBill -= int.parse(
+                                                  selectedProducts[index]
+                                                          ['price']
+                                                      .toString());
                                               selectedProducts.removeAt(index);
                                             })
                                           },
@@ -414,29 +413,21 @@ class _newOrderState extends State<newOrder> {
               child: const Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
                 setState(() {
                   selectedProducts.clear();
                   totalBill = 0;
                 });
+                // Adding the Invoice to the Database
+                // Updating the Products Quantity
+                await Flutter_api().addOrder(selectedProducts, totalBill);
               },
               child: const Text("Confirm"),
             ),
           ],
         ),
       );
-
-  callbackFunc(productID) {
-    print(productID);
-    this.setState(() {});
-    return null;
-    setState(() {
-      var i =
-          selectedProducts.indexWhere((element) => element['id'] == productID);
-      selectedProducts.removeAt(i);
-    });
-  }
 
   Future OpenDialoge(productID, i) => showDialog(
         context: context,
@@ -450,12 +441,16 @@ class _newOrderState extends State<newOrder> {
             ),
             onChanged: ((value) => {
                   if (value.isNotEmpty)
-                    if (int.parse(searchProducts[i]['quantity']) <=
-                        int.parse(value))
-                      {
-                        quantityController.text =
-                            "${searchProducts[i]['quantity']}"
-                      }
+                    {
+                      if (int.parse(searchProducts[i]['quantity']) == 0)
+                        {quantityController.text = "0"}
+                      else if (int.parse(searchProducts[i]['quantity']) <=
+                          int.parse(value))
+                        {
+                          quantityController.text =
+                              "${searchProducts[i]['quantity']}"
+                        }
+                    }
                 }),
           ),
           actions: [
@@ -485,12 +480,17 @@ class _newOrderState extends State<newOrder> {
                       selectedProducts[i]['quantity'] += qty;
 
                       totalBill += qty * int.parse(products[index]['price']);
+                      searchProducts[i]['quantity'] =
+                          int.parse(searchProducts[i]['quantity']) - qty;
                     } else {
                       // products[index]['quantity'] =
                       //     int.parse(quantityController.text);
                       selectedProducts.add(products[index]);
                       totalBill += int.parse(quantityController.text) *
                           int.parse(products[index]['price']);
+                      searchProducts[i]['quantity'] =
+                          int.parse(searchProducts[i]['quantity']) -
+                              int.parse(quantityController.text);
                     }
                     quantityController.clear();
                   });

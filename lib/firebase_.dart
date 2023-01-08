@@ -153,4 +153,57 @@ class Flutter_api {
       return Future<bool>.value(true);
     }
   }
+
+  // Add Order
+  Future<bool> addOrder(List<dynamic> selectedProc, var totalBill) async {
+    var email = await getEmail();
+    print(email);
+    try {
+      Firestore.instance
+          .collection(email)
+          .document("Order")
+          .collection("orders")
+          .add({
+        'products': selectedProc,
+        'totalBill': totalBill,
+      });
+      return Future<bool>.value(true);
+    } catch (e) {
+      print("Not Connected to the Internet");
+      return Future<bool>.value(false);
+    }
+  }
+
+  // Updating the Products Quantity
+  Future<bool> updateProductsQuantity(List<Document> selectedProc) async {
+    var email = await getEmail();
+    print(email);
+    try {
+      for (var i = 0; i < selectedProc.length; i++) {
+        Firestore.instance
+            .collection(email)
+            .document("Product")
+            .collection("products")
+            .document(selectedProc[i].id)
+            .update({
+          'productQty': selectedProc[i]["quantity"],
+        });
+      }
+      return Future<bool>.value(true);
+    } catch (e) {
+      print("Not Connected to the Internet");
+      return Future<bool>.value(false);
+    }
+  }
+
+  getEmail() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+    return email;
+  }
 }
