@@ -415,13 +415,16 @@ class _newOrderState extends State<newOrder> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                setState(() {
-                  selectedProducts.clear();
-                  totalBill = 0;
-                });
+                if (await Flutter_api().addOrder(selectedProducts, totalBill) ==
+                    true) {
+                  setState(() {
+                    selectedProducts.clear();
+                    totalBill = 0;
+                  });
+                }
+
                 // Adding the Invoice to the Database
                 // Updating the Products Quantity
-                await Flutter_api().addOrder(selectedProducts, totalBill);
               },
               child: const Text("Confirm"),
             ),
@@ -478,10 +481,10 @@ class _newOrderState extends State<newOrder> {
                       var qty = int.parse(quantityController.text);
                       var i = selectedProducts.indexOf(products[index]);
                       selectedProducts[i]['quantity'] += qty;
-
-                      totalBill += qty * int.parse(products[index]['price']);
                       searchProducts[i]['quantity'] =
                           int.parse(searchProducts[i]['quantity']) - qty;
+
+                      totalBill += qty * int.parse(products[index]['price']);
                     } else {
                       // products[index]['quantity'] =
                       //     int.parse(quantityController.text);
