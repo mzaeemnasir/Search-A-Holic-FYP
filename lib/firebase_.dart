@@ -53,7 +53,7 @@ class Flutter_api {
     String long = location[1];
 
     // Checking if the email is already registered
-    final managers = Firestore.instance.collection(email);
+    final managers = Firestore.instance.collection('');
 
     // Checking for the document with the email
     if (await managers.document(email).exists) {
@@ -107,8 +107,30 @@ class Flutter_api {
     }
   }
 
-  ///Email check
   Future<bool> email_check(String email1) async {
+    final managers = Firestore.instance.collection(email1);
+    print(managers);
+
+    final manager = managers.document("Store Details");
+    print(manager);
+    print("Got Managers");
+
+    // Getting the Data from the Document
+    try {
+      final data = await manager.get();
+      if (data['email'] == email1) {
+        return Future<bool>.value(true);
+      } else {
+        return Future<bool>.value(false);
+      }
+    } catch (e) {
+      print("Error Occured - Does not Find Data ");
+      return Future<bool>.value(false);
+    }
+  }
+
+  ///Email check
+  /*Future<bool> email_check(String email1) async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
     Directory folder = Directory('$path/SeachAHolic');
@@ -117,11 +139,13 @@ class Flutter_api {
     File file = File('$path/SeachAHolic/user.json');
     String email = jsonDecode(file.readAsStringSync())['email'];
     if (email == email1) {
+      print(email);
       return Future<bool>.value(true);
     } else {
+      print(email);
       return Future<bool>.value(false);
     }
-  }
+  }*/
 
   ///change password
   Future<bool> forget_p(String email1, String password) async {
