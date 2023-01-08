@@ -1,9 +1,7 @@
 // ignore_for_file: avoid_print, camel_case_types, non_constant_identifier_names
 // ignore_for_file: constant_identifier_names
 import 'dart:convert';
-
 import 'package:alert/alert.dart';
-
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 

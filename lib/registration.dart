@@ -53,6 +53,15 @@ class _SignUpState extends State<SignUp> {
         });
   }
 
+  void showAlert2() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Sorry.....',
+      text: 'Email is already registered.  Try to signin',
+    );
+  }
+
   void showOtpSentSuccess() {
     QuickAlert.show(
       context: context,
@@ -339,11 +348,20 @@ class _SignUpState extends State<SignUp> {
                           hintText: "Enter OTP",
                           suffixIcon: TextButton(
                               child: const Text("Send OTP"),
-                              onPressed: () => {
-                                    if (formkey.currentState!.validate())
+                              onPressed: () async => {
+                                    if (await Flutter_api()
+                                            .email_check(email.text) ==
+                                        true)
                                       {
-                                        sendOTP(),
-                                        showOtpSentSuccess(),
+                                        showAlert2(),
+                                      }
+                                    else
+                                      {
+                                        if (formkey.currentState!.validate())
+                                          {
+                                            sendOTP(),
+                                            showOtpSentSuccess(),
+                                          }
                                       }
                                   }),
                           suffix: TextButton(
