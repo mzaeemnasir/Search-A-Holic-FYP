@@ -1,27 +1,35 @@
+import 'dart:convert';
+
+import 'package:alert/alert.dart';
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:email_otp/email_otp.dart';
 
-class Forget extends StatefulWidget {
-  const Forget({super.key});
+class change extends StatefulWidget {
+  const change({super.key});
 
   @override
-  _ForgetState createState() => _ForgetState();
+  _changeState createState() => _changeState();
 }
 
-class _ForgetState extends State<Forget> {
+class _changeState extends State<change> {
   bool otpst = false;
-  var _email = TextEditingController();
+  //var _email = TextEditingController();
   //var storeName = TextEditingController();
   //var storeLocationLat = TextEditingController();
   //var storeLocationLong = TextEditingController();
   //var phoneNumber = TextEditingController();
   var _password = TextEditingController();
+  var _newPassword = TextEditingController();
+  var _confirmPassword = TextEditingController();
   var otp = TextEditingController();
 
   bool _isObscure = true;
+  bool _isObscure1 = true;
+  bool _isObscure2 = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   void showAlert() {
@@ -29,89 +37,26 @@ class _ForgetState extends State<Forget> {
       context: context,
       type: QuickAlertType.error,
       title: 'Oops...',
-      text: 'Invalid credentials!!',
+      text: 'password is wrong',
+    );
+  }
+
+  void showAlert1() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Oops...',
+      text: 'New password not match with confirm password',
     );
   }
 
   void showAlert2() {
     QuickAlert.show(
       context: context,
-      type: QuickAlertType.error,
-      title: 'Sorry....',
-      text: 'There is no valid user of this Email',
-    );
-  }
-
-  void showAlert1() {
-    QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        title: 'Yahoooo...',
-        text: 'Password changed successfully!!',
-        confirmBtnText: 'Ok',
-        onConfirmBtnTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Login(),
-            ),
-          );
-        });
-  }
-
-  void showOtpSentSuccess() {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.success,
-      text: 'OTP Successfully sent!',
-    );
-  }
-
-  void showOtpSuccess() {
-    QuickAlert.show(
-      context: context,
       type: QuickAlertType.success,
       title: 'Yahoooo...',
-      text: 'OTP verified',
+      text: 'Password changed successfully!!',
     );
-  }
-
-  void showOtpFailure() {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.error,
-      title: 'Opps!!',
-      text: 'OTP was not verified',
-    );
-  }
-
-  EmailOTP myauth = EmailOTP();
-  void sendOTP() async {
-    myauth.setConfig(
-        appEmail: "Searchaholic@gmail.com",
-        appName: "Searchaholic",
-        userEmail: _email.text,
-        otpLength: 4,
-        otpType: OTPType.digitsOnly);
-    var res = await myauth.sendOTP();
-    if (res) {
-      print("otp sent");
-    } else {
-      print("otp didnt sent");
-    }
-  }
-
-  void verifyOtp() {
-    var res = myauth.verifyOTP(otp: otp.text);
-    if (res) {
-      setState(() {
-        otpst = true;
-        print("otp true");
-      });
-      print("verfied");
-    } else {
-      print("otp didnt verified");
-    }
   }
 
   @override
@@ -145,44 +90,6 @@ class _ForgetState extends State<Forget> {
                       ),
                     ),
                     // Text Field Email
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.10,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.37,
-                      child: TextFormField(
-                        controller: _email,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Email Required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            print(_email);
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid email address';
-                            }
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Email",
-                          hintStyle: GoogleFonts.montserrat(
-                            fontSize: 15,
-                            color: Colors.grey[450],
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(width: 0.15),
-                          ),
-                        ),
-                      ),
-                    ),
 
                     // Password (with eye icon)
                     Container(
@@ -222,6 +129,57 @@ class _ForgetState extends State<Forget> {
                                   _isObscure = !_isObscure;
                                 });
                               }),
+                          hintText: "Password",
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            color: Colors.grey[450],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 0.15),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // New Password (with eye icon)
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.035,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.37,
+                      child: TextFormField(
+                        obscureText: _isObscure1,
+                        maxLength: 18,
+                        // validation
+                        controller: _newPassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid password';
+                            }
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(_isObscure1
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure1 = !_isObscure1;
+                                });
+                              }),
                           hintText: "New Password",
                           hintStyle: GoogleFonts.montserrat(
                             fontSize: 15,
@@ -235,53 +193,47 @@ class _ForgetState extends State<Forget> {
                         ),
                       ),
                     ),
+
+                    /// Confirm Password (with eye icon)
                     Container(
                       margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.03,
+                        top: MediaQuery.of(context).size.height * 0.035,
                       ),
-                      width: MediaQuery.of(context).size.width * 0.20,
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.37,
                       child: TextFormField(
-                        controller: otp,
+                        obscureText: _isObscure2,
+                        maxLength: 18,
+                        // validation
+                        controller: _confirmPassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password required';
+                          } else {
+                            RegExp regExp = RegExp(
+                              r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (!regExp.hasMatch(value)) {
+                              // Make input field red
+                              return 'Please enter a valid password';
+                            }
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
-                          hintText: "Enter OTP",
-                          suffixIcon: TextButton(
-                              child: const Text("Send OTP"),
-                              onPressed: () async => {
-                                    if (await Flutter_api()
-                                            .email_check(_email.text) !=
-                                        true)
-                                      {
-                                        showAlert2(),
-                                      }
-                                    else
-                                      {
-                                        if (formkey.currentState!.validate())
-                                          {
-                                            sendOTP(),
-                                            showOtpSentSuccess(),
-                                          }
-                                      }
-                                  }),
-                          suffix: TextButton(
-                              child: const Text("Verify"),
-                              onPressed: () => {
-                                    verifyOtp(),
-                                    if (otpst)
-                                      {
-                                        showOtpSuccess(),
-                                      }
-                                    else if (otpst == false)
-                                      {
-                                        showOtpFailure(),
-                                      }
-                                    else
-                                      {
-                                        print("failure"),
-                                      }
-                                  }),
+                          suffixIcon: IconButton(
+                              icon: Icon(_isObscure2
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure2 = !_isObscure2;
+                                });
+                              }),
+                          hintText: "Confirm Password",
                           hintStyle: GoogleFonts.montserrat(
-                            fontSize: 10,
+                            fontSize: 15,
                             color: Colors.grey[450],
                             fontWeight: FontWeight.w500,
                           ),
@@ -292,6 +244,7 @@ class _ForgetState extends State<Forget> {
                         ),
                       ),
                     ),
+
                     // Register Button
                     Container(
                       margin: EdgeInsets.only(
@@ -300,22 +253,18 @@ class _ForgetState extends State<Forget> {
                       width: MediaQuery.of(context).size.width * 0.37,
                       height: MediaQuery.of(context).size.height * 0.06,
                       child: ElevatedButton(
-                        onPressed: () {
-                          print("Change Password Button Pressed");
+                        onPressed: () async {
                           if (formkey.currentState!.validate()) {
-                            if (otpst) {
-                              setState(() {
-                                otpst = false;
-                              });
-
+                            if (await password_check(_password.text) == true) {
+                              showAlert();
+                            } else if (newpassword_match(
+                                    _newPassword.text, _confirmPassword.text) ==
+                                true) {
                               showAlert1();
-                              foget_p();
                             } else {
-                              showOtpFailure();
+                              change(_confirmPassword.text);
+                              showAlert2();
                             }
-                          } else {
-                            print("error");
-                            showAlert();
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -345,7 +294,7 @@ class _ForgetState extends State<Forget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Login(),
+                              builder: (context) => Dashboard(),
                             ),
                           );
                         },
@@ -356,7 +305,7 @@ class _ForgetState extends State<Forget> {
                           ),
                         ),
                         child: Text(
-                          "Login?",
+                          "Back",
                           style: GoogleFonts.montserrat(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -422,12 +371,64 @@ class _ForgetState extends State<Forget> {
     );
   }
 
-  Future<bool> foget_p() async {
-    // Add Product to the Database
-    if (await Flutter_api().forget_p(_email.text, _password.text)) {
+  ///getting password from database and check password match or not
+  Future password_check(String password) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    // Getting Documents from Firestore
+    var data = Firestore.instance.collection(email);
+    var data1 = data.document('Store Details');
+    var data2 = await data1.get();
+    if (data2['password'] != password) {
       return Future<bool>.value(true);
     } else {
       return Future<bool>.value(false);
     }
   }
+
+  bool newpassword_match(String newpassword, String confirmpassword) {
+    if (newpassword != confirmpassword) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ///change password
+  Future<bool> change(String password1) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+    try {
+      // Adding the product to the database
+      await Firestore.instance
+          .collection(email)
+          .document("Store Details")
+          .update({
+        'password': password1,
+      });
+      return Future<bool>.value(true);
+    } catch (e) {
+      print("Not Connected to the Internet");
+      return Future<bool>.value(false);
+    }
+  }
+  /*Future<bool> foget_p() async {
+    // Add Product to the Database
+    if (await Flutter_api().forget_p(_email.text, _password.text)) {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }*/
+  //}
 }

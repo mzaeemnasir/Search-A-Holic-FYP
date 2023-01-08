@@ -350,12 +350,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:searchaholic/biCharts.dart';
+import 'package:searchaholic/change_password.dart';
 import 'package:searchaholic/login.dart';
 import 'package:searchaholic/product.dart';
 //import 'package:alert/alert.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:searchaholic/profile.dart';
 import 'package:searchaholic/forgetPassword.dart';
+import 'package:searchaholic/reports.dart';
+import 'package:searchaholic/sales.dart';
 
 import 'dashboard.dart';
 
@@ -509,6 +513,10 @@ class _SidebarState extends State<Sidebar> {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => biCharts()),
+                      );
                       print("Categories Button Pressed");
                     },
                     child: Row(
@@ -557,6 +565,10 @@ class _SidebarState extends State<Sidebar> {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Sales()),
+                      );
                       print("Sales Button Pressed");
                     },
                     child: Row(
@@ -605,6 +617,10 @@ class _SidebarState extends State<Sidebar> {
                         borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Reports()),
+                        );
                         print("Analytics Button Pressed");
                       },
                       child: Row(
@@ -717,7 +733,7 @@ class _SidebarState extends State<Sidebar> {
             child: ListTile(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Forget()));
+                      MaterialPageRoute(builder: (context) => change()));
                 },
                 leading: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.036,
