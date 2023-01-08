@@ -47,6 +47,7 @@ dependencies:
   quickalert: ^1.0.1
   email_otp: ^1.0.4
   alert: ^2.0.1
+  e_invoice_generator: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -79,7 +80,7 @@ flutter:
     - images/orders_icon.png
     - images/products_icon.png
     - images/profile_icon.png
-    - images/revenue_icon.png 
+    - images/revenue_icon.png
     - images/sale_icon.png
     - images/sales_icon.png
     - images/settings_icon.png

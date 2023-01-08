@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-// import 'package:searchaholic/homePage.dart';
+import 'package:searchaholic/newOrder.dart';
 
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
+      home: newOrder(),
     );
   }
 }

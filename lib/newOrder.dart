@@ -1,13 +1,17 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
 
 import 'dart:convert';
 
 import 'package:firedart/firedart.dart';
+import 'package:flutter/services.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:searchaholic/orderCard.dart';
 import 'package:searchaholic/sidebar.dart';
+import 'package:e_invoice_generator/e_invoice_generator.dart';
 
 import 'imports.dart';
+
+final selectedProducts = [];
 
 class newOrder extends StatefulWidget {
   const newOrder({Key? key}) : super(key: key);
@@ -18,11 +22,9 @@ class newOrder extends StatefulWidget {
 class _newOrderState extends State<newOrder> {
   final products = [];
   final searchProducts = [];
-
-  final selectedProducts = [];
-
   int totalBill = 0;
   final quantityController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -94,51 +96,46 @@ class _newOrderState extends State<newOrder> {
                                 ),
                                 Expanded(
                                   flex: 1,
-                                  child: InkWell(
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        // line on right side of the basket
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(60),
-                                        ),
-                                      ),
-                                      // Clear Basket Button
-                                      child: const Center(
-                                        child: Text(
-                                          "Clear Basket",
-                                          style: TextStyle(
-                                            fontFamily: "NTR",
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      // Are you sure you want to clear the basket?
-                                      QuickAlert.show(
-                                          context: context,
-                                          type: QuickAlertType.confirm,
-                                          animType:
-                                              QuickAlertAnimType.slideInRight,
-                                          title: "Clear Basket",
-                                          text:
-                                              "Are you sure you want to clear the basket?",
-                                          onConfirmBtnTap: () {
-                                            setState(() {
-                                              selectedProducts.clear();
-                                              totalBill = 0;
-                                              for (var i = 0;
-                                                  i < products.length;
-                                                  i++) {
-                                                products[i]['quantity'] = 1;
-                                              }
-                                            });
-                                            Navigator.pop(context);
-                                          });
-                                    },
+                                  child: SizedBox(
+                                    // Clear Basket Button
+                                    child: Center(
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              QuickAlert.show(
+                                                context: context,
+                                                type: QuickAlertType.confirm,
+                                                animType: QuickAlertAnimType
+                                                    .slideInRight,
+                                                title: "Clear Basket",
+                                                text:
+                                                    "Are you sure you want to clear the basket?",
+                                                onConfirmBtnTap: () {
+                                                  setState(() {
+                                                    selectedProducts.clear();
+                                                    totalBill = 0;
+                                                    for (var i = 0;
+                                                        i < products.length;
+                                                        i++) {
+                                                      products[i]['quantity'] =
+                                                          1;
+                                                    }
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            },
+                                            child: const Text(
+                                              "Clear Basket",
+                                              style: TextStyle(
+                                                fontFamily: "NTR",
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 15,
+                                              ),
+                                            ))),
                                   ),
                                 ),
                               ],
@@ -154,18 +151,27 @@ class _newOrderState extends State<newOrder> {
                               child: ListView.builder(
                                 itemCount: selectedProducts.length,
                                 itemBuilder: (context, index) {
-                                  return OrderCard(
-                                    productName: selectedProducts[index]['name']
-                                        .toString(),
-                                    productPrice: selectedProducts[index]
-                                            ['price']
-                                        .toString(),
-                                    productQty: selectedProducts[index]
-                                            ['quantity']
-                                        .toString(),
-                                    productID: selectedProducts[index]['id']
-                                        .toString(),
-                                  );
+                                  return GestureDetector(
+                                      onTap: () => {
+                                            // Getting the product ID
+                                            // Updating the List View
+                                            setState(() {
+                                              selectedProducts.removeAt(index);
+                                            })
+                                          },
+                                      child: OrderCard(
+                                          productName: selectedProducts[index]
+                                                  ['name']
+                                              .toString(),
+                                          productPrice: selectedProducts[index]
+                                                  ['price']
+                                              .toString(),
+                                          productQty: selectedProducts[index]
+                                                  ['quantity']
+                                              .toString(),
+                                          productID: selectedProducts[index]
+                                                  ['id']
+                                              .toString()));
                                 },
                               ),
                             ),
@@ -223,12 +229,14 @@ class _newOrderState extends State<newOrder> {
                       )),
                   // Right Side (Will be Products with Search Bar and Few Buttons)
                   Expanded(
-                    flex: 1,
                     child: Column(children: [
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 30, right: 30, top: 30),
+                            left: 30,
+                            right: 30,
+                            top: 50,
+                          ),
                           child: Container(
                             // Search Bar
                             decoration: BoxDecoration(
@@ -256,57 +264,68 @@ class _newOrderState extends State<newOrder> {
                       ),
                       // List View of the Products
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             left: 35,
                             right: 30,
+                            bottom: 20,
                           ),
-                          child: ListView.builder(
-                            itemCount: searchProducts.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                // Making a Card for each Product
-                                tileColor:
-                                    const Color.fromRGBO(196, 229, 255, 1),
-                                textColor: Colors.black,
-                                title: Text(searchProducts[index]['name']),
-                                subtitle: Text(
-                                    "Rs. ${searchProducts[index]['price']}"),
-                                onTap: () {
-                                  setState(() {
-                                    OpenDialoge(searchProducts[index]["id"]);
-                                  });
-                                },
-                              );
-                            },
+                          child: SizedBox(
+                            child: ListView.builder(
+                              itemCount: searchProducts.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  // Making a Card for each Product
+                                  tileColor:
+                                      const Color.fromRGBO(196, 229, 255, 1),
+                                  textColor: Colors.black,
+                                  title: Text(searchProducts[index]['name']),
+                                  subtitle: Text(
+                                      "Rs. ${searchProducts[index]['price']}"),
+                                  trailing: Text(
+                                      "Qty: ${searchProducts[index]['quantity']}"),
+                                  onTap: () {
+                                    setState(() {
+                                      var i = products.indexWhere((element) =>
+                                          element['id'] ==
+                                          searchProducts[index]["id"]);
+                                      OpenDialoge(
+                                          searchProducts[index]["id"], i);
+                                    });
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
-                        child: Row(
+                        child: Column(
                           children: [
                             // Input User Email
-                            const Expanded(
+                            Expanded(
                                 child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 30,
-                                right: 30,
+                              padding: const EdgeInsets.only(
+                                left: 100,
+                                right: 100,
+                                bottom: 10,
                               ),
                               child: SizedBox(
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
+                                child: TextFormField(
+                                  maxLines: 1,
+                                  controller: _emailController,
                                   decoration: InputDecoration(
-                                    hintText: "User Phone Number",
-                                    hintStyle: TextStyle(
-                                        fontFamily: "NTR",
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
+                                    hintText: "Email",
+                                    hintStyle: const TextStyle(
+                                      fontFamily: "NTR",
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                    ),
+                                    prefixIcon: const Icon(Icons.email),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
@@ -314,18 +333,27 @@ class _newOrderState extends State<newOrder> {
                             )),
                             // Confirm Button
                             Expanded(
-                                child: SizedBox(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Sending the Order to the Database
-                                },
-                                child: Text("Checkout"),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
-                                  onPrimary: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 10,
+                              ),
+                              child: SizedBox(
+                                width: 200,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // INVOICE
+                                    invoiceDiagloge();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    // ignore: deprecated_member_use
+                                    primary: Colors.blue,
+                                    // ignore: deprecated_member_use
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
                                   ),
+                                  child: const Text("Checkout"),
                                 ),
                               ),
                             ))
@@ -343,16 +371,92 @@ class _newOrderState extends State<newOrder> {
     ]));
   }
 
-  Future OpenDialoge(productID) => showDialog(
+  // Invoice Dialoge
+  Future invoiceDiagloge() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Product Quantity?"),
+          title: Text("Invoice - ${_emailController.text}"),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: ListView.builder(
+              itemCount: selectedProducts.length + 1,
+              itemBuilder: (context, index) {
+                if (index == selectedProducts.length) {
+                  return ListTile(
+                    title: const Text("Total Bill"),
+
+                    trailing: Text("Rs. $totalBill"),
+                    // Total Bill
+                  );
+                } else {
+                  var price = "${selectedProducts[index]['price']}";
+                  var quantity = "${selectedProducts[index]['quantity']}";
+
+                  return ListTile(
+                    title: Text(selectedProducts[index]['name']),
+                    subtitle: Text(
+                        "Rs. ${selectedProducts[index]['price']} x ${selectedProducts[index]['quantity']}"),
+                    // ignore: unnecessary_new
+                    trailing: new Text(
+                        "Rs. ${int.parse(price) * int.parse(quantity)}"),
+                    // Total Bill
+                  );
+                }
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  selectedProducts.clear();
+                  totalBill = 0;
+                });
+              },
+              child: const Text("Confirm"),
+            ),
+          ],
+        ),
+      );
+
+  callbackFunc(productID) {
+    print(productID);
+    this.setState(() {});
+    return null;
+    setState(() {
+      var i =
+          selectedProducts.indexWhere((element) => element['id'] == productID);
+      selectedProducts.removeAt(i);
+    });
+  }
+
+  Future OpenDialoge(productID, i) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Product Quantity?"),
           content: TextField(
             controller: quantityController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               hintText: "Quantity",
             ),
+            onChanged: ((value) => {
+                  if (value.isNotEmpty)
+                    if (int.parse(searchProducts[i]['quantity']) <=
+                        int.parse(value))
+                      {
+                        quantityController.text =
+                            "${searchProducts[i]['quantity']}"
+                      }
+                }),
           ),
           actions: [
             TextButton(
@@ -374,14 +478,16 @@ class _newOrderState extends State<newOrder> {
                     // Adding the product to the list
                     var index = products
                         .indexWhere((element) => element['id'] == productID);
+
                     if (selectedProducts.contains(products[index])) {
                       var qty = int.parse(quantityController.text);
                       var i = selectedProducts.indexOf(products[index]);
                       selectedProducts[i]['quantity'] += qty;
+
                       totalBill += qty * int.parse(products[index]['price']);
                     } else {
-                      products[index]['quantity'] =
-                          int.parse(quantityController.text);
+                      // products[index]['quantity'] =
+                      //     int.parse(quantityController.text);
                       selectedProducts.add(products[index]);
                       totalBill += int.parse(quantityController.text) *
                           int.parse(products[index]['price']);
@@ -440,10 +546,12 @@ class _newOrderState extends State<newOrder> {
           "id": element.id,
           "name": element['productName'],
           "price": element['productPrice'],
-          "quantity": 1,
+          "quantity": element["productQty"],
         };
         products.add(data);
+        searchProducts.add(data);
       });
+      // searchProducts.add(products);
     });
     // Getting Documents from Firestore again the email
   }

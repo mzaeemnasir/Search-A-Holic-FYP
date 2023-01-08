@@ -6,6 +6,7 @@ class OrderCard extends StatelessWidget {
   String productPrice = "";
   String productQty = "";
   String productID = "";
+
   OrderCard({
     Key? key,
     required this.productName,
@@ -41,26 +42,28 @@ class OrderCard extends StatelessWidget {
                       height: 45,
                       child: Align(
                           child: Text("Rs. $productPrice",
-                              style: TextStyle(color: Colors.red))))),
+                              style: const TextStyle(color: Colors.red))))),
               Expanded(
                   child: SizedBox(
                       height: 45,
                       child: Align(
                           child: Text("Qty. $productQty",
-                              style: TextStyle(color: Colors.blue))))),
-              Expanded(
+                              style: const TextStyle(color: Colors.blue))))),
+              const Expanded(
                   child: SizedBox(
                       height: 45,
-                      child: InkWell(
-                          hoverColor: Colors.red,
-                          child: const Align(child: Text("Delete")),
-                          onTap: () {
-                            // Sending the productID to the delete function
-                          }))),
+                      // Delete Icon
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Align(
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ))),
             ],
           ),
         ));
   }
-
-  void buttonPress(int x) {}
 }

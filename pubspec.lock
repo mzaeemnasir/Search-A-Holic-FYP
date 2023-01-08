@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
+  e_invoice_generator:
+    dependency: "direct main"
+    description:
+      name: e_invoice_generator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   email_otp:
     dependency: "direct main"
     description:
@@ -427,6 +434,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
+  qr_flutter:
+    dependency: transitive
+    description:
+      name: qr_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   quickalert:
     dependency: "direct main"
     description:
