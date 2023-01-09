@@ -147,8 +147,6 @@ class _newOrderState extends State<newOrder> {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                       onTap: () => {
-                                            // Getting the product ID
-                                            // Updating the List View
                                             setState(() {
                                               // Updating the Total Bill
                                               totalBill -= int.parse(
@@ -159,18 +157,18 @@ class _newOrderState extends State<newOrder> {
                                             })
                                           },
                                       child: OrderCard(
-                                          productName: selectedProducts[index]
-                                                  ['name']
-                                              .toString(),
-                                          productPrice: selectedProducts[index]
-                                                  ['price']
-                                              .toString(),
-                                          productQty: selectedProducts[index]
-                                                  ['quantity']
-                                              .toString(),
-                                          productID: selectedProducts[index]
-                                                  ['id']
-                                              .toString()));
+                                        productName: selectedProducts[index]
+                                                ['name']
+                                            .toString(),
+                                        productPrice: selectedProducts[index]
+                                                ['price']
+                                            .toString(),
+                                        productQty: selectedProducts[index]
+                                                ['quantity']
+                                            .toString(),
+                                        productID: selectedProducts[index]['id']
+                                            .toString(),
+                                      ));
                                 },
                               ),
                             ),
@@ -282,8 +280,6 @@ class _newOrderState extends State<newOrder> {
                                   title: Text(searchProducts[index]['name']),
                                   subtitle: Text(
                                       "Rs. ${searchProducts[index]['price']}"),
-                                  trailing: Text(
-                                      "Qty: ${searchProducts[index]['quantity']}"),
                                   onTap: () {
                                     setState(() {
                                       var i = products.indexWhere((element) =>
@@ -471,32 +467,27 @@ class _newOrderState extends State<newOrder> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                var index = products
+                    .indexWhere((element) => element['id'] == productID);
+
                 if (quantityController.text.isNotEmpty) {
-                  setState(() {
-                    // Adding the product to the list
-                    var index = products
-                        .indexWhere((element) => element['id'] == productID);
-
-                    if (selectedProducts.contains(products[index])) {
+                  if (selectedProducts.contains(products[index])) {
+                    setState(() {
                       var qty = int.parse(quantityController.text);
-                      var i = selectedProducts.indexOf(products[index]);
-                      selectedProducts[i]['quantity'] += qty;
-                      searchProducts[i]['quantity'] =
-                          int.parse(searchProducts[i]['quantity']) - qty;
-
-                      totalBill += qty * int.parse(products[index]['price']);
-                    } else {
-                      // products[index]['quantity'] =
-                      //     int.parse(quantityController.text);
+                      var index2 = selectedProducts
+                          .indexWhere((element) => element['id'] == productID);
+                      selectedProducts[index2]['quantity'] =
+                          "${int.parse(selectedProducts[index2]['quantity']) + qty}";
+                      totalBill += int.parse(products[index]['price']) * qty;
+                    });
+                  } else {
+                    setState(() {
+                      var qty = int.parse(quantityController.text);
+                      products[index]['quantity'] = "$qty";
                       selectedProducts.add(products[index]);
-                      totalBill += int.parse(quantityController.text) *
-                          int.parse(products[index]['price']);
-                      searchProducts[i]['quantity'] =
-                          int.parse(searchProducts[i]['quantity']) -
-                              int.parse(quantityController.text);
-                    }
-                    quantityController.clear();
-                  });
+                      totalBill += int.parse(products[index]['price']) * qty;
+                    });
+                  }
                 }
               },
               child: const Text("Add"),
