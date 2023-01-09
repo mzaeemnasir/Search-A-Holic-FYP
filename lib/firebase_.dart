@@ -53,7 +53,7 @@ class Flutter_api {
     String long = location[1];
 
     // Checking if the email is already registered
-    final managers = Firestore.instance.collection('');
+    final managers = Firestore.instance.collection(email);
 
     // Checking for the document with the email
     if (await managers.document(email).exists) {
