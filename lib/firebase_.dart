@@ -27,9 +27,8 @@ class Flutter_api {
     final manager = managers.document("Store Details");
     print(manager);
     print("Got Managers");
-
-    // Getting the Data from the Document
     try {
+      print("Trying to get Data");
       final data = await manager.get();
       if (data['password'] == password && data['email'] == email) {
         print("Login Successful");
@@ -128,24 +127,6 @@ class Flutter_api {
       return Future<bool>.value(false);
     }
   }
-
-  ///Email check
-  /*Future<bool> email_check(String email1) async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    Directory folder = Directory('$path/SeachAHolic');
-
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
-    if (email == email1) {
-      print(email);
-      return Future<bool>.value(true);
-    } else {
-      print(email);
-      return Future<bool>.value(false);
-    }
-  }*/
 
   ///change password
   Future<bool> forget_p(String email1, String password) async {

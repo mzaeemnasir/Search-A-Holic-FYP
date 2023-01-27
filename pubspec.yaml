@@ -48,6 +48,7 @@ dependencies:
   email_otp: ^1.0.4
   alert: ^2.0.1
   e_invoice_generator: ^0.0.1
+  firebase_auth: ^4.2.5
 
 dev_dependencies:
   flutter_test:

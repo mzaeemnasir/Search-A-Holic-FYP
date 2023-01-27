@@ -32,20 +32,32 @@ class _DashboardState extends State<Dashboard> {
 
     // getting the email from the user.json file
     File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+    try {
+      if (!file.existsSync()) {
+        print("File does not exist");
+      } else if (file.lengthSync() == 0) {
+        print("File is empty");
+      } else {
+        String fileContent = file.readAsStringSync();
+        var json = jsonDecode(fileContent);
+        String email = json['email'];
 
-    // Getting Documents from Firestore
-    var data = Firestore.instance.collection(email);
-    var data1 = data.document('Store Details');
-    var data2 = await data1.get();
+        // Getting Documents from Firestore
+        var data = Firestore.instance.collection(email);
+        var data1 = data.document('Store Details');
+        var data2 = await data1.get();
 
-    setState(() {
-      Store_name = data2['storeName'];
-      Email = data2['email'];
-      Phone_number = data2['phNo'];
-      address_l1 = data2['lat'];
-      address_l2 = data2['long'];
-    });
+        setState(() {
+          Store_name = data2['storeName'];
+          Email = data2['email'];
+          Phone_number = data2['phNo'];
+          address_l1 = data2['lat'];
+          address_l2 = data2['long'];
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override

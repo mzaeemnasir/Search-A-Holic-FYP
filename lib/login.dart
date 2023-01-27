@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:convert';
 
 import 'package:quickalert/models/quickalert_type.dart';
@@ -56,7 +58,7 @@ class LoginScreen extends State<Login> {
       context: context,
       type: QuickAlertType.error,
       title: 'Login Faild',
-      text: 'Wrong Email or Password',
+      text: 'Wrong Email or Password..',
     );
   }
 
@@ -173,40 +175,42 @@ class LoginScreen extends State<Login> {
                     ),
                     // 5. Login Button
                     Container(
-                        margin: EdgeInsets.only(top: 30, left: 150, right: 150),
+                        margin: const EdgeInsets.only(
+                            top: 30, left: 150, right: 150),
                         width: MediaQuery.of(context).size.width * 0.4,
                         height: 50,
                         child: RoundedLoadingButton(
-                          onPressed: () {
+                          onPressed: () async {
                             formkey.currentState?.validate();
-                            //  On Press Show Loading Animation in the Login Button
-                            setState(() async {
-                              // Validate the Email and Password
-                              var object_flutterApi = Flutter_api();
-                              var object = LoginCheck(email, password);
+                            var objectFlutterApi = Flutter_api();
+                            var object = LoginCheck(email, password);
 
-                              if (object.Validator() == "emptyEmail" ||
-                                  object.Validator() == "emptyPassword") {
-                                // If Invalid then Show the Error Message
+                            if (object.Validator() == "emptyEmail" ||
+                                object.Validator() == "emptyPassword") {
+                              // If Invalid then Show the Error Message
+                              setState(() {
                                 print("Please Enter the Email and Password");
                                 onClickFun2(_btnController);
-                              } else if (await object_flutterApi.check_login(
-                                      email.text, password.text) ==
-                                  true) {
-                                // If Valid then Navigate to the Home Screen
+                              });
+                            } else if (await objectFlutterApi.check_login(
+                                    email.text, password.text) ==
+                                true) {
+                              // If Valid then Navigate to the Home Screen
+                              setState(() {
                                 print("Valid");
                                 object.checkLogin(context);
                                 onClickFun(_btnController);
                                 myalert1();
-                                await updateLoginFile(
-                                    email.text, password.text);
-                              } else if (await object_flutterApi.check_login(
-                                      email.text, password.text) ==
-                                  false) {
+                              });
+                              await updateLoginFile(email.text, password.text);
+                            } else if (await objectFlutterApi.check_login(
+                                    email.text, password.text) ==
+                                false) {
+                              setState(() {
                                 myalert();
                                 onClickFun2(_btnController);
-                              }
-                            });
+                              });
+                            }
 
                             // End of Set State , // End of Set State
                           },
@@ -334,14 +338,7 @@ class LoginCheck {
     // If Password is Empty
     else if (password.text == "") {
       return "emptyPassword"; // Error Message
-    }
-
-    // If Email is not Valid
-    //else if (!EmailValidator.validate(email.text)) {
-    //return "invalidEmail"; // Error Message
-    //}
-    // If Email and Password is Valid
-    else {
+    } else {
       return "valid"; // Error Message
     }
   }

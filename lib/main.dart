@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:searchaholic/newOrder.dart';
-
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 
@@ -11,6 +9,7 @@ const project_id = "searchaholic-86248";
 // Showing Hello World in Flutter
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   Firestore.initialize(project_id); // Establishing connection with Firestore
 
   if (Platform.isWindows) {
