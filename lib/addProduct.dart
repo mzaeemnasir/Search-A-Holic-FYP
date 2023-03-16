@@ -8,6 +8,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'imports.dart';
+import 'package:intl/intl.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -23,10 +24,12 @@ class _AddProduct extends State<AddProduct> {
   TextEditingController _productQty = TextEditingController();
   TextEditingController _productType = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  TextEditingController dateinput = TextEditingController();
 
   @override
   // Update State
   void initState() {
+    dateinput.text = "";
     super.initState();
   }
 
@@ -55,10 +58,10 @@ class _AddProduct extends State<AddProduct> {
         key: formkey,
         child: Row(
           children: [
-            Sidebar(),
+            const Sidebar(),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
                   children: [
                     Container(
@@ -73,13 +76,14 @@ class _AddProduct extends State<AddProduct> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.057),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                          top: MediaQuery.of(context).size.height * 0.047),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: MediaQuery.of(context).size.height * 0.07,
                       child: TextFormField(
-                        maxLength: 15,
                         controller: _productName,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.pages),
                           labelText: 'Product Name',
                           hintMaxLines: 1,
                         ),
@@ -88,7 +92,7 @@ class _AddProduct extends State<AddProduct> {
                             return 'Product Name required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[A-Za-z\s]*$",
+                              r"^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$",
                               caseSensitive: false,
                               multiLine: false,
                             );
@@ -103,8 +107,9 @@ class _AddProduct extends State<AddProduct> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.057),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                          top: MediaQuery.of(context).size.height * 0.047),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: MediaQuery.of(context).size.height * 0.07,
                       child: TextFormField(
                         keyboardType: TextInputType.number,
                         controller: _productPrice,
@@ -113,6 +118,7 @@ class _AddProduct extends State<AddProduct> {
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.price_check),
                           labelText: 'Product Price',
                         ),
                         validator: (value) {
@@ -135,8 +141,9 @@ class _AddProduct extends State<AddProduct> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.057),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                          top: MediaQuery.of(context).size.height * 0.047),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: MediaQuery.of(context).size.height * 0.07,
                       child: TextFormField(
                         controller: _productQty,
                         inputFormatters: <TextInputFormatter>[
@@ -144,6 +151,7 @@ class _AddProduct extends State<AddProduct> {
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.production_quantity_limits),
                           labelText: 'Product Quantity',
                         ),
                         validator: (value) {
@@ -165,13 +173,60 @@ class _AddProduct extends State<AddProduct> {
                       ),
                     ),
                     Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.047),
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        child: Center(
+                            child: TextField(
+                          controller:
+                              dateinput, //editing controller of this TextField
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.calendar_today),
+                              //icon of text field
+                              labelText:
+                                  "Enter Expire Date" //label text of field
+                              ),
+
+                          readOnly:
+                              true, //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1950),
+                                //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2100));
+
+                            if (pickedDate != null) {
+                              print(
+                                  pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(
+                                  formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+
+                              setState(() {
+                                dateinput.text =
+                                    formattedDate; //set output date to TextField value.
+                              });
+                            } else {
+                              print("Date is not selected");
+                            }
+                          },
+                        ))),
+                    Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.057),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                          top: MediaQuery.of(context).size.height * 0.047),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       // Options [Public or Private]
                       child: DropdownButtonFormField(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.visibility),
                         ),
                         items: const [
                           DropdownMenuItem(
@@ -191,19 +246,59 @@ class _AddProduct extends State<AddProduct> {
                         hint: const Text("Select Product Visibility"),
                       ),
                     ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.047),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      // Options [Public or Private]
+                      child: DropdownButtonFormField(
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.category)),
+                        items: const [
+                          DropdownMenuItem(
+                            value: "Syrup",
+                            child: Text("Syrup"),
+                          ),
+                          DropdownMenuItem(
+                            value: "Tablet",
+                            child: Text("Tablet"),
+                          ),
+                          DropdownMenuItem(
+                            value: "Capsule",
+                            child: Text("Capsule"),
+                          ),
+                          DropdownMenuItem(
+                            value: "Drops",
+                            child: Text("Drops"),
+                          ),
+                          DropdownMenuItem(
+                            value: "Other",
+                            child: Text("Other"),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          _productType.text = value.toString();
+                          print(value);
+                          print(_productType.text);
+                        },
+                        hint: const Text("Select Product Category"),
+                      ),
+                    ),
                     // A Row with 2 buttons (left: Cancel, right: Add)
                     Container(
                       margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.057),
+                          top: MediaQuery.of(context).size.height * 0.047),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.10,
                             height: MediaQuery.of(context).size.height * 0.04,
                             margin: EdgeInsets.only(
                                 left:
-                                    MediaQuery.of(context).size.width * 0.062),
+                                    MediaQuery.of(context).size.width * 0.222),
                             child: ElevatedButton(
                               onPressed: () {
                                 // Navigator.pop(context);
@@ -223,11 +318,11 @@ class _AddProduct extends State<AddProduct> {
                             ),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.10,
                             height: MediaQuery.of(context).size.height * 0.04,
                             margin: EdgeInsets.only(
                                 right:
-                                    MediaQuery.of(context).size.width * 0.062),
+                                    MediaQuery.of(context).size.width * 0.270),
                             child: ElevatedButton(
                               onPressed: () {
                                 // Add Product to the Database
@@ -246,7 +341,7 @@ class _AddProduct extends State<AddProduct> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.blue,
+                                primary: Colors.green,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),

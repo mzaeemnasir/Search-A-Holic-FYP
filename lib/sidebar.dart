@@ -536,7 +536,7 @@ class _SidebarState extends State<Sidebar> {
 
                         ///Text
                         Text(
-                          "Categories",
+                          "Reports",
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontWeight: FontWeight.w500,
@@ -602,56 +602,56 @@ class _SidebarState extends State<Sidebar> {
               )),
 
           ///Analytics Card
-          Padding(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * 0.02,
-                  10,
-                  MediaQuery.of(context).size.width * 0.03,
-                  10),
-              child: Container(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  child: Card(
-                    elevation: 0,
-                    color: Color.fromRGBO(248, 249, 250, 1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Reports()),
-                        );
-                        print("Analytics Button Pressed");
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ///Image
-                          Padding(
-                            padding: EdgeInsets.only(
-                              right: 4,
-                              left: MediaQuery.of(context).size.width * 0.02,
-                              top: MediaQuery.of(context).size.height * 0.015,
-                              bottom:
-                                  MediaQuery.of(context).size.height * 0.012,
-                            ),
-                            child: Image(
-                                image: AssetImage("images/analytics_icon.png")),
-                          ),
+          // Padding(
+          //     padding: EdgeInsets.fromLTRB(
+          //         MediaQuery.of(context).size.width * 0.02,
+          //         10,
+          //         MediaQuery.of(context).size.width * 0.03,
+          //         10),
+          //     child: Container(
+          //         height: MediaQuery.of(context).size.height * 0.08,
+          //         child: Card(
+          //           elevation: 0,
+          //           color: Color.fromRGBO(248, 249, 250, 1),
+          //           shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(10)),
+          //           child: InkWell(
+          //             onTap: () {
+          //               Navigator.push(
+          //                 context,
+          //                 MaterialPageRoute(builder: (context) => Reports()),
+          //               );
+          //               print("Analytics Button Pressed");
+          //             },
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.start,
+          //               children: [
+          //                 ///Image
+          //                 Padding(
+          //                   padding: EdgeInsets.only(
+          //                     right: 4,
+          //                     left: MediaQuery.of(context).size.width * 0.02,
+          //                     top: MediaQuery.of(context).size.height * 0.015,
+          //                     bottom:
+          //                         MediaQuery.of(context).size.height * 0.012,
+          //                   ),
+          //                   child: Image(
+          //                       image: AssetImage("images/analytics_icon.png")),
+          //                 ),
 
-                          ///Text
-                          Text(
-                            "Analytics",
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w500,
-                              fontSize: MediaQuery.of(context).size.width / 60,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ))),
+          //                 ///Text
+          //                 Text(
+          //                   "Analytics",
+          //                   style: TextStyle(
+          //                     fontFamily: "Montserrat",
+          //                     fontWeight: FontWeight.w500,
+          //                     fontSize: MediaQuery.of(context).size.width / 60,
+          //                   ),
+          //                 )
+          //               ],
+          //             ),
+          //           ),
+          //         ))),
 
           ///Divider
           Padding(

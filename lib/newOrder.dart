@@ -12,9 +12,7 @@ import 'package:e_invoice_generator/e_invoice_generator.dart';
 
 import 'imports.dart';
 
-final selectedProducts = [
-
-];
+final selectedProducts = [];
 
 class newOrder extends StatefulWidget {
   const newOrder({Key? key}) : super(key: key);
@@ -28,6 +26,36 @@ class _newOrderState extends State<newOrder> {
   int totalBill = 0;
   final quantityController = TextEditingController();
   final _emailController = TextEditingController();
+  dynamic Store_name;
+  dynamic Email;
+  dynamic Phone_number;
+  dynamic address_l1, address_l2;
+  //dynamic password;
+
+  ///getting profile data from databae
+  Future getprofile() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String email = jsonDecode(file.readAsStringSync())['email'];
+
+    // Getting Documents from Firestore
+    var data = Firestore.instance.collection(email);
+    var data1 = data.document('Store Details');
+    var data2 = await data1.get();
+
+    setState(() {
+      Store_name = data2['storeName'];
+      Email = data2['email'];
+      Phone_number = data2['phNo'];
+      address_l1 = data2['lat'];
+      address_l2 = data2['long'];
+      //password = data2['password'];
+    });
+  }
 
   @override
   void initState() {
@@ -39,6 +67,7 @@ class _newOrderState extends State<newOrder> {
     searchProducts.clear();
     quantityController.clear();
     getProducts();
+    getprofile();
   }
 
   @override
@@ -72,91 +101,87 @@ class _newOrderState extends State<newOrder> {
                         children: [
                           // Header of the Barket
                           Expanded(
-                            flex: 1,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20)
-                                  )
-                              ),
-                              child: Row(
-                                children: [
-                                  // Basket Title + Icon
-                                  Expanded(
-                                    flex: 3,
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Basket",
-                                          style: TextStyle(
-                                            fontFamily: "NTR",
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 30,
+                              flex: 1,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20))),
+                                child: Row(
+                                  children: [
+                                    // Basket Title + Icon
+                                    Expanded(
+                                      flex: 3,
+                                      child: Row(
+                                        children: const [
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10)),
+                                          SizedBox(
+                                            width: 10,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    // Clear Basket Button
-                                    child: Center(
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
+                                          Text(
+                                            "Basket",
+                                            style: TextStyle(
+                                              fontFamily: "NTR",
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 30,
                                             ),
-                                            onPressed: () {
-                                              QuickAlert.show(
-                                                context: context,
-                                                type: QuickAlertType.confirm,
-                                                animType: QuickAlertAnimType
-                                                    .slideInRight,
-                                                title: "Clear Basket",
-                                                text:
-                                                "Are you sure you want to clear the basket?",
-                                                onConfirmBtnTap: () {
-                                                  setState(() {
-                                                    selectedProducts.clear();
-                                                    totalBill = 0;
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              "Clear Basket",
-                                              style: TextStyle(
-                                                fontFamily: "NTR",
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 15,
-                                              ),
-                                            )
-                                        )
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ),
+                                    SizedBox(
+                                      width: 120,
+                                      // Clear Basket Button
+                                      child: Center(
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                QuickAlert.show(
+                                                  context: context,
+                                                  type: QuickAlertType.confirm,
+                                                  animType: QuickAlertAnimType
+                                                      .slideInRight,
+                                                  title: "Clear Basket",
+                                                  text:
+                                                      "Are you sure you want to clear the basket?",
+                                                  onConfirmBtnTap: () {
+                                                    setState(() {
+                                                      selectedProducts.clear();
+                                                      totalBill = 0;
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
+                                              },
+                                              child: const Text(
+                                                "Clear Basket",
+                                                style: TextStyle(
+                                                  fontFamily: "NTR",
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 15,
+                                                ),
+                                              ))),
+                                    ),
+                                  ],
+                                ),
+                              )),
                           // List View of the Basket
                           Expanded(
                             flex: 8,
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 10, 10, 10),
                               //padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
-                                    Radius.circular(10)
-                                  ),
+                                      Radius.circular(10)),
                                   color: Colors.grey[200],
                                 ),
                                 height: MediaQuery.of(context).size.height,
@@ -166,26 +191,28 @@ class _newOrderState extends State<newOrder> {
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
                                         onTap: () => {
-                                          setState(() {
-                                            // Updating the Total Bill
-                                            totalBill -= int.parse(
-                                                selectedProducts[index]
-                                                ['price']
-                                                    .toString());
-                                            selectedProducts.removeAt(index);
-                                          })
-                                        },
+                                              setState(() {
+                                                // Updating the Total Bill
+                                                totalBill -= int.parse(
+                                                    selectedProducts[index]
+                                                            ['price']
+                                                        .toString());
+                                                selectedProducts
+                                                    .removeAt(index);
+                                              })
+                                            },
                                         child: OrderCard(
                                           productName: selectedProducts[index]
-                                          ['name']
+                                                  ['name']
                                               .toString(),
                                           productPrice: selectedProducts[index]
-                                          ['price']
+                                                  ['price']
                                               .toString(),
                                           productQty: selectedProducts[index]
-                                          ['quantity']
+                                                  ['quantity']
                                               .toString(),
-                                          productID: selectedProducts[index]['id']
+                                          productID: selectedProducts[index]
+                                                  ['id']
                                               .toString(),
                                         ));
                                   },
@@ -204,11 +231,9 @@ class _newOrderState extends State<newOrder> {
                                         decoration: const BoxDecoration(
                                             color: Colors.blue,
                                             borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20)
-                                            )
-                                        ),
+                                                topLeft: Radius.circular(20))),
                                         height:
-                                        MediaQuery.of(context).size.height,
+                                            MediaQuery.of(context).size.height,
                                         child: const Center(
                                           child: Text(
                                             "TOTAL ",
@@ -228,16 +253,14 @@ class _newOrderState extends State<newOrder> {
                                         decoration: const BoxDecoration(
                                             color: Colors.blue,
                                             borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20)
-                                            )
-                                        ),
+                                                topRight: Radius.circular(20))),
                                         height:
-                                        MediaQuery.of(context).size.height,
+                                            MediaQuery.of(context).size.height,
                                         child: Align(
                                           alignment: Alignment.centerRight,
                                           child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(right: 20),
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
                                             child: Text(
                                               "Rs. $totalBill",
                                               style: const TextStyle(
@@ -253,8 +276,7 @@ class _newOrderState extends State<newOrder> {
                                     ),
                                   ],
                                 ),
-                              )
-                          )
+                              ))
                         ],
                       )),
                   // Right Side (Will be Products with Search Bar and Few Buttons)
@@ -270,26 +292,25 @@ class _newOrderState extends State<newOrder> {
                           ),
                           child: TextFormField(
                             decoration: InputDecoration(
-                              hintText: "Search Product",
-                              hintStyle: const TextStyle(
-                                fontFamily: "NTR",
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20,
-                              ),
-                              prefixIcon: const Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              contentPadding: EdgeInsets.only()
-                            ),
+                                hintText: "Search Product",
+                                hintStyle: const TextStyle(
+                                  fontFamily: "NTR",
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20,
+                                ),
+                                prefixIcon: const Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                contentPadding: EdgeInsets.only()),
                             onChanged: searchQuery,
                           ),
                         ),
                       ),
 
                       // List View of the Products
-                      Flexible  (
+                      Flexible(
                         flex: 55,
                         fit: FlexFit.tight,
                         child: Padding(
@@ -303,42 +324,39 @@ class _newOrderState extends State<newOrder> {
                               itemCount: searchProducts.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: 5
-                                  ),
-                                  child: Card(
-                                    elevation: 2,
-                                    color: Colors.blue[300],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: ListTile(
-                                      // Making a Card for each Product
-                                      title: Text(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Card(
+                                      elevation: 2,
+                                      color: Colors.blue[300],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: ListTile(
+                                        // Making a Card for each Product
+                                        title: Text(
                                           searchProducts[index]['name'],
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
                                         ),
-                                      ),
-                                      subtitle: Text(
+                                        subtitle: Text(
                                           "Rs. ${searchProducts[index]['price']}",
-                                        style: TextStyle(
-                                            color: Colors.white
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
+                                        onTap: () {
+                                          setState(() {
+                                            var i = products.indexWhere(
+                                                (element) =>
+                                                    element['id'] ==
+                                                    searchProducts[index]
+                                                        ["id"]);
+                                            OpenDialoge(
+                                                searchProducts[index]["id"], i);
+                                          });
+                                        },
                                       ),
-                                      onTap: () {
-                                        setState(() {
-                                          var i = products.indexWhere((element) =>
-                                          element['id'] ==
-                                              searchProducts[index]["id"]);
-                                          OpenDialoge(
-                                              searchProducts[index]["id"], i);
-                                        });
-                                      },
-                                    ),
-                                  )
-                                );
+                                    ));
                               },
                             ),
                           ),
@@ -347,65 +365,68 @@ class _newOrderState extends State<newOrder> {
                       Expanded(
                         flex: 10,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            children: [
-                              // Input User Email
-                              Flexible(
-                                  child: TextFormField(
-                                    maxLines: 1,
-                                    controller: _emailController,
-                                    decoration: InputDecoration(
-                                        hintText: "Email",
-                                        hintStyle: const TextStyle(
-                                          fontFamily: "NTR",
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 15,
-                                        ),
-                                        prefixIcon: const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15,
-                                              right: 10
-                                          ),
-                                          child: Icon(Icons.email),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        contentPadding: EdgeInsets.only()
-                                    ),
-                                  )
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              // Confirm Button
-                              SizedBox(
-                                height: 43,
-                                width: 100,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // INVOICE
-                                    invoiceDiagloge();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    // ignore: deprecated_member_use
-                                    primary: Colors.blue,
-                                    // ignore: deprecated_member_use
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text("Checkout"),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                            ),
+                            child: Row(
+                              children: [
+                                // Input User Email
+                                Flexible(
+                                    child: TextFormField(
+                                  maxLines: 1,
+                                  controller: _emailController,
+                                  decoration: InputDecoration(
+                                      hintText: "Phone Number",
+                                      hintStyle: const TextStyle(
+                                        fontFamily: "NTR",
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                      ),
+                                      prefixIcon: const Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 15, right: 10),
+                                        child: Icon(Icons.phone),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      contentPadding: EdgeInsets.only()),
+                                )),
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              )
-                            ],
-                          )
-                        ),
+                                // Confirm Button
+                                SizedBox(
+                                  height: 43,
+                                  width: 100,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // INVOICE
+                                      QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.warning,
+                                        title: 'Prescription Confirmation',
+                                        text:
+                                            'Have you checked the prescription?',
+                                        onConfirmBtnTap: () =>
+                                            invoiceDiagloge(),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      // ignore: deprecated_member_use
+                                      primary: Colors.blue,
+                                      // ignore: deprecated_member_use
+                                      onPrimary: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    child: const Text("Checkout"),
+                                  ),
+                                )
+                              ],
+                            )),
                       )
                     ]),
                   ),
@@ -432,7 +453,6 @@ class _newOrderState extends State<newOrder> {
                 if (index == selectedProducts.length) {
                   return ListTile(
                     title: const Text("Total Bill"),
-
                     trailing: Text("Rs. $totalBill"),
                     // Total Bill
                   );
@@ -457,6 +477,9 @@ class _newOrderState extends State<newOrder> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.push(
+                    context, // Adding Product
+                    MaterialPageRoute(builder: (context) => const newOrder()));
               },
               child: const Text("Cancel"),
             ),
@@ -470,6 +493,9 @@ class _newOrderState extends State<newOrder> {
                     totalBill = 0;
                   });
                 }
+                Navigator.push(
+                    context, // Adding Product
+                    MaterialPageRoute(builder: (context) => const newOrder()));
 
                 // Adding the Invoice to the Database
                 // Updating the Products Quantity
