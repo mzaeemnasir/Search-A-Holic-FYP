@@ -135,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
                     bottom: MediaQuery.of(context).size.height * 0.02,
                   ),
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.10,
+                    height: MediaQuery.of(context).size.width * 0.1,
                     child: Card(
                       elevation: 2,
                       shape: RoundedRectangleBorder(

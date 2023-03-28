@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:searchaholic/newOrder.dart';
 import 'package:searchaholic/product.dart';
-
 import 'addProduct.dart';
+import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-Expanded textBox(
+Expanded textbox2(
   BuildContext context,
   String text,
   Color topRightColor,
@@ -23,23 +23,23 @@ Expanded textBox(
       elevation: 3,
       borderRadius: BorderRadius.all(Radius.circular(10)),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.20,
+        height: MediaQuery.of(context).size.height * 0.25,
         child: InkWell(
-          onTap: () {
-            print(text);
-            if (text == "Add Product") {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const AddProduct()));
-            }
-            if (text == "Search Product") {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const Product()));
-            }
-            if (text == "New Order") {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => newOrder()));
-            }
-          },
+          // onTap: () {
+          //   print(text);
+          //   if (text == "Add Product") {
+          //     Navigator.pushReplacement(context,
+          //         MaterialPageRoute(builder: (context) => const AddProduct()));
+          //   }
+          //   if (text == "Search Product") {
+          //     Navigator.pushReplacement(context,
+          //         MaterialPageRoute(builder: (context) => const Product()));
+          //   }
+          //   if (text == "New Order") {
+          //     Navigator.pushReplacement(
+          //         context, MaterialPageRoute(builder: (context) => newOrder()));
+          //   }
+          // },
           child: Container(
             height: MediaQuery.of(context).size.width * 0.12,
             decoration: BoxDecoration(
@@ -63,18 +63,29 @@ Expanded textBox(
                     ),
                     child: logo != ""
                         ? Center(
-                            child: Image(
-                              image: logo,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.1,
+                            child: SizedBox(
+                              width: 100,
+                              child: SimpleCircularProgressBar(
+                                // valueNotifier: valueNotifier,
+                                mergeMode: true,
+                                onGetText: (double value) {
+                                  return Text(
+                                    '01',
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           )
                         : Container(),
                   ),
-                  Container(
-                    child: Align(
-                      alignment: Alignment
-                          .bottomCenter, //.center : Alignment.bottomLeft,
+                  Padding(
+                    padding: EdgeInsets.only(top: 05),
+                    child: Container(
                       child: Text(
                         text,
                         textAlign: TextAlign.center,
