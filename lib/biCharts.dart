@@ -1,3 +1,5 @@
+import 'package:firedart/generated/google/firestore/v1/document.pb.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'imports.dart';
 
 class biCharts extends StatefulWidget {
@@ -17,23 +20,10 @@ class biCharts extends StatefulWidget {
 
 class _biChartsState extends State<biCharts> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  void myalert() {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.error,
-      title: 'Login Faild',
-      text: 'Wrong Email or Password',
-    );
-  }
-
-  void myalert1() {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.success,
-      title: 'Login Successful',
-      text: '',
-    );
-  }
+  var revenue = 0.0;
+  var sale = 0.0;
+  var orders = 0.0;
+  String email = "";
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +44,7 @@ class _biChartsState extends State<biCharts> {
                           padding: EdgeInsets.only(
                             top: MediaQuery.of(context).size.height * 0.057,
                           ),
-                          child: Text("BI charts",
+                          child: Text("Report's",
                               style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w600,
@@ -62,7 +52,385 @@ class _biChartsState extends State<biCharts> {
                                     MediaQuery.of(context).size.width / 45,
                               )),
                         ),
-                      ])))
+
+                        ///Today's report
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Generate Report's",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.w400,
+                              fontSize: MediaQuery.of(context).size.width / 55,
+                            ),
+                          ),
+                        ),
+
+                        ///Today's report card
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.017,
+                            bottom: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.10,
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ///Revenue
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.width *
+                                          0.01,
+                                      bottom:
+                                          MediaQuery.of(context).size.width *
+                                              0.01,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.01,
+                                      right: MediaQuery.of(context).size.width *
+                                          0.01,
+                                    ),
+                                    child: Card(
+                                      elevation: 1,
+                                      color: Colors.grey[100],
+                                      child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              ///Text
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Revenue",
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              55,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "Rs. " + revenue.toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              80,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+
+                                              ///Padding
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.015,
+                                              ),
+
+                                              ///Icon
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.007,
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.007),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      "images/revenue_icon.png"),
+                                                ),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  ),
+
+                                  ///Sale
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.width *
+                                          0.01,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.075,
+                                      bottom:
+                                          MediaQuery.of(context).size.width *
+                                              0.01,
+                                      right: MediaQuery.of(context).size.width *
+                                          0.01,
+                                    ),
+                                    child: Card(
+                                      elevation: 1,
+                                      color: Colors.grey[100],
+                                      child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              ///Text
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Sale",
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              55,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "Rs. " + sale.toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              80,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+
+                                              ///Padding
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.015,
+                                              ),
+
+                                              ///Icon
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.007,
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.007),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      "images/sale_icon.png"),
+                                                ),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  ),
+
+                                  ///Orders
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.width *
+                                          0.01,
+                                      bottom:
+                                          MediaQuery.of(context).size.width *
+                                              0.01,
+                                      left: MediaQuery.of(context).size.width *
+                                          0.057,
+                                      right: MediaQuery.of(context).size.width *
+                                          0.0009,
+                                    ),
+                                    child: Card(
+                                      elevation: 1,
+                                      color: Colors.grey[100],
+                                      child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              ///Text
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Orders",
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              55,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "Rs. " + orders.toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              80,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+
+                                              ///Padding
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.015,
+                                              ),
+
+                                              ///Icon
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.007,
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.007),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      "images/orders_icon.png"),
+                                                ),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Sales Report",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.w400,
+                              fontSize: MediaQuery.of(context).size.width / 45,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              // top: MediaQuery.of(context).size.height * 0.015,
+                              // bottom: MediaQuery.of(context).size.height * 0.02,
+                              ),
+                          child: SizedBox(
+                              // height: MediaQuery.of(context).size.width * 0.25,
+                              // width: MediaQuery.of(context).size.width * 0.25,
+                              child: Row(
+                            children: <Widget>[
+                              Container(
+                                margin: const EdgeInsets.only(left: 20),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.48,
+                                width: MediaQuery.of(context).size.width * 0.31,
+                                child: SfCartesianChart(
+                                  title: ChartTitle(text: "Daily Sales"),
+                                  primaryXAxis: CategoryAxis(
+                                      title: AxisTitle(text: "Sales Date")),
+                                  primaryYAxis: NumericAxis(
+                                      title: AxisTitle(
+                                        text: "Sale in Lack's",
+                                      ),
+                                      labelFormat: "{value} lac"),
+                                  series: <ChartSeries>[
+                                    ColumnSeries<Salesdata, String>(
+                                        dataSource: getSalesdata(),
+                                        xValueMapper: (Salesdata sales, _) =>
+                                            sales.x,
+                                        yValueMapper: (Salesdata sales, _) =>
+                                            sales.y,
+                                        dataLabelSettings:
+                                            DataLabelSettings(isVisible: true))
+                                  ],
+                                ),
+                              ),
+                              // your blue container
+                              Container(
+                                margin: const EdgeInsets.only(left: 30),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.48,
+                                width: MediaQuery.of(context).size.width * 0.31,
+                              ),
+                            ],
+                          )),
+                        )
+                      ]))),
             ])));
   }
+}
+
+class Salesdata {
+  String x;
+  double y;
+
+  Salesdata(this.x, this.y);
+}
+
+dynamic getSalesdata() {
+  List<Salesdata> Salesdata1 = <Salesdata>[
+    Salesdata("25", 3.4),
+    Salesdata("26", 5.6),
+    Salesdata("27", 3.4),
+    Salesdata("28", 6),
+    Salesdata("29", 2),
+    Salesdata("30", 7.6)
+  ];
+  return Salesdata1;
 }
