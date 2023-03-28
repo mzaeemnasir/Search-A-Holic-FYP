@@ -9,7 +9,8 @@ import 'package:searchaholic/orderCard.dart';
 import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'package:e_invoice_generator/e_invoice_generator.dart';
-
+import 'package:intl/intl.dart';
+import 'package:share_whatsapp/share_whatsapp.dart';
 import 'imports.dart';
 
 final selectedProducts = [];
@@ -22,14 +23,18 @@ class newOrder extends StatefulWidget {
 
 class _newOrderState extends State<newOrder> {
   final products = [];
+
   final searchProducts = [];
   int totalBill = 0;
   final quantityController = TextEditingController();
   final _emailController = TextEditingController();
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   dynamic Store_name;
   dynamic Email;
   dynamic Phone_number;
   dynamic address_l1, address_l2;
+  dynamic date;
+  dynamic msg;
   //dynamic password;
 
   ///getting profile data from databae
@@ -54,6 +59,15 @@ class _newOrderState extends State<newOrder> {
       address_l1 = data2['lat'];
       address_l2 = data2['long'];
       //password = data2['password'];
+    });
+  }
+
+  Future getDateandTime() async {
+    var now = DateTime.now();
+    var formatter = DateFormat.yMMMMd().add_jm();
+    String formattedDate = formatter.format(now);
+    setState(() {
+      date = formattedDate;
     });
   }
 
@@ -372,26 +386,47 @@ class _newOrderState extends State<newOrder> {
                               children: [
                                 // Input User Email
                                 Flexible(
-                                    child: TextFormField(
-                                  maxLines: 1,
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                      hintText: "Phone Number",
-                                      hintStyle: const TextStyle(
-                                        fontFamily: "NTR",
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                      ),
-                                      prefixIcon: const Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 10),
-                                        child: Icon(Icons.phone),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      contentPadding: EdgeInsets.only()),
+                                    child: Form(
+                                  key: formkey,
+                                  child: TextFormField(
+                                    maxLines: 1,
+                                    controller: _emailController,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Phone number required';
+                                      } else {
+                                        RegExp regExp = RegExp(
+                                          r"^[0-9]{11}$",
+                                          caseSensitive: false,
+                                          multiLine: false,
+                                        );
+                                        if (!regExp.hasMatch(value)) {
+                                          // Make input field red
+                                          return 'Please enter a valid phone number';
+                                        }
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                        hintText: "Phone Number",
+                                        hintStyle: const TextStyle(
+                                          fontFamily: "NTR",
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15,
+                                        ),
+                                        prefixIcon: const Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 15, right: 10),
+                                          child: Icon(Icons.phone),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.only()),
+                                  ),
                                 )),
                                 const SizedBox(
                                   width: 10,
@@ -402,16 +437,20 @@ class _newOrderState extends State<newOrder> {
                                   width: 100,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      // INVOICE
-                                      QuickAlert.show(
-                                        context: context,
-                                        type: QuickAlertType.warning,
-                                        title: 'Prescription Confirmation',
-                                        text:
-                                            'Have you checked the prescription?',
-                                        onConfirmBtnTap: () =>
-                                            invoiceDiagloge(),
-                                      );
+                                      if (formkey.currentState!.validate()) {
+                                        // INVOICE
+                                        getDateandTime();
+
+                                        QuickAlert.show(
+                                          context: context,
+                                          type: QuickAlertType.warning,
+                                          title: 'Prescription Confirmation',
+                                          text:
+                                              'Have you checked the prescription?',
+                                          onConfirmBtnTap: () =>
+                                              invoiceDiagloge(),
+                                        );
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       // ignore: deprecated_member_use
@@ -443,36 +482,132 @@ class _newOrderState extends State<newOrder> {
   Future invoiceDiagloge() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Invoice - ${_emailController.text}"),
-          content: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: ListView.builder(
-              itemCount: selectedProducts.length + 1,
-              itemBuilder: (context, index) {
-                if (index == selectedProducts.length) {
-                  return ListTile(
-                    title: const Text("Total Bill"),
-                    trailing: Text("Rs. $totalBill"),
-                    // Total Bill
-                  );
-                } else {
-                  var price = "${selectedProducts[index]['price']}";
-                  var quantity = "${selectedProducts[index]['quantity']}";
-
-                  return ListTile(
-                    title: Text(selectedProducts[index]['name']),
-                    subtitle: Text(
-                        "Rs. ${selectedProducts[index]['price']} x ${selectedProducts[index]['quantity']}"),
-                    // ignore: unnecessary_new
-                    trailing: new Text(
-                        "Rs. ${int.parse(price) * int.parse(quantity)}"),
-                    // Total Bill
-                  );
-                }
-              },
+          title: Padding(
+            padding: const EdgeInsets.only(left: 150),
+            child: Text(
+              "$Store_name",
+              style: const TextStyle(fontSize: 24, color: Colors.black),
             ),
           ),
+          //Text("Invoice - ${_emailController.text}"),
+          content: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(left: 25),
+                child: Text("Sales Invoice",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 280),
+                child: Text("Address: $address_l1,$address_l2",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 235),
+                child: Text("Tel #: $Phone_number",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 120),
+                child: Text("Date & Time: $date",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 175),
+                child: Text("Customer Tel #: ${_emailController.text}",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Scrollbar(
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: selectedProducts.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == selectedProducts.length) {
+                        return ListTile(
+                          title: const Text("Total Bill"),
+                          trailing: Text("Rs. $totalBill"),
+                          // Total Bill
+                        );
+                      } else {
+                        var price = "${selectedProducts[index]['price']}";
+                        var quantity = "${selectedProducts[index]['quantity']}";
+
+                        return ListTile(
+                          title: Text(selectedProducts[index]['name']),
+                          subtitle: Text(
+                              "Rs. ${selectedProducts[index]['price']} x ${selectedProducts[index]['quantity']}"),
+                          // ignore: unnecessary_new
+                          trailing: new Text(
+                              "Rs. ${int.parse(price) * int.parse(quantity)}"),
+                          // Total Bill
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: Text(
+                    'Total discount',
+                  ),
+                  trailing: Text('0'),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: Text(
+                    'Sales Tax %',
+                  ),
+                  trailing: Text('0'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: const Text(
+                    'Total Amount',
+                  ),
+                  trailing: Text('$totalBill'),
+                ),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text("Thank You for choosing $Store_name",
+                    style: const TextStyle(fontSize: 11, color: Colors.black)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Text("For feedback @ $Email",
+                    style: const TextStyle(fontSize: 11, color: Colors.black)),
+              ),
+
+              // Add more Text widgets for additional lines of data
+            ],
+          ),
+
           actions: [
             TextButton(
               onPressed: () {
@@ -485,6 +620,17 @@ class _newOrderState extends State<newOrder> {
             ),
             TextButton(
               onPressed: () async {
+                setState(() {
+                  msg =
+                      "$Store_name\nSales Invoice\nAddress: $address_l1,$address_l2\nTel #: $Phone_number\nDate & Time: $date\nCustomer Tel #: ${_emailController.text}\n${selectedProducts[0]['name']}  Rs. ${selectedProducts[0]['price']} x ${selectedProducts[0]['quantity']}\nSales Tax:0\nDiscount:0\nTotal Amount:$totalBill\nThank You for choosing $Store_name\nFor feedback @ $Email\n";
+                });
+                shareWhatsapp.share(
+                  text: msg,
+                  // change with real whatsapp number
+                  phone: '+92${_emailController.text}',
+                );
+                // ignore: unused_local_variable
+
                 Navigator.pop(context);
                 if (await Flutter_api().addOrder(selectedProducts, totalBill) ==
                     true) {

@@ -92,7 +92,8 @@ class _AddProduct extends State<AddProduct> {
                             return 'Product Name required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$",
+                              r"^[a-zA-Z][a-zA-Z0-9\s]*$",
+                              // r"^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$",
                               caseSensitive: false,
                               multiLine: false,
                             );
