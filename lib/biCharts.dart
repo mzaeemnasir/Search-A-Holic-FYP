@@ -13,10 +13,11 @@ import 'imports.dart';
 
 class biCharts extends StatefulWidget {
   const biCharts({super.key});
-
   @override
   _biChartsState createState() => _biChartsState();
 }
+
+// TooltipBehavior _tooltipBehavior;
 
 class _biChartsState extends State<biCharts> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -24,6 +25,12 @@ class _biChartsState extends State<biCharts> {
   var sale = 0.0;
   var orders = 0.0;
   String email = "";
+
+  // @override
+  // void initState() {
+  //   _tooltipBehavior = TooltipBehavior(enable: true);
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +118,7 @@ class _biChartsState extends State<biCharts> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Revenue",
+                                                    "Hot Products",
                                                     style: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: "Montserrat",
@@ -200,7 +207,7 @@ class _biChartsState extends State<biCharts> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sale",
+                                                    "Season Trend",
                                                     style: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: "Montserrat",
@@ -289,7 +296,7 @@ class _biChartsState extends State<biCharts> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Orders",
+                                                    "Trend",
                                                     style: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: "Montserrat",
@@ -302,20 +309,20 @@ class _biChartsState extends State<biCharts> {
                                                               55,
                                                     ),
                                                   ),
-                                                  Text(
-                                                    "Rs. " + orders.toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              80,
-                                                    ),
-                                                  )
+                                                  // Text(
+                                                  //   "Rs. " + orders.toString(),
+                                                  //   style: TextStyle(
+                                                  //     color: Colors.black,
+                                                  //     fontFamily: "Montserrat",
+                                                  //     fontWeight:
+                                                  //         FontWeight.w300,
+                                                  //     fontSize:
+                                                  //         MediaQuery.of(context)
+                                                  //                 .size
+                                                  //                 .width /
+                                                  //             80,
+                                                  //   ),
+                                                  // )
                                                 ],
                                               ),
 
@@ -403,11 +410,40 @@ class _biChartsState extends State<biCharts> {
                               ),
                               // your blue container
                               Container(
-                                margin: const EdgeInsets.only(left: 30),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.48,
-                                width: MediaQuery.of(context).size.width * 0.31,
-                              ),
+                                  margin: const EdgeInsets.only(left: 30),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.48,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.31,
+                                  child: SfCartesianChart(
+                                      primaryXAxis: CategoryAxis(),
+                                      // Chart title
+                                      title: ChartTitle(
+                                          text: 'Half yearly sales analysis'),
+                                      // Enable legend
+                                      //legend: Legend(isVisible: true),
+                                      // Enable tooltip
+                                      //tooltipBehavior: _tooltipBehavior,
+                                      series: <LineSeries<SalesData, String>>[
+                                        LineSeries<SalesData, String>(
+                                            dataSource: <SalesData>[
+                                              SalesData('Jan', 23),
+                                              SalesData('Feb', 28),
+                                              SalesData('Mar', 34),
+                                              SalesData('Apr', 32),
+                                              SalesData('May', 40)
+                                            ],
+                                            xValueMapper:
+                                                (SalesData sales, _) =>
+                                                    sales.year,
+                                            yValueMapper:
+                                                (SalesData sales, _) =>
+                                                    sales.sales,
+                                            // Enable data label
+                                            dataLabelSettings:
+                                                DataLabelSettings(
+                                                    isVisible: true))
+                                      ])),
                             ],
                           )),
                         )
@@ -433,4 +469,10 @@ dynamic getSalesdata() {
     Salesdata("30", 7.6)
   ];
   return Salesdata1;
+}
+
+class SalesData {
+  SalesData(this.year, this.sales);
+  final String year;
+  final double sales;
 }
