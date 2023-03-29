@@ -50,6 +50,15 @@ class _changeState extends State<change> {
     );
   }
 
+  void showAlert3() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Oops...',
+      text: 'New password is same as old password',
+    );
+  }
+
   void showAlert2() {
     QuickAlert.show(
       context: context,
@@ -257,6 +266,10 @@ class _changeState extends State<change> {
                           if (formkey.currentState!.validate()) {
                             if (await password_check(_password.text) == true) {
                               showAlert();
+                            } else if (check_newpass_notequal_pass(
+                                    _password.text, _newPassword.text) ==
+                                true) {
+                              showAlert3();
                             } else if (newpassword_match(
                                     _newPassword.text, _confirmPassword.text) ==
                                 true) {
@@ -389,6 +402,14 @@ class _changeState extends State<change> {
       return Future<bool>.value(true);
     } else {
       return Future<bool>.value(false);
+    }
+  }
+
+  bool check_newpass_notequal_pass(String password, String newpassword) {
+    if (password == newpassword) {
+      return true;
+    } else {
+      return false;
     }
   }
 

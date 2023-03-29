@@ -185,6 +185,7 @@ class _AddProduct extends State<AddProduct> {
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               prefixIcon: Icon(Icons.calendar_today),
+                              suffixIcon: Icon(Icons.arrow_drop_down),
                               //icon of text field
                               labelText:
                                   "Enter Expire Date" //label text of field
@@ -244,7 +245,9 @@ class _AddProduct extends State<AddProduct> {
                           print(value);
                           print(_productType.text);
                         },
-                        hint: const Text("Select Product Visibility"),
+                        hint: const Text(
+                          "Select Product Visibility",
+                        ),
                       ),
                     ),
                     Container(
