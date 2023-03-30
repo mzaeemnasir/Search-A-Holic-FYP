@@ -383,31 +383,37 @@ class _biChartsState extends State<biCharts> {
                               child: Row(
                             children: <Widget>[
                               Container(
-                                margin: const EdgeInsets.only(left: 20),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.48,
-                                width: MediaQuery.of(context).size.width * 0.31,
-                                child: SfCartesianChart(
-                                  title: ChartTitle(text: "Daily Sales"),
-                                  primaryXAxis: CategoryAxis(
-                                      title: AxisTitle(text: "Sales Date")),
-                                  primaryYAxis: NumericAxis(
-                                      title: AxisTitle(
-                                        text: "Sale in Lack's",
-                                      ),
-                                      labelFormat: "{value} lac"),
-                                  series: <ChartSeries>[
-                                    ColumnSeries<Salesdata, String>(
-                                        dataSource: getSalesdata(),
-                                        xValueMapper: (Salesdata sales, _) =>
-                                            sales.x,
-                                        yValueMapper: (Salesdata sales, _) =>
-                                            sales.y,
-                                        dataLabelSettings:
-                                            DataLabelSettings(isVisible: true))
-                                  ],
-                                ),
-                              ),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.48,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.31,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    margin: const EdgeInsets.only(left: 20),
+                                    child: SfCartesianChart(
+                                      title: ChartTitle(text: "Daily Sales"),
+                                      primaryXAxis: CategoryAxis(
+                                          title: AxisTitle(text: "Sales Date")),
+                                      primaryYAxis: NumericAxis(
+                                          title: AxisTitle(
+                                            text: "Sale in Lack's",
+                                          ),
+                                          labelFormat: "{value} lac"),
+                                      series: <ChartSeries>[
+                                        ColumnSeries<Salesdata, String>(
+                                            dataSource: getSalesdata(),
+                                            xValueMapper:
+                                                (Salesdata sales, _) => sales.x,
+                                            yValueMapper:
+                                                (Salesdata sales, _) => sales.y,
+                                            dataLabelSettings:
+                                                DataLabelSettings(
+                                                    isVisible: true))
+                                      ],
+                                    ),
+                                  )),
                               // your blue container
                               Container(
                                   margin: const EdgeInsets.only(left: 30),
@@ -415,35 +421,41 @@ class _biChartsState extends State<biCharts> {
                                       MediaQuery.of(context).size.height * 0.48,
                                   width:
                                       MediaQuery.of(context).size.width * 0.31,
-                                  child: SfCartesianChart(
-                                      primaryXAxis: CategoryAxis(),
-                                      // Chart title
-                                      title: ChartTitle(
-                                          text: 'Half yearly sales analysis'),
-                                      // Enable legend
-                                      //legend: Legend(isVisible: true),
-                                      // Enable tooltip
-                                      //tooltipBehavior: _tooltipBehavior,
-                                      series: <LineSeries<SalesData, String>>[
-                                        LineSeries<SalesData, String>(
-                                            dataSource: <SalesData>[
-                                              SalesData('Jan', 23),
-                                              SalesData('Feb', 28),
-                                              SalesData('Mar', 34),
-                                              SalesData('Apr', 32),
-                                              SalesData('May', 40)
-                                            ],
-                                            xValueMapper:
-                                                (SalesData sales, _) =>
-                                                    sales.year,
-                                            yValueMapper:
-                                                (SalesData sales, _) =>
-                                                    sales.sales,
-                                            // Enable data label
-                                            dataLabelSettings:
-                                                DataLabelSettings(
-                                                    isVisible: true))
-                                      ])),
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: SfCartesianChart(
+                                          primaryXAxis: CategoryAxis(),
+                                          // Chart title
+                                          title: ChartTitle(
+                                              text:
+                                                  'Half yearly sales analysis'),
+                                          // Enable legend
+                                          //legend: Legend(isVisible: true),
+                                          // Enable tooltip
+                                          //tooltipBehavior: _tooltipBehavior,
+                                          series: <
+                                              LineSeries<SalesData, String>>[
+                                            LineSeries<SalesData, String>(
+                                                dataSource: <SalesData>[
+                                                  SalesData('Jan', 23),
+                                                  SalesData('Feb', 28),
+                                                  SalesData('Mar', 34),
+                                                  SalesData('Apr', 32),
+                                                  SalesData('May', 40)
+                                                ],
+                                                xValueMapper:
+                                                    (SalesData sales, _) =>
+                                                        sales.year,
+                                                yValueMapper:
+                                                    (SalesData sales, _) =>
+                                                        sales.sales,
+                                                // Enable data label
+                                                dataLabelSettings:
+                                                    DataLabelSettings(
+                                                        isVisible: true))
+                                          ]))),
                             ],
                           )),
                         )
