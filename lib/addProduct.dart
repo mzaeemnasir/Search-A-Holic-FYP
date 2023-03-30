@@ -118,7 +118,8 @@ class _AddProduct extends State<AddProduct> {
                         keyboardType: TextInputType.number,
                         controller: _productPrice,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}"))
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -128,17 +129,8 @@ class _AddProduct extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Price required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[0-9]*$",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid price';
-                            }
                           }
+
                           return null;
                         },
                       ),
@@ -151,7 +143,8 @@ class _AddProduct extends State<AddProduct> {
                       child: TextFormField(
                         controller: _productQty,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}"))
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -161,16 +154,6 @@ class _AddProduct extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Quantity required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[0-9]*$",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid Quantity';
-                            }
                           }
                           return null;
                         },
