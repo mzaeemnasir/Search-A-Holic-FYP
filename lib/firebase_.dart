@@ -88,21 +88,17 @@ class Flutter_api {
     List storeDetails = await getStoreDetails();
 
     try {
-      Document doc = await Firestore.instance
-          .collection("Products")
-          .document(storeID)
-          .get();
+      Document x = await getAllProducts();
+      Map<String, dynamic> data =
+          x.map; //Maping the data to the data variable (Map<String, dynamic>)
 
-      print(doc);
-
-      //Maping the data to the data variable (Map<String, dynamic>)
-      Map<String, dynamic> data = {};
       // Cecking if the product is already present add the quantity
       if (data.containsKey(productID)) {
         int prevQty = int.parse(data[productID]['Quantity']);
         int newQty = prevQty + int.parse(productQty);
         data[productID]['Quantity'] = newQty.toString();
       } else {
+        print(data.length);
         // Adding the product to the product collection (prevData
         data.addAll({
           productID: {
@@ -119,6 +115,7 @@ class Flutter_api {
                 double.parse(storeDetails[1]), double.parse(storeDetails[2])),
           },
         });
+        print(data.length);
       }
 
       await Firestore.instance
