@@ -22,7 +22,8 @@ class _Product extends State<Product> {
   @override
   void initState() {
     super.initState();
-    getProducts();
+    print("Init State Called");
+    updateProduct();
     _searchController.addListener(_searchControllerFun);
     products.clear();
   }
@@ -179,6 +180,31 @@ class _Product extends State<Product> {
     );
   }
 
+  void updateProduct() async {
+    // Updating the Product
+    Document doc = await Flutter_api().getAllProducts();
+
+    for (var i = 0; i < doc.map.length; i++) {
+      print(doc.map[i]);
+    }
+
+    setState(() {
+      products.clear();
+      // Adding Product to the List
+      for (var i = 0; i < doc.map.length; i++) {
+        products.add({
+          "Name": doc.map[i]['Name'],
+          "Price": doc.map[i]['Price'],
+          "Quantity": doc.map[i]['Quantity'],
+          "StoreId": doc.map[i]['storeId'],
+          "ProductId": doc.map[i]['productId'],
+          "Type": doc.map[i]['Type'],
+        });
+        print(doc.map[i]['Name']);
+      }
+    });
+  }
+
   Future getProducts() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
@@ -213,3 +239,19 @@ class _Product extends State<Product> {
     // Getting Documents from Firestore again the email
   }
 }
+
+
+
+
+/*Category
+Expire
+"12/31/2024"
+Name
+Price
+ProductId
+Quantity
+StoreId
+StoreLocation
+StoreName
+Type
+*/
