@@ -117,6 +117,7 @@ class _Product extends State<Product> {
                       ],
                     ),
                   ),
+                  // Adding Button (Add Product)
                   Container(
                     alignment: Alignment.centerLeft,
                     child: // Adding Button (Add Product)
@@ -186,89 +187,49 @@ class _Product extends State<Product> {
             value,
             value.map.forEach((key, value) {
               setState(() {
-                products.add({
-                  "Name": value['Name'],
-                  "Price": value['Price'],
-                  "Quantity": value['Quantity'],
-                  "StoreId": value['storeId'],
-                  "ProductId": value['productId'],
-                  "Type": value['Type'],
-                  "id": key,
-                });
-                print(products);
+                try {
+                  products.add({
+                    "Name": value['Name'],
+                    "Price": value['Price'],
+                    "Quantity": value['Quantity'],
+                    "StoreId": value['StoreId'],
+                    "ProductId": value['ProductId'],
+                    "Type": value['Type'],
+                    "id": key,
+                  });
+                } catch (e) {
+                  print(e);
+                }
               });
             })
           },
         );
-
-    // for (var i = 0; i < doc.map.length; i++) {
-    //   print(doc.map[i]);
-    // }
-
-    // setState(() {
-    //   products.clear();
-    //   // Adding Product to the List
-    //   for (var i = 0; i < doc.map.length; i++) {
-    //     products.add({
-    //       "Name": doc.map[i]['Name'],
-    //       "Price": doc.map[i]['Price'],
-    //       "Quantity": doc.map[i]['Quantity'],
-    //       "StoreId": doc.map[i]['storeId'],
-    //       "ProductId": doc.map[i]['productId'],
-    //       "Type": doc.map[i]['Type'],
-    //     });
-    //     print(doc.map[i]['Name']);
-    //   }
-    // });
   }
 
   Future getProducts() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    Directory folder = Directory('$path/SeachAHolic');
-
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+    String email = await Flutter_api().getEmail();
+    String storeId = await Flutter_api().generateStoreId(email);
 
     // Getting Documents from Firestore
-    var data = await Firestore.instance
-        .collection(email)
-        .document("Product")
-        .collection("products")
-        .orderBy("productName", descending: false)
-        .get();
-
+    var data =
+        await Firestore.instance.collection(email).document(storeId).get();
     setState(() {
       products.clear();
       // adding Temp Data to the List
-      data.forEach((element) {
-        // spliting the Document ID to get the Product ID
-        var data = {
-          "id": element.id,
-          "name": element['productName'],
-          "price": element['productPrice'],
-          "quantity": element['productQty'],
-        };
-        products.add(data);
+      data.map.forEach((key, value) {
+        setState(() {
+          products.add({
+            "Name": value['Name'],
+            "Price": value['Price'],
+            "Quantity": value['Quantity'],
+            "StoreId": value['StoreId'],
+            "ProductId": value['ProductId'],
+            "Type": value['Type'],
+            "id": key,
+          });
+        });
       });
     });
     // Getting Documents from Firestore again the email
   }
 }
-
-
-
-
-/*Category
-Expire
-"12/31/2024"
-Name
-Price
-ProductId
-Quantity
-StoreId
-StoreLocation
-StoreName
-Type
-*/

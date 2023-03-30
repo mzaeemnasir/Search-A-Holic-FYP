@@ -231,23 +231,34 @@ class ProductCard extends StatelessWidget {
     return Future<String>.value(email);
   }
 
-  Future<bool> deleteProduct(String id) async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
+  Map<String, dynamic> removeMapData(Map<String, dynamic> map, String id) {
+    map.remove(id);
+    map.forEach((key, value) {
+      if (key == id) {
+        print("Found the key to be deleted");
+        map.remove(key);
+      }
+    });
+    return map;
+  }
 
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+  Future<bool> deleteProduct(String id) async {
+    print(id);
+
+    String email = await Flutter_api().getEmail();
+    var x = Flutter_api().generateStoreId(email);
 
     // Deleting the Product from Firestore
     try {
-      await Firestore.instance
-          .collection(email)
-          .document("Product")
-          .collection("products")
-          .document(id)
-          .delete();
+      final DATA =
+          await Firestore.instance.collection("Products").document(x).get();
 
+      final map = removeMapData(DATA.map, id);
+
+      await Firestore.instance.collection("Products").document(x).set(map);
+
+      print("Product Deleted");
+      print(DATA.map);
       // Reload the content of the list in the previous page
       return Future.value(true);
     } catch (e) {
