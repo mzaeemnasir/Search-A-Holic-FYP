@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/sidebar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UploadData extends StatefulWidget {
   // Removing Title Bar from the App
@@ -76,6 +77,9 @@ class _UploadDataState extends State<UploadData> {
                                                 // wait for 1 second
                                                 print(email);
 
+                                                Flutter_api().uploadFile(
+                                                    result.files.single.path!);
+
                                                 // To Do: Upload the file to the database
 
                                                 print("Upload the file");
@@ -116,7 +120,9 @@ class _UploadDataState extends State<UploadData> {
                       child: ElevatedButton(
                           child: const Text('Download Sample Data'),
                           onPressed: () {
-                            print("object");
+                            Uri uri = Uri.parse(
+                                "https://cdn.discordapp.com/attachments/748221133819609108/1090748564143083540/sample.csv"); // To Do: Add the link to the sample data
+                            launchUrl(uri);
                           }),
                     ),
                   ]))),

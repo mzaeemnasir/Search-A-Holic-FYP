@@ -54,7 +54,10 @@ dependencies:
   simple_circular_progress_bar: ^1.0.2
   file_picker: ^5.2.6
   url_launcher: ^6.1.10
+  crypto: ^3.0.2
+  csv: ^5.0.1
 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
