@@ -39,13 +39,7 @@ class _newOrderState extends State<newOrder> {
 
   ///getting profile data from databae
   Future getprofile() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    Directory folder = Directory('$path/SeachAHolic');
-
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+    String email = await Flutter_api().getEmail();
 
     // Getting Documents from Firestore
     var data = Firestore.instance.collection(email);
@@ -78,206 +72,221 @@ class _newOrderState extends State<newOrder> {
 
     products.clear();
     searchProducts.clear();
-    searchProducts.clear();
-    quantityController.clear();
     getProducts();
     getprofile();
   }
 
+  //-------------------------- Indexes of the Product --------------------------
+  final Name = "Name";
+  final Price = "Price";
+  final Quantity = "Quantity";
+  final Category = "Category";
+  final Expire = "Expire";
+  final StoreId = "StoreId";
+  final ProductId = "ProductId";
+  final StoreName = "StoreName";
+  final Type = "Type";
+  final StoreLocation = "StoreLocation";
+
+  //----------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Row(children: [
-      const Sidebar(),
-      Expanded(
-        child: Column(
-          children: [
-            const Expanded(
-                flex: 1,
-                child: Center(
-                    child: Text(
-                  "New Order",
-                  style: TextStyle(
-                    fontFamily: "NTR",
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 30,
-                  ),
-                ))),
-            Expanded(
-              flex: 9,
-              child: Row(
-                children: [
-                  // Left Side (Will be Basket)
-                  Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          // Header of the Barket
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(20),
-                                        bottomRight: Radius.circular(20))),
-                                child: Row(
-                                  children: [
-                                    // Basket Title + Icon
-                                    Expanded(
-                                      flex: 3,
-                                      child: Row(
-                                        children: const [
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10)),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            "Basket",
-                                            style: TextStyle(
-                                              fontFamily: "NTR",
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 30,
+      body: Row(
+        children: [
+          const Sidebar(),
+          Expanded(
+            child: Column(
+              children: [
+                // Header of the Page New Order
+                const Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(
+                      "New Order",
+                      style: TextStyle(
+                        fontFamily: "NTR",
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                      ),
+                    ))),
+                Expanded(
+                  flex: 9,
+                  child: Row(
+                    children: [
+                      // Left Side (Will be Basket)
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                            // Header of the Barket
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(20),
+                                          bottomRight: Radius.circular(20))),
+                                  child: Row(
+                                    children: [
+                                      // Basket Title + Icon
+                                      Expanded(
+                                        flex: 3,
+                                        child: Row(
+                                          children: const [
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10)),
+                                            SizedBox(
+                                              width: 10,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 120,
-                                      // Clear Basket Button
-                                      child: Center(
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
+                                            Text(
+                                              "Basket",
+                                              style: TextStyle(
+                                                fontFamily: "NTR",
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 30,
                                               ),
-                                              onPressed: () {
-                                                QuickAlert.show(
-                                                  context: context,
-                                                  type: QuickAlertType.confirm,
-                                                  animType: QuickAlertAnimType
-                                                      .slideInRight,
-                                                  title: "Clear Basket",
-                                                  text:
-                                                      "Are you sure you want to clear the basket?",
-                                                  onConfirmBtnTap: () {
-                                                    setState(() {
-                                                      selectedProducts.clear();
-                                                      totalBill = 0;
-                                                    });
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
-                                              },
-                                              child: const Text(
-                                                "Clear Basket",
-                                                style: TextStyle(
-                                                  fontFamily: "NTR",
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 15,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 120,
+                                        // Clear Basket Button
+                                        child: Center(
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red,
                                                 ),
-                                              ))),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          // List View of the Basket
-                          Expanded(
-                            flex: 8,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              //padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: Colors.grey[200],
-                                ),
-                                height: MediaQuery.of(context).size.height,
-                                // List View of the Basket
-                                child: ListView.builder(
-                                  itemCount: selectedProducts.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
+                                                onPressed: () {
+                                                  QuickAlert.show(
+                                                    context: context,
+                                                    type:
+                                                        QuickAlertType.confirm,
+                                                    animType: QuickAlertAnimType
+                                                        .slideInRight,
+                                                    title: "Clear Basket",
+                                                    text:
+                                                        "Are you sure you want to clear the basket?",
+                                                    onConfirmBtnTap: () {
+                                                      setState(() {
+                                                        selectedProducts
+                                                            .clear();
+                                                        totalBill = 0;
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                  );
+                                                },
+                                                child: const Text(
+                                                  "Clear Basket",
+                                                  style: TextStyle(
+                                                    fontFamily: "NTR",
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 15,
+                                                  ),
+                                                ))),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            // List View of the Basket
+                            Expanded(
+                              flex: 8,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                //padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: Colors.grey[200],
+                                  ),
+                                  height: MediaQuery.of(context).size.height,
+                                  // List View of the Basket
+                                  child: ListView.builder(
+                                    itemCount: selectedProducts.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
                                         onTap: () => {
-                                              setState(() {
-                                                // Updating the Total Bill
-                                                totalBill -= int.parse(
-                                                    selectedProducts[index]
-                                                            ['price']
-                                                        .toString());
-                                                selectedProducts
-                                                    .removeAt(index);
-                                              })
+                                          print("Product Clicked"),
+                                          setState(
+                                            () => {
+                                              // Updating the Total Bill
+                                              totalBill -= int.parse(
+                                                  selectedProducts[index][Price]
+                                                      .toString()),
+
+                                              // Updating Quantity of the Product
+                                              searchProducts.forEach(
+                                                (element) {
+                                                  if (element[Name] ==
+                                                      selectedProducts[index]
+                                                          [Name]) {
+                                                    element[
+                                                        Quantity] = int.parse(
+                                                            selectedProducts[
+                                                                        index]
+                                                                    [Quantity]
+                                                                .toString()) +
+                                                        int.parse(
+                                                            element[Quantity]
+                                                                .toString());
+                                                  }
+                                                },
+                                              ),
+
+                                              // Removing the Product from the Basket
+                                              selectedProducts.removeAt(index),
                                             },
+                                          ),
+                                        },
                                         child: OrderCard(
                                           productName: selectedProducts[index]
-                                                  ['name']
+                                                  [Name]
                                               .toString(),
                                           productPrice: selectedProducts[index]
-                                                  ['price']
+                                                  [Price]
                                               .toString(),
                                           productQty: selectedProducts[index]
-                                                  ['quantity']
+                                                  [Quantity]
                                               .toString(),
                                           productID: selectedProducts[index]
-                                                  ['id']
+                                                  [ProductId]
                                               .toString(),
-                                        ));
-                                  },
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20))),
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        child: const Center(
-                                          child: Text(
-                                            "TOTAL ",
-                                            style: TextStyle(
-                                              fontFamily: "NTR",
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 25,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(20))),
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 20),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(20))),
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: const Center(
                                             child: Text(
-                                              "Rs. $totalBill",
-                                              style: const TextStyle(
+                                              "TOTAL ",
+                                              style: TextStyle(
                                                 fontFamily: "NTR",
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600,
@@ -287,195 +296,243 @@ class _newOrderState extends State<newOrder> {
                                           ),
                                         ),
                                       ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(20))),
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
+                                              child: Text(
+                                                "Rs. $totalBill",
+                                                style: const TextStyle(
+                                                  fontFamily: "NTR",
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 25,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                      // Right Side (Will be Products with Search Bar and Few Buttons)
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              flex: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 30,
+                                  right: 30,
+                                  top: 20,
+                                ),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                      hintText: "Search Product",
+                                      hintStyle: const TextStyle(
+                                        fontFamily: "NTR",
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 20,
+                                      ),
+                                      prefixIcon: const Icon(Icons.search),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      contentPadding: EdgeInsets.only()),
+                                  onChanged: searchQuery,
+                                ),
+                              ),
+                            ),
+
+                            // List View of the Products
+                            Flexible(
+                              flex: 55,
+                              fit: FlexFit.tight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 35,
+                                  right: 30,
+                                  bottom: 20,
+                                ),
+                                child: SizedBox(
+                                  child: ListView.builder(
+                                    itemCount: searchProducts.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 5),
+                                        child: Card(
+                                          elevation: 2,
+                                          color: Colors.blue[300],
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: ListTile(
+                                            // Making a Card for each Product
+                                            title: Text(
+                                              searchProducts[index][Name],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            subtitle: Text(
+                                              "Rs. ${searchProducts[index][Price]}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            trailing: Text(
+                                              "Qty: ${searchProducts[index][Quantity]}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                var i = products.indexWhere(
+                                                    (element) =>
+                                                        element[ProductId] ==
+                                                        searchProducts[index]
+                                                            [ProductId]);
+                                                OpenDialoge(
+                                                    searchProducts[index]
+                                                        [ProductId],
+                                                    i);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                ),
+                                child: Row(
+                                  children: [
+                                    // Input User Email
+                                    Flexible(
+                                      child: Form(
+                                        key: formkey,
+                                        child: TextFormField(
+                                          maxLines: 1,
+                                          controller: _emailController,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Phone number required';
+                                            } else {
+                                              RegExp regExp = RegExp(
+                                                r"^[0-9]{11}$",
+                                                caseSensitive: false,
+                                                multiLine: false,
+                                              );
+                                              if (!regExp.hasMatch(value)) {
+                                                // Make input field red
+                                                return 'Please enter a valid phone number';
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                              hintText: "Phone Number",
+                                              hintStyle: const TextStyle(
+                                                fontFamily: "NTR",
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 15,
+                                              ),
+                                              prefixIcon: const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 15, right: 10),
+                                                child: Icon(Icons.phone),
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              contentPadding:
+                                                  const EdgeInsets.only()),
+                                        ),
+                                      ),
                                     ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    // Confirm Button
+                                    SizedBox(
+                                      height: 43,
+                                      width: 100,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          if (formkey.currentState!
+                                              .validate()) {
+                                            // INVOICE
+                                            getDateandTime();
+
+                                            QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.warning,
+                                              title:
+                                                  'Prescription Confirmation',
+                                              text:
+                                                  'Have you checked the prescription?',
+                                              onConfirmBtnTap: () =>
+                                                  invoiceDiagloge(),
+                                            );
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          // ignore: deprecated_member_use
+                                          primary: Colors.blue,
+                                          // ignore: deprecated_member_use
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                          ),
+                                        ),
+                                        child: const Text("Checkout"),
+                                      ),
+                                    )
                                   ],
                                 ),
-                              ))
-                        ],
-                      )),
-                  // Right Side (Will be Products with Search Bar and Few Buttons)
-                  Expanded(
-                    child: Column(children: [
-                      Expanded(
-                        flex: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 30,
-                            right: 30,
-                            top: 20,
-                          ),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "Search Product",
-                                hintStyle: const TextStyle(
-                                  fontFamily: "NTR",
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                ),
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                contentPadding: EdgeInsets.only()),
-                            onChanged: searchQuery,
-                          ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-
-                      // List View of the Products
-                      Flexible(
-                        flex: 55,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 35,
-                            right: 30,
-                            bottom: 20,
-                          ),
-                          child: SizedBox(
-                            child: ListView.builder(
-                              itemCount: searchProducts.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: Card(
-                                      elevation: 2,
-                                      color: Colors.blue[300],
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: ListTile(
-                                        // Making a Card for each Product
-                                        title: Text(
-                                          searchProducts[index]['name'],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ),
-                                        subtitle: Text(
-                                          "Rs. ${searchProducts[index]['price']}",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            var i = products.indexWhere(
-                                                (element) =>
-                                                    element['id'] ==
-                                                    searchProducts[index]
-                                                        ["id"]);
-                                            OpenDialoge(
-                                                searchProducts[index]["id"], i);
-                                          });
-                                        },
-                                      ),
-                                    ));
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
-                            child: Row(
-                              children: [
-                                // Input User Email
-                                Flexible(
-                                    child: Form(
-                                  key: formkey,
-                                  child: TextFormField(
-                                    maxLines: 1,
-                                    controller: _emailController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Phone number required';
-                                      } else {
-                                        RegExp regExp = RegExp(
-                                          r"^[0-9]{11}$",
-                                          caseSensitive: false,
-                                          multiLine: false,
-                                        );
-                                        if (!regExp.hasMatch(value)) {
-                                          // Make input field red
-                                          return 'Please enter a valid phone number';
-                                        }
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                        hintText: "Phone Number",
-                                        hintStyle: const TextStyle(
-                                          fontFamily: "NTR",
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 15,
-                                        ),
-                                        prefixIcon: const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15, right: 10),
-                                          child: Icon(Icons.phone),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        contentPadding:
-                                            const EdgeInsets.only()),
-                                  ),
-                                )),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                // Confirm Button
-                                SizedBox(
-                                  height: 43,
-                                  width: 100,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (formkey.currentState!.validate()) {
-                                        // INVOICE
-                                        getDateandTime();
-
-                                        QuickAlert.show(
-                                          context: context,
-                                          type: QuickAlertType.warning,
-                                          title: 'Prescription Confirmation',
-                                          text:
-                                              'Have you checked the prescription?',
-                                          onConfirmBtnTap: () =>
-                                              invoiceDiagloge(),
-                                        );
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      // ignore: deprecated_member_use
-                                      primary: Colors.blue,
-                                      // ignore: deprecated_member_use
-                                      onPrimary: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    child: const Text("Checkout"),
-                                  ),
-                                )
-                              ],
-                            )),
-                      )
-                    ]),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      )
-    ]));
+          )
+        ],
+      ),
+    );
   }
 
   // Invoice Dialoge
@@ -543,13 +600,13 @@ class _newOrderState extends State<newOrder> {
                           // Total Bill
                         );
                       } else {
-                        var price = "${selectedProducts[index]['price']}";
-                        var quantity = "${selectedProducts[index]['quantity']}";
+                        var price = "${selectedProducts[index][Price]}";
+                        var quantity = "${selectedProducts[index][Quantity]}";
 
                         return ListTile(
-                          title: Text(selectedProducts[index]['name']),
+                          title: Text(selectedProducts[index][Name]),
                           subtitle: Text(
-                              "Rs. ${selectedProducts[index]['price']} x ${selectedProducts[index]['quantity']}"),
+                              "Rs. ${selectedProducts[index][Price]} x ${selectedProducts[index][Quantity]}"),
                           // ignore: unnecessary_new
                           trailing: new Text(
                               "Rs. ${int.parse(price) * int.parse(quantity)}"),
@@ -665,13 +722,13 @@ class _newOrderState extends State<newOrder> {
             onChanged: ((value) => {
                   if (value.isNotEmpty)
                     {
-                      if (int.parse(searchProducts[i]['quantity']) == 0)
+                      if (int.parse(searchProducts[i][Quantity]) == 0)
                         {quantityController.text = "0"}
-                      else if (int.parse(searchProducts[i]['quantity']) <=
+                      else if (int.parse(searchProducts[i][Quantity]) <=
                           int.parse(value))
                         {
                           quantityController.text =
-                              "${searchProducts[i]['quantity']}"
+                              "${searchProducts[i][Quantity]}"
                         }
                     }
                 }),
@@ -682,7 +739,10 @@ class _newOrderState extends State<newOrder> {
                 Navigator.pop(context);
                 if (quantityController.text.isNotEmpty) {
                   setState(() {
-                    // Nothing
+                    searchProducts[i][Quantity] =
+                        "${int.parse(searchProducts[i][Quantity]) - int.parse(quantityController.text)}";
+
+                    selectedProducts.add(searchProducts[i]);
                   });
                 }
               },
@@ -692,24 +752,24 @@ class _newOrderState extends State<newOrder> {
               onPressed: () {
                 Navigator.pop(context);
                 var index = products
-                    .indexWhere((element) => element['id'] == productID);
+                    .indexWhere((element) => element[ProductId] == productID);
 
                 if (quantityController.text.isNotEmpty) {
                   if (selectedProducts.contains(products[index])) {
                     setState(() {
                       var qty = int.parse(quantityController.text);
-                      var index2 = selectedProducts
-                          .indexWhere((element) => element['id'] == productID);
-                      selectedProducts[index2]['quantity'] =
-                          "${int.parse(selectedProducts[index2]['quantity']) + qty}";
-                      totalBill += int.parse(products[index]['price']) * qty;
+                      var index2 = selectedProducts.indexWhere(
+                          (element) => element[ProductId] == productID);
+                      selectedProducts[index2][Quantity] =
+                          "${int.parse(selectedProducts[index2][Quantity]) + qty}";
+                      totalBill += int.parse(products[index][Price]) * qty;
                     });
                   } else {
                     setState(() {
                       var qty = int.parse(quantityController.text);
-                      products[index]['quantity'] = "$qty";
+                      products[index][Quantity] = "$qty";
                       selectedProducts.add(products[index]);
-                      totalBill += int.parse(products[index]['price']) * qty;
+                      totalBill += int.parse(products[index][Price]) * qty;
                     });
                   }
                 }
@@ -723,7 +783,7 @@ class _newOrderState extends State<newOrder> {
   void searchQuery(String query) {
     if (query.isNotEmpty) {
       var data = products.where((element) {
-        var productName = element['name'].toLowerCase();
+        var productName = element[Name].toLowerCase();
         return productName.contains(query.toLowerCase());
       }).toList();
       setState(() {
@@ -740,37 +800,19 @@ class _newOrderState extends State<newOrder> {
   }
 
   Future getProducts() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+    String email = await Flutter_api().getEmail();
+    String storeId = Flutter_api().generateStoreId(email);
 
     // Getting Documents from Firestore
-    var data = await Firestore.instance
-        .collection(email)
-        .document("Product")
-        .collection("products")
-        .orderBy("productName", descending: false)
-        .get();
+    var data =
+        await Firestore.instance.collection("Products").document(storeId).get();
 
     setState(() {
       products.clear();
-      // adding Temp Data to the List
-      data.forEach((element) {
-        // spliting the Document ID to get the Product ID
-        var data = {
-          "id": element.id,
-          "name": element['productName'],
-          "price": element['productPrice'],
-          "quantity": element["productQty"],
-        };
-        products.add(data);
-        searchProducts.add(data);
+      data.map.forEach((key, value) {
+        print(value);
+        searchProducts.add(value);
       });
-      // searchProducts.add(products);
     });
-    // Getting Documents from Firestore again the email
   }
 }
