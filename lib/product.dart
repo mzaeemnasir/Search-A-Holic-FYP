@@ -22,7 +22,6 @@ class _Product extends State<Product> {
   @override
   void initState() {
     super.initState();
-    print("Init State Called");
     updateProduct();
     _searchController.addListener(_searchControllerFun);
     products.clear();
@@ -40,8 +39,9 @@ class _Product extends State<Product> {
       });
     } else {
       setState(() {
+        print("Getting PRoduct");
         products.clear();
-        getProducts();
+        updateProduct();
       });
     }
   }
@@ -165,9 +165,7 @@ class _Product extends State<Product> {
 
                           itemCount: products.length,
                           itemBuilder: (context, index) {
-                            return ProductCard(
-                                product:
-                                    products[index] as Map<String, dynamic>);
+                            return ProductCard(product: products[index]);
                           },
                         )),
                   ),
@@ -180,29 +178,48 @@ class _Product extends State<Product> {
     );
   }
 
-  void updateProduct() async {
+  void updateProduct() {
     // Updating the Product
-    Document doc = await Flutter_api().getAllProducts();
 
-    for (var i = 0; i < doc.map.length; i++) {
-      print(doc.map[i]);
-    }
+    Flutter_api().getAllProducts().then(
+          (value) => {
+            value,
+            value.map.forEach((key, value) {
+              setState(() {
+                products.add({
+                  "Name": value['Name'],
+                  "Price": value['Price'],
+                  "Quantity": value['Quantity'],
+                  "StoreId": value['storeId'],
+                  "ProductId": value['productId'],
+                  "Type": value['Type'],
+                  "id": key,
+                });
+                print(products);
+              });
+            })
+          },
+        );
 
-    setState(() {
-      products.clear();
-      // Adding Product to the List
-      for (var i = 0; i < doc.map.length; i++) {
-        products.add({
-          "Name": doc.map[i]['Name'],
-          "Price": doc.map[i]['Price'],
-          "Quantity": doc.map[i]['Quantity'],
-          "StoreId": doc.map[i]['storeId'],
-          "ProductId": doc.map[i]['productId'],
-          "Type": doc.map[i]['Type'],
-        });
-        print(doc.map[i]['Name']);
-      }
-    });
+    // for (var i = 0; i < doc.map.length; i++) {
+    //   print(doc.map[i]);
+    // }
+
+    // setState(() {
+    //   products.clear();
+    //   // Adding Product to the List
+    //   for (var i = 0; i < doc.map.length; i++) {
+    //     products.add({
+    //       "Name": doc.map[i]['Name'],
+    //       "Price": doc.map[i]['Price'],
+    //       "Quantity": doc.map[i]['Quantity'],
+    //       "StoreId": doc.map[i]['storeId'],
+    //       "ProductId": doc.map[i]['productId'],
+    //       "Type": doc.map[i]['Type'],
+    //     });
+    //     print(doc.map[i]['Name']);
+    //   }
+    // });
   }
 
   Future getProducts() async {
