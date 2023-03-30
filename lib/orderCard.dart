@@ -3,8 +3,8 @@ import 'package:searchaholic/newOrder.dart';
 
 class OrderCard extends StatelessWidget {
   String productName = "";
-  String productPrice = "";
-  String productQty = "";
+  double productPrice = 0;
+  double productQty = 0;
   String productID = "";
 
   OrderCard({

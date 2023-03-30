@@ -72,7 +72,9 @@ class _newOrderState extends State<newOrder> {
 
     products.clear();
     searchProducts.clear();
-    getProducts();
+    getProducts().then((value) => {
+          print("Products Fetched"),
+        });
     getprofile();
   }
 
@@ -177,7 +179,10 @@ class _newOrderState extends State<newOrder> {
                                                         selectedProducts
                                                             .clear();
                                                         totalBill = 0;
+                                                        searchProducts.clear();
+                                                        getProducts();
                                                       });
+
                                                       Navigator.pop(context);
                                                     },
                                                   );
@@ -213,35 +218,46 @@ class _newOrderState extends State<newOrder> {
                                   child: ListView.builder(
                                     itemCount: selectedProducts.length,
                                     itemBuilder: (context, index) {
+                                      print(selectedProducts[index]);
                                       return GestureDetector(
                                         onTap: () => {
-                                          print("Product Clicked"),
                                           setState(
                                             () => {
                                               // Updating the Total Bill
-                                              totalBill -= int.parse(
-                                                  selectedProducts[index][Price]
-                                                      .toString()),
+                                              totalBill = totalBill -
+                                                  (double.parse(
+                                                              selectedProducts[
+                                                                          index]
+                                                                      [Price]
+                                                                  .toString())
+                                                          .toInt() *
+                                                      int.parse(
+                                                          selectedProducts[
+                                                                      index]
+                                                                  [Quantity]
+                                                              .toString())),
 
-                                              // Updating Quantity of the Product
+                                              // int.parse(selectedProducts[index]
+                                              //         [Quantity]
+                                              //     .toString()) ,
+
                                               searchProducts.forEach(
                                                 (element) {
                                                   if (element[Name] ==
                                                       selectedProducts[index]
                                                           [Name]) {
                                                     element[
-                                                        Quantity] = int.parse(
-                                                            selectedProducts[
+                                                        Quantity] = double.parse(
+                                                                selectedProducts[
                                                                         index]
-                                                                    [Quantity]
-                                                                .toString()) +
+                                                                    [Quantity])
+                                                            .toInt() +
                                                         int.parse(
                                                             element[Quantity]
                                                                 .toString());
                                                   }
                                                 },
                                               ),
-
                                               // Removing the Product from the Basket
                                               selectedProducts.removeAt(index),
                                             },
@@ -251,12 +267,12 @@ class _newOrderState extends State<newOrder> {
                                           productName: selectedProducts[index]
                                                   [Name]
                                               .toString(),
-                                          productPrice: selectedProducts[index]
-                                                  [Price]
-                                              .toString(),
-                                          productQty: selectedProducts[index]
-                                                  [Quantity]
-                                              .toString(),
+                                          productPrice: double.parse(
+                                              selectedProducts[index][Price]
+                                                  .toString()),
+                                          productQty: double.parse(
+                                              selectedProducts[index][Quantity]
+                                                  .toString()),
                                           productID: selectedProducts[index]
                                                   [ProductId]
                                               .toString(),
@@ -362,7 +378,7 @@ class _newOrderState extends State<newOrder> {
                               ),
                             ),
 
-                            // List View of the Products
+                            // List View of the Search Products
                             Flexible(
                               flex: 55,
                               fit: FlexFit.tight,
@@ -405,15 +421,16 @@ class _newOrderState extends State<newOrder> {
                                             ),
                                             onTap: () {
                                               setState(() {
-                                                var i = products.indexWhere(
-                                                    (element) =>
-                                                        element[ProductId] ==
-                                                        searchProducts[index]
-                                                            [ProductId]);
+                                                Iterable productDetails =
+                                                    searchProducts.where(
+                                                        (element) =>
+                                                            element[Name] ==
+                                                            searchProducts[
+                                                                index][Name]);
                                                 OpenDialoge(
                                                     searchProducts[index]
                                                         [ProductId],
-                                                    i);
+                                                    productDetails.toList()[0]);
                                               });
                                             },
                                           ),
@@ -677,7 +694,15 @@ class _newOrderState extends State<newOrder> {
             ),
             TextButton(
               onPressed: () async {
+                await updateProductsQuantity();
+                await createSales();
                 setState(() {
+                  // Updating the product quantity in firebase
+                  selectedProducts.clear();
+                  totalBill = 0;
+
+                  print("Bill ${selectedProducts}");
+
                   msg =
                       "$Store_name\nSales Invoice\nAddress: $address_l1,$address_l2\nTel #: $Phone_number\nDate & Time: $date\nCustomer Tel #: ${_emailController.text}\n${selectedProducts[0]['name']}  Rs. ${selectedProducts[0]['price']} x ${selectedProducts[0]['quantity']}\nSales Tax:0\nDiscount:0\nTotal Amount:$totalBill\nThank You for choosing $Store_name\nFor feedback @ $Email\n";
                 });
@@ -709,7 +734,7 @@ class _newOrderState extends State<newOrder> {
         ),
       );
 
-  Future OpenDialoge(productID, i) => showDialog(
+  Future OpenDialoge(productID, productDetails) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Product Quantity?"),
@@ -719,16 +744,18 @@ class _newOrderState extends State<newOrder> {
             decoration: const InputDecoration(
               hintText: "Quantity",
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
             onChanged: ((value) => {
                   if (value.isNotEmpty)
                     {
-                      if (int.parse(searchProducts[i][Quantity]) == 0)
-                        {quantityController.text = "0"}
-                      else if (int.parse(searchProducts[i][Quantity]) <=
-                          int.parse(value))
+                      if (int.parse(value) >
+                          int.parse(productDetails[Quantity].toString()))
                         {
-                          quantityController.text =
-                              "${searchProducts[i][Quantity]}"
+                          setState(() {
+                            quantityController.text = productDetails[Quantity];
+                          })
                         }
                     }
                 }),
@@ -736,15 +763,7 @@ class _newOrderState extends State<newOrder> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                if (quantityController.text.isNotEmpty) {
-                  setState(() {
-                    searchProducts[i][Quantity] =
-                        "${int.parse(searchProducts[i][Quantity]) - int.parse(quantityController.text)}";
-
-                    selectedProducts.add(searchProducts[i]);
-                  });
-                }
+                // Do Nothing....
               },
               child: const Text("Cancel"),
             ),
@@ -757,19 +776,96 @@ class _newOrderState extends State<newOrder> {
                 if (quantityController.text.isNotEmpty) {
                   if (selectedProducts.contains(products[index])) {
                     setState(() {
-                      var qty = int.parse(quantityController.text);
-                      var index2 = selectedProducts.indexWhere(
-                          (element) => element[ProductId] == productID);
-                      selectedProducts[index2][Quantity] =
-                          "${int.parse(selectedProducts[index2][Quantity]) + qty}";
-                      totalBill += int.parse(products[index][Price]) * qty;
+                      // Checking if the quantity is greater than the available quantity
+                      if (int.parse(quantityController.text) >
+                          int.parse(products[index][Quantity].toString())) {
+                        // Alert Dialoge to show the error
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text("Error"),
+                            content: const Text(
+                                "The quantity you entered is greater than the available quantity"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Ok"),
+                              ),
+                            ],
+                          ),
+                        );
+                        return;
+                      }
+
+                      // Updating the quantity of the product
+                      var Qty = double.parse(quantityController.text);
+                      var qty = double.parse(
+                          selectedProducts[index][Quantity].toString());
+                      var price = double.parse(
+                          selectedProducts[index][Price].toString());
+                      totalBill += int.parse((price * Qty).toString());
+
+                      selectedProducts[index][Quantity] = int.parse(
+                          (Qty + qty).toString()); // Updating the quantity
                     });
                   } else {
                     setState(() {
-                      var qty = int.parse(quantityController.text);
-                      products[index][Quantity] = "$qty";
-                      selectedProducts.add(products[index]);
-                      totalBill += int.parse(products[index][Price]) * qty;
+                      // Checking if the quantity is greater than the available quantity
+                      if (int.parse(quantityController.text) >
+                          int.parse(products[index][Quantity].toString())) {
+                        // Alert Dialoge to show the error
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text("Error"),
+                            content: const Text(
+                                "The quantity you entered is greater than the available quantity"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Ok"),
+                              ),
+                            ],
+                          ),
+                        );
+                        return;
+                      }
+
+                      int controlerQty =
+                          int.parse((quantityController.text).toString());
+                      int productQty =
+                          int.parse((products[index][Quantity]).toString());
+
+                      var x = products.elementAt(index);
+
+                      selectedProducts.add({
+                        "Name": x[Name],
+                        "Price": x[Price],
+                        "Quantity": quantityController.text,
+                        "ProductId": x[ProductId],
+                        "Category": x[Category],
+                        "Type": x[Type],
+                        "StoreId": x[StoreId],
+                        "Expire": x[Expire],
+                      });
+
+                      int selIndex = selectedProducts.indexWhere(
+                          (element) => element[ProductId] == productID);
+
+                      int productPrice = double.parse(
+                              selectedProducts[selIndex][Price].toString())
+                          .round()
+                          .toInt();
+
+                      products[index][Quantity] = (productQty - controlerQty)
+                          .toString(); // Updating the quantity
+
+                      totalBill += (controlerQty * productPrice);
+                      print("Total Bill: $totalBill");
                     });
                   }
                 }
@@ -799,6 +895,73 @@ class _newOrderState extends State<newOrder> {
     }
   }
 
+  // Creating Sales of the Products
+  Future createSales() async {
+    // Creating Sales
+    String phoneNumber = _emailController.text;
+
+    // List of Products only Names
+    List porductNames = [];
+    for (var i = 0; i < selectedProducts.length; i++) {
+      porductNames.add(selectedProducts[i][Name]);
+    }
+
+    var email = await Flutter_api().getEmail();
+
+    // Creating a Unique Invoice ID for the Invoice with Timestamp
+    var invoiceID = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Updating the Products Quantity
+    // await Firestore.instance
+    //     .collection(email)
+    //     .document("Sales")
+    //     .collection(phoneNumber)
+    //     .add({
+    //   "Name": p[Name],
+    //   "Price": p[Price],
+    //   "Quantity": p[Quantity],
+    //   "Category": p[Category],
+    //   "Expire": p[Expire],
+    //   "ProductId": p[ProductId],
+    //   "PhoneNumber": phoneNumber,
+    //   "Date": DateTime.now().toString(),
+    //   "TotalBill": totalBill,
+    //   "InvoiceID": invoiceID,
+    // });
+  }
+
+  // Updating the Products Quantity
+  Future updateProductsQuantity() async {
+    for (var i = 0; i < selectedProducts.length; i++) {
+      var proIndex = products.indexWhere(
+          (element) => element[ProductId] == selectedProducts[i][ProductId]);
+
+      var p = selectedProducts[i];
+      var productID = p[ProductId];
+      var productQty = products[proIndex][Quantity] - p[Quantity];
+      // var x = Flutter_api().generateStoreId(storeId);
+
+      // Updating the Products Quantity
+      await Firestore.instance
+          .collection("Products")
+          .document(p[StoreId])
+          .update({
+        productID: {
+          "Name": p[Name],
+          "Price": p[Price],
+          "Quantity": productQty,
+          "Category": p[Category],
+          "Expire": p[Expire],
+          "StoreId": p[StoreId],
+          "ProductId": p[ProductId],
+          "StoreName": p[StoreName],
+          "Type": p[Type],
+          "StoreLocation": p[StoreLocation],
+        }
+      });
+    }
+  }
+
   Future getProducts() async {
     String email = await Flutter_api().getEmail();
     String storeId = Flutter_api().generateStoreId(email);
@@ -810,8 +973,8 @@ class _newOrderState extends State<newOrder> {
     setState(() {
       products.clear();
       data.map.forEach((key, value) {
-        print(value);
         searchProducts.add(value);
+        products.add(value);
       });
     });
   }
