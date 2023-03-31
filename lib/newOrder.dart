@@ -694,17 +694,19 @@ class _newOrderState extends State<newOrder> {
             ),
             TextButton(
               onPressed: () async {
-                await updateProductsQuantity();
-                await createSales();
+                // await createSales();
+                msg =
+                    "$Store_name\nSales Invoice\nAddress: $address_l1,$address_l2\nTel #: $Phone_number\nDate & Time: $date\nCustomer Tel #: ${_emailController.text}\n${selectedProducts[0]['name']}  Rs. ${selectedProducts[0]['price']} x ${selectedProducts[0]['quantity']}\nSales Tax:0\nDiscount:0\nTotal Amount:$totalBill\nThank You for choosing $Store_name\nFor feedback @ $Email\n";
+                if (await updateProductsQuantity()) {
+                  print("Products Quantity Updated Successfully");
+                }
+
                 setState(() {
                   // Updating the product quantity in firebase
                   selectedProducts.clear();
                   totalBill = 0;
 
                   print("Bill ${selectedProducts}");
-
-                  msg =
-                      "$Store_name\nSales Invoice\nAddress: $address_l1,$address_l2\nTel #: $Phone_number\nDate & Time: $date\nCustomer Tel #: ${_emailController.text}\n${selectedProducts[0]['name']}  Rs. ${selectedProducts[0]['price']} x ${selectedProducts[0]['quantity']}\nSales Tax:0\nDiscount:0\nTotal Amount:$totalBill\nThank You for choosing $Store_name\nFor feedback @ $Email\n";
                 });
                 shareWhatsapp.share(
                   text: msg,
@@ -938,28 +940,50 @@ class _newOrderState extends State<newOrder> {
 
       var p = selectedProducts[i];
       var productID = p[ProductId];
-      var productQty = products[proIndex][Quantity] - p[Quantity];
-      // var x = Flutter_api().generateStoreId(storeId);
+      var productQty =
+          int.parse(products[proIndex][Quantity]) - int.parse(p[Quantity]);
 
-      // Updating the Products Quantity
+      var tempProducts = await Firestore.instance
+          .collection("Products")
+          .document(p[StoreId])
+          .get();
+
+      var map = updateQtyMap(tempProducts.map);
+
       await Firestore.instance
           .collection("Products")
           .document(p[StoreId])
-          .update({
-        productID: {
-          "Name": p[Name],
-          "Price": p[Price],
-          "Quantity": productQty,
-          "Category": p[Category],
-          "Expire": p[Expire],
-          "StoreId": p[StoreId],
-          "ProductId": p[ProductId],
-          "StoreName": p[StoreName],
-          "Type": p[Type],
-          "StoreLocation": p[StoreLocation],
-        }
-      });
+          .set(map);
+
+      return Future.value(true);
     }
+  }
+
+  Map<String, dynamic> updateQtyMap(Map<String, dynamic> map) {
+    for (var i = 0; i < selectedProducts.length; i++) {
+      var p = selectedProducts[i];
+      var productID = p[ProductId];
+      var productQty = int.parse(p[Quantity]);
+
+      map.update(
+          productID,
+          (value) => {
+                "Name": value[Name],
+                "Price": value[Price],
+                "Quantity":
+                    (int.parse(value[Quantity].toString()) - productQty),
+                "Category": value[Category],
+                "Expire": value[Expire],
+                "ProductId": value[ProductId],
+                "StoreId": value[StoreId],
+                "Type": value[Type],
+                "Expire": value[Expire],
+                "ProductId": value[ProductId],
+              });
+      // (int.parse(map[productID][Quantity]) - productQty).toString();
+    }
+
+    return map;
   }
 
   Future getProducts() async {
