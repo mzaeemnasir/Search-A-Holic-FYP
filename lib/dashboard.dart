@@ -449,8 +449,8 @@ class _DashboardState extends State<Dashboard> {
                                   textBox(
                                       context,
                                       "Add Product",
-                                      Color.fromRGBO(255, 236, 244, 1),
-                                      Color.fromRGBO(192, 252, 252, 1),
+                                      Color.fromRGBO(128, 194, 255, 1),
+                                      Color.fromRGBO(53, 253, 253, 1),
                                       addProduct),
                                 ],
                               ),
@@ -468,7 +468,7 @@ class _DashboardState extends State<Dashboard> {
                                   ///Add Categories
                                   textBox(
                                       context,
-                                      "Add Categories",
+                                      "Upload Data",
                                       Color.fromRGBO(255, 162, 180, 1),
                                       Color.fromRGBO(255, 162, 180, 0.95),
                                       addCategory),
@@ -482,7 +482,7 @@ class _DashboardState extends State<Dashboard> {
                                   ///View All Orders
                                   textBox(
                                       context,
-                                      "View Orders",
+                                      "View Sales",
                                       Color.fromRGBO(184, 204, 252, 1),
                                       Color.fromRGBO(252, 212, 244, 1),
                                       viewOrders),
@@ -497,8 +497,8 @@ class _DashboardState extends State<Dashboard> {
                                   textBox(
                                     context,
                                     "Report",
-                                    Color.fromRGBO(255, 252, 212, 1),
-                                    Color.fromRGBO(255, 228, 84, 1),
+                                    Color.fromRGBO(248, 207, 127, 1),
+                                    Color.fromRGBO(184, 206, 132, 1),
                                     reports,
                                   ),
                                 ],

@@ -42,10 +42,9 @@ class _EditProduct extends State<EditProduct> {
     getProduct(productID, email).then((value) => {
           setState(() {
             var doc = value[0];
-            _productName.text = doc['productName'];
-            _productPrice.text = doc['productPrice'];
-            _productQty.text = doc['productQty'];
-            _productType.value = TextEditingValue(text: doc['productType']);
+            _productName.text = doc['Name'];
+            _productPrice.text = doc['Price'].toString();
+            _productQty.text = doc['Quantity'].toString();
           })
         });
   }
@@ -129,7 +128,9 @@ class _EditProduct extends State<EditProduct> {
                         keyboardType: TextInputType.number,
                         controller: _productPrice,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          // numbers with points and at least one number after the point
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}"))
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -140,13 +141,13 @@ class _EditProduct extends State<EditProduct> {
                             return 'Price required';
                           } else {
                             RegExp regExp = RegExp(
-                              r"^[0-9]*$",
+                              r"^\d+\.?\d{0,2}",
                               caseSensitive: false,
                               multiLine: false,
                             );
                             if (!regExp.hasMatch(value)) {
                               // Make input field red
-                              return 'Please enter a valid price';
+                              return 'Please enter a valid Price';
                             }
                           }
                           return null;
@@ -160,7 +161,8 @@ class _EditProduct extends State<EditProduct> {
                       child: TextFormField(
                         controller: _productQty,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}")),
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -169,16 +171,6 @@ class _EditProduct extends State<EditProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Quantity required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[0-9]*$",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid Quantity';
-                            }
                           }
                           return null;
                         },
@@ -205,8 +197,6 @@ class _EditProduct extends State<EditProduct> {
                         ],
                         onChanged: (value) {
                           _productType.text = value.toString();
-                          print(value);
-                          print(_productType.text);
                         },
                         hint: const Text("Select Product Visibility"),
                       ),
@@ -251,7 +241,7 @@ class _EditProduct extends State<EditProduct> {
                                     MediaQuery.of(context).size.width * 0.062),
                             child: ElevatedButton(
                               onPressed: () {
-                                // Add Product to the Database
+                                print("Add button pressed");
                                 if (formkey.currentState!.validate()) {
                                   updateProduct(
                                           _productName.text,
@@ -302,39 +292,64 @@ class _EditProduct extends State<EditProduct> {
       ),
     );
   }
+}
 
-  Future<bool> EditProduct() async {
-    return Future<bool>.value(true);
-  }
+Map<String, dynamic> updataingMapValues(String name, String price, String qty,
+    String type, String email, String productID, Map<String, dynamic> map) {
+  map.update(
+      productID,
+      (value) => {
+            "Name": name,
+            "Price": double.parse(price),
+            "Quantity": int.parse(qty),
+            "Type": type,
+          });
+
+  return map;
 }
 
 Future<bool> updateProduct(String name, String price, String qty, String type,
     String email, String productID) async {
+  var x = Flutter_api().generateStoreId(email);
+  final DATA = await Flutter_api().getAllProducts();
+
+  final map =
+      updataingMapValues(name, price, qty, type, email, productID, DATA.map);
+
   // Updating the Product
-  await Firestore.instance
-      .collection(email)
-      .document('Product')
-      .collection('products')
-      .document(productID)
-      .update({
-    'productName': name,
-    'productPrice': price,
-    'productQty': qty,
-    'productType': type,
-  });
+  await Firestore.instance.collection("Products").document(x).set(map);
+
   print("Product Updated");
   return Future<bool>.value(true);
 }
 
 Future<List> getProduct(String productID, String email) async {
   List product = [];
+  var x = Flutter_api().generateStoreId(email);
   var data = await Firestore.instance
-      .collection(email)
-      .document('Product')
-      .collection('products')
-      .document(productID)
+      .collection("Products")
+      .document(x)
       .get()
-      .then((value) => {product.add(value)});
+      .then((value) => {
+            value.map.forEach((key, value) {
+              if (key == productID) {
+                // spliting the Document ID to get the Product ID
+                var data = {
+                  "id": key,
+                  "Name": value['Name'],
+                  "Price": value['Price'],
+                  "Quantity": value['Quantity'],
+                  "Type": value['Type'],
+                  "Expiry": value['Expiry'],
+                  "Category": value['Category'],
+                  "StoreId": value['StoreId'],
+                  "StoreLocation": value['StoreLocation'],
+                  "StoreName": value['StoreName'],
+                };
+                product.add(data);
+              }
+            })
+          });
 
   return Future<List>.value(product);
 }

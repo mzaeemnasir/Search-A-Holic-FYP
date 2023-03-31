@@ -380,9 +380,16 @@ Future<bool> updateLoginFile(String email, String password) async {
 
   // Updating the Login File
   if (await folder.exists() && file.existsSync()) {
-    print("Login File Exists");
-    file.writeAsStringSync(
-        '{"email": "$email", "password": "$password"}'); // Writing the File
+    print("${email} ${password}");
+
+    final msg = """
+    {
+      "email": "$email",
+      "password": "$password"
+    }
+    """;
+
+    file.writeAsString(msg.toString()); // Writing the File
     print("user.json Updated");
     return Future<bool>.value(true);
   } else {

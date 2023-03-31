@@ -2,11 +2,14 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:convert';
 import 'package:alert/alert.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'imports.dart';
 import 'package:firedart/firedart.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:csv/csv.dart';
+import 'package:collection/collection.dart';
 
 const api_key = "AIzaSyCjZK5ojHcJQh8Sr0sdMG0Nlnga4D94FME";
 const project_id = "searchaholic-86248";
@@ -21,8 +24,32 @@ class Flutter_api {
     print("Firestore Initialized");
   }
 
+  // check offline login
+  Future<bool> check_offline(String email, String password) async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    Directory folder = Directory('$path/SeachAHolic');
+
+    // getting the email from the user.json file
+    File file = File('$path/SeachAHolic/user.json');
+    String localEmail = jsonDecode(file.readAsStringSync())['email'];
+    String localPassword = jsonDecode(file.readAsStringSync())['password'];
+
+    if (localEmail == email && localPassword == password) {
+      print("Login Successfull");
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }
+  }
+
   // checking login of members
   Future<bool> check_login(String email, String password) async {
+    // if internet is not connected then login offline (with the credentials saved from the last login)
+    if (await check_offline(email, password)) {
+      return Future<bool>.value(true);
+    }
+
     // Getting the User Collection
     final managers = Firestore.instance.collection(email);
     print(managers);
@@ -115,14 +142,11 @@ class Flutter_api {
                 double.parse(storeDetails[1]), double.parse(storeDetails[2])),
           },
         });
-        print(data.length);
       }
-
       await Firestore.instance
           .collection("Products")
           .document(storeID)
           .set(data);
-
       return Future<bool>.value(true);
     } catch (e) {
       print(e);
@@ -260,8 +284,25 @@ class Flutter_api {
 
     final result =
         await input.transform(utf8.decoder).transform(parser).toList();
+
     result.removeAt(0);
     return result;
+  }
+
+  // listCompare function
+
+  bool listEql(List a, List b) {
+    print(a);
+    print(b);
+    if (a.length != b.length) {
+      return false;
+    }
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // get Store Name and Store Locaion by email
@@ -279,6 +320,29 @@ class Flutter_api {
       lon,
     ];
     return storeDetails;
+  }
+
+  // check csv file herder and return the if the file is valid or not
+  Future<bool> check_file_header(String filepath) async {
+    final file = File(filepath).openRead();
+    final fields = [
+      'product_name',
+      'product_quantity',
+      'product_price',
+      'product_type',
+      'product_expiry',
+      'product_category'
+    ];
+    final input = await file.transform(utf8.decoder).toList();
+    return Future<bool>.value(true);
+    // var newFields = input[0].split(',');
+    // if (listEql(fields.toString() isnewFields.elementAt(0).toString())) {
+    //   print("File is Valid");
+    //   return Future<bool>.value(true);
+    // } else {
+    //   print("File is not Valid");
+    //   return Future<bool>.value(false);
+    // }
   }
 
   // Uploading the File to the Data Base Against the StoreId
@@ -310,6 +374,7 @@ class Flutter_api {
         data.addAll(x);
       }
       await adddProduct(data);
+      print("Products Uploaded Successfully");
       return Future<bool>.value(true);
     } catch (e) {
       print(e);
@@ -354,46 +419,43 @@ var DATA = {
         
         */
 
-
-
-  // // Add Product to database
-  // Future<bool> adddProduct(
-  //   String Name,
-  //   String Quantity,
-  //   String Price,
-  //   String Type,
-  //   String Expire,
-  //   String Category,
-  //   String StoreId,
-  //   String ProductId,
-  //   String StoreName,
-  //   List StoreLocation,
-  // ) async {
-  //   try {
-  //     // Uploading the Product to the database
-  //     Firestore.instance
-  //         .collection("products")
-  //         .document(StoreId)
-  //         .collection("product")
-  //         .document(ProductId)
-  //         .set({
-  //       "Name": Name,
-  //       "Quantity": Quantity, // double
-  //       "Price": Price, // double
-  //       "Type": Type, // Public, Private
-  //       "ExpireDate": Expire, // Date
-  //       "Category": Category,
-  //       "StoreId": StoreId,
-  //       "ProductId": ProductId,
-  //       "StoreName": StoreName,
-  //       "StoreLocation": GeoPoint(
-  //           double.parse(StoreLocation[1]), double.parse(StoreLocation[2])),
-  //     });
-  //     print("Product ${Name} added");
-  //     return Future<bool>.value(true);
-  //   } catch (e) {
-  //     print(e);
-  //     return Future<bool>.value(false);
-  //   }
-  // }
-
+// // Add Product to database
+// Future<bool> adddProduct(
+//   String Name,
+//   String Quantity,
+//   String Price,
+//   String Type,
+//   String Expire,
+//   String Category,
+//   String StoreId,
+//   String ProductId,
+//   String StoreName,
+//   List StoreLocation,
+// ) async {
+//   try {
+//     // Uploading the Product to the database
+//     Firestore.instance
+//         .collection("products")
+//         .document(StoreId)
+//         .collection("product")
+//         .document(ProductId)
+//         .set({
+//       "Name": Name,
+//       "Quantity": Quantity, // double
+//       "Price": Price, // double
+//       "Type": Type, // Public, Private
+//       "ExpireDate": Expire, // Date
+//       "Category": Category,
+//       "StoreId": StoreId,
+//       "ProductId": ProductId,
+//       "StoreName": StoreName,
+//       "StoreLocation": GeoPoint(
+//           double.parse(StoreLocation[1]), double.parse(StoreLocation[2])),
+//     });
+//     print("Product ${Name} added");
+//     return Future<bool>.value(true);
+//   } catch (e) {
+//     print(e);
+//     return Future<bool>.value(false);
+//   }
+// }

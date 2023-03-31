@@ -43,7 +43,7 @@ class _biChartsState extends State<biCharts> {
                   child: Padding(
                       padding: EdgeInsets.only(
                         left: MediaQuery.of(context).size.width * 0.04,
-                        right: MediaQuery.of(context).size.width * 0.04,
+                        right: MediaQuery.of(context).size.width * 0.015,
                       ),
                       child: Column(children: [
                         const Padding(padding: EdgeInsets.only(top: 20)),

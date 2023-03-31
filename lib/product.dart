@@ -22,7 +22,7 @@ class _Product extends State<Product> {
   @override
   void initState() {
     super.initState();
-    getProducts();
+    updateProduct();
     _searchController.addListener(_searchControllerFun);
     products.clear();
   }
@@ -39,8 +39,9 @@ class _Product extends State<Product> {
       });
     } else {
       setState(() {
+        print("Getting PRoduct");
         products.clear();
-        getProducts();
+        updateProduct();
       });
     }
   }
@@ -116,6 +117,7 @@ class _Product extends State<Product> {
                       ],
                     ),
                   ),
+                  // Adding Button (Add Product)
                   Container(
                     alignment: Alignment.centerLeft,
                     child: // Adding Button (Add Product)
@@ -164,9 +166,7 @@ class _Product extends State<Product> {
 
                           itemCount: products.length,
                           itemBuilder: (context, index) {
-                            return ProductCard(
-                                product:
-                                    products[index] as Map<String, dynamic>);
+                            return ProductCard(product: products[index]);
                           },
                         )),
                   ),
@@ -179,35 +179,55 @@ class _Product extends State<Product> {
     );
   }
 
-  Future getProducts() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    Directory folder = Directory('$path/SeachAHolic');
+  void updateProduct() {
+    // Updating the Product
 
-    // getting the email from the user.json file
-    File file = File('$path/SeachAHolic/user.json');
-    String email = jsonDecode(file.readAsStringSync())['email'];
+    Flutter_api().getAllProducts().then(
+          (value) => {
+            value,
+            value.map.forEach((key, value) {
+              setState(() {
+                try {
+                  products.add({
+                    "Name": value['Name'],
+                    "Price": value['Price'],
+                    "Quantity": value['Quantity'],
+                    "StoreId": value['StoreId'],
+                    "ProductId": value['ProductId'],
+                    "Type": value['Type'],
+                    "id": key,
+                  });
+                } catch (e) {
+                  print(e);
+                }
+              });
+            })
+          },
+        );
+  }
+
+  Future getProducts() async {
+    String email = await Flutter_api().getEmail();
+    String storeId = await Flutter_api().generateStoreId(email);
 
     // Getting Documents from Firestore
-    var data = await Firestore.instance
-        .collection(email)
-        .document("Product")
-        .collection("products")
-        .orderBy("productName", descending: false)
-        .get();
-
+    var data =
+        await Firestore.instance.collection(email).document(storeId).get();
     setState(() {
       products.clear();
       // adding Temp Data to the List
-      data.forEach((element) {
-        // spliting the Document ID to get the Product ID
-        var data = {
-          "id": element.id,
-          "name": element['productName'],
-          "price": element['productPrice'],
-          "quantity": element['productQty'],
-        };
-        products.add(data);
+      data.map.forEach((key, value) {
+        setState(() {
+          products.add({
+            "Name": value['Name'],
+            "Price": value['Price'],
+            "Quantity": value['Quantity'],
+            "StoreId": value['StoreId'],
+            "ProductId": value['ProductId'],
+            "Type": value['Type'],
+            "id": key,
+          });
+        });
       });
     });
     // Getting Documents from Firestore again the email

@@ -1,6 +1,7 @@
 // Add Product Page
 
 // Path: lib\addProduct.dart
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -23,6 +24,8 @@ class _AddProduct extends State<AddProduct> {
   TextEditingController _productPrice = TextEditingController();
   TextEditingController _productQty = TextEditingController();
   TextEditingController _productType = TextEditingController();
+  TextEditingController _productCategory = TextEditingController();
+
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController dateinput = TextEditingController();
 
@@ -115,7 +118,8 @@ class _AddProduct extends State<AddProduct> {
                         keyboardType: TextInputType.number,
                         controller: _productPrice,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}"))
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -125,17 +129,8 @@ class _AddProduct extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Price required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[0-9]*$",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid price';
-                            }
                           }
+
                           return null;
                         },
                       ),
@@ -148,7 +143,8 @@ class _AddProduct extends State<AddProduct> {
                       child: TextFormField(
                         controller: _productQty,
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"^\d+\.?\d{0,2}"))
                         ],
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -158,16 +154,6 @@ class _AddProduct extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Quantity required';
-                          } else {
-                            RegExp regExp = RegExp(
-                              r"^[0-9]*$",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-                            if (!regExp.hasMatch(value)) {
-                              // Make input field red
-                              return 'Please enter a valid Quantity';
-                            }
                           }
                           return null;
                         },
@@ -250,6 +236,8 @@ class _AddProduct extends State<AddProduct> {
                         ),
                       ),
                     ),
+
+                    // Product Category
                     Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.047),
@@ -283,9 +271,7 @@ class _AddProduct extends State<AddProduct> {
                           ),
                         ],
                         onChanged: (value) {
-                          _productType.text = value.toString();
-                          print(value);
-                          print(_productType.text);
+                          _productCategory.text = value.toString();
                         },
                         hint: const Text("Select Product Category"),
                       ),
@@ -366,13 +352,38 @@ class _AddProduct extends State<AddProduct> {
     );
   }
 
+  Map<String, dynamic> addDataToMap(Map<String, dynamic> map) {
+    // _productName.text, _productPrice.text,
+    //     _productQty.text, _productType.text
+
+    // Generating key of the Product
+    final productId = Flutter_api().generateProductId(_productName.text);
+
+    map.putIfAbsent(
+        productId,
+        () => {
+              "Name": _productName.text,
+              "Price": _productPrice.text,
+              "Quantity": _productQty.text,
+              "Expiry Date": dateinput.text,
+              "Type": _productType.text,
+              "Category": _productCategory.text,
+            });
+
+    return map;
+  }
+
   Future<bool> addProduct() async {
-    // Add Product to the Database
-    if (await Flutter_api().addProduct(_productName.text, _productPrice.text,
-        _productQty.text, _productType.text)) {
-      return Future<bool>.value(true);
-    } else {
-      return Future<bool>.value(false);
-    }
+    final DATA = await Flutter_api().getAllProducts();
+    final email = await Flutter_api().getEmail();
+    final storeId = Flutter_api().generateStoreId(email);
+
+    // Add Product to the Map
+    final map = addDataToMap(DATA.map);
+
+    // Update the Database
+    await Firestore.instance.collection("Products").document(storeId).set(map);
+
+    return Future<bool>.value(true);
   }
 }

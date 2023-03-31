@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, unrelated_type_equality_checks, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:searchaholic/biCharts.dart';
 import 'package:searchaholic/newOrder.dart';
 import 'package:searchaholic/product.dart';
+import 'package:searchaholic/reports.dart';
+import 'package:searchaholic/sales.dart';
+import 'package:searchaholic/uploadData.dart';
 
 import 'addProduct.dart';
 
@@ -38,6 +42,18 @@ Expanded textBox(
             if (text == "New Order") {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => newOrder()));
+            }
+            if (text == "Report") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const biCharts()));
+            }
+            if (text == "View Sales") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Sales()));
+            }
+            if (text == "Upload Data") {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => UploadData()));
             }
           },
           child: Container(

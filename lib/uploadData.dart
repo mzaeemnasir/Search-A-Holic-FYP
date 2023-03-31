@@ -1,5 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +15,25 @@ class UploadData extends StatefulWidget {
 
 class _UploadDataState extends State<UploadData> {
   late String email;
+
+  void success_alert() {
+    QuickAlert.show(
+      context: context,
+      title: "File Uploaded",
+      text: "Your file has been uploaded successfully",
+      type: QuickAlertType.success,
+    );
+  }
+
+  void error_alert() {
+    QuickAlert.show(
+      context: context,
+      title: "Error",
+      text:
+          "There was an error uploading your file, Please check the Sample Data Your Fields are not matching with the Sample Data",
+      type: QuickAlertType.error,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +98,19 @@ class _UploadDataState extends State<UploadData> {
                                                 // wait for 1 second
                                                 print(email);
 
-                                                Flutter_api().uploadFile(
-                                                    result.files.single.path!);
+                                                Flutter_api()
+                                                    .uploadFile(result
+                                                        .files.single.path!)
+                                                    .then((value) => {
+                                                          if (value == true)
+                                                            {
+                                                              success_alert(),
+                                                            }
+                                                          else
+                                                            {
+                                                              print("Error"),
+                                                            }
+                                                        });
 
                                                 // To Do: Upload the file to the database
 
@@ -121,7 +153,7 @@ class _UploadDataState extends State<UploadData> {
                           child: const Text('Download Sample Data'),
                           onPressed: () {
                             Uri uri = Uri.parse(
-                                "https://cdn.discordapp.com/attachments/748221133819609108/1090748564143083540/sample.csv"); // To Do: Add the link to the sample data
+                                "https://cdn.discordapp.com/attachments/748221133819609108/1091224870320349194/MedicinceData.csv"); // To Do: Add the link to the sample data
                             launchUrl(uri);
                           }),
                     ),
