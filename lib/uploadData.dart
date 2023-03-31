@@ -153,7 +153,7 @@ class _UploadDataState extends State<UploadData> {
                           child: const Text('Download Sample Data'),
                           onPressed: () {
                             Uri uri = Uri.parse(
-                                "https://cdn.discordapp.com/attachments/748221133819609108/1090748564143083540/sample.csv"); // To Do: Add the link to the sample data
+                                "https://cdn.discordapp.com/attachments/748221133819609108/1091224870320349194/MedicinceData.csv"); // To Do: Add the link to the sample data
                             launchUrl(uri);
                           }),
                     ),
