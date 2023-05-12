@@ -27,8 +27,6 @@ class _SignUpState extends State<SignUp> {
 
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  setLoaction();
-
 
   void showAlert() {
     QuickAlert.show(
@@ -118,6 +116,12 @@ class _SignUpState extends State<SignUp> {
     } else {
       print("otp didnt verified");
     }
+  }
+
+  @override
+  void initState() {
+    print("Getting Details.......");
+    setLoaction();
   }
 
   @override
@@ -547,7 +551,6 @@ class _SignUpState extends State<SignUp> {
     double latitude = position.latitude;
     double longitude = position.longitude;
 
-    print(latitude);
-    print(longitude);
+    storeLocationLong.text = latitude.toString() + "," + longitude.toString();
   }
 }

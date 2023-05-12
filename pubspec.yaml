@@ -57,6 +57,7 @@ dependencies:
   crypto: ^3.0.2
   csv: ^5.0.1
   geolocator: ^9.0.2
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
