@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:searchaholic/firebase_.dart';
 import 'package:searchaholic/imports.dart';
 import 'package:quickalert/quickalert.dart';
@@ -26,6 +27,8 @@ class _SignUpState extends State<SignUp> {
 
   bool _isObscure = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  setLoaction();
+
 
   void showAlert() {
     QuickAlert.show(
@@ -537,5 +540,14 @@ class _SignUpState extends State<SignUp> {
         ],
       ),
     );
+  }
+
+  void setLoaction() async {
+    Position position = await ApiCall().getCurrentLocation();
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+
+    print(latitude);
+    print(longitude);
   }
 }

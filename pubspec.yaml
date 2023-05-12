@@ -56,6 +56,7 @@ dependencies:
   url_launcher: ^6.1.10
   crypto: ^3.0.2
   csv: ^5.0.1
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:
