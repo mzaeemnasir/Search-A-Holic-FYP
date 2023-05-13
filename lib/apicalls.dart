@@ -5,6 +5,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 class ApiCall {
   Future<Position> getCurrentLocation() async {
+    var status = await Permission.location.status;
+
     PermissionStatus permission = await Permission.location.request();
     if (permission != PermissionStatus.granted) {
       print("Permission not granted");

@@ -193,7 +193,7 @@ class _SalesState extends State<Sales> {
                                     DataColumn(label: Text("Product")),
                                     DataColumn(label: Text("Quantity")),
                                     DataColumn(label: Text("Amount")),
-                                  ], rows: [
+                                  ], rows: const [
                                     DataRow(cells: [
                                       DataCell(Text('1')),
                                       DataCell(Text('22-03-2023')),

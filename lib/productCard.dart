@@ -243,7 +243,7 @@ class ProductCard extends StatelessWidget {
   }
 
   Future<bool> deleteProduct(String id) async {
-    print(id);
+    print("Product Deleted: " + id);
 
     String email = await Flutter_api().getEmail();
     var x = Flutter_api().generateStoreId(email);
@@ -252,14 +252,8 @@ class ProductCard extends StatelessWidget {
     try {
       final DATA =
           await Firestore.instance.collection("Products").document(x).get();
-
       final map = removeMapData(DATA.map, id);
-
       await Firestore.instance.collection("Products").document(x).set(map);
-
-      print("Product Deleted");
-      print(DATA.map);
-      // Reload the content of the list in the previous page
       return Future.value(true);
     } catch (e) {
       print(e);
