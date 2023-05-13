@@ -209,7 +209,8 @@ class Flutter_api {
   }
 
   // Add Order
-  Future<bool> addOrder(List<dynamic> selectedProc, var totalBill) async {
+  Future<bool> addOrder(
+      List<dynamic> selectedProc, var totalBill, var phoneNo) async {
     var email = await getEmail();
     var time = DateTime.now();
     var saleId = await generateStoreId(time.toString());
@@ -233,7 +234,7 @@ class Flutter_api {
 
     try {
       Firestore.instance.collection("Sales").document(saleId).set({
-        "customerPhone": "Not Set",
+        "customerPhone": phoneNo.toString(),
         "saleAmount": totalBill,
         "saleDate": time,
         "saleProducts": saleProducts,

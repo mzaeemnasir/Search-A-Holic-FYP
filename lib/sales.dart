@@ -1,3 +1,4 @@
+import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:searchaholic/imports.dart';
@@ -41,6 +42,19 @@ class _SalesState extends State<Sales> {
   AssetImage addCategory = AssetImage("images/addCategory.png");
   AssetImage viewOrders = AssetImage("images/viewOrders.png");
   AssetImage reports = AssetImage("images/report.png");
+
+  late List recentOrders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    print("Getting recent orders...");
+    getRecentOrders().then((value) => {
+          setState(() {
+            recentOrders = value;
+          })
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,95 +200,39 @@ class _SalesState extends State<Sales> {
                                   elevation: 2,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: DataTable(columns: const [
-                                    DataColumn(label: Text("Sales ID")),
-                                    DataColumn(label: Text("Date")),
-                                    DataColumn(label: Text("Customer")),
-                                    DataColumn(label: Text("Product")),
-                                    DataColumn(label: Text("Quantity")),
-                                    DataColumn(label: Text("Amount")),
-                                  ], rows: const [
-                                    DataRow(cells: [
-                                      DataCell(Text('1')),
-                                      DataCell(Text('22-03-2023')),
-                                      DataCell(Text('32')),
-                                      DataCell(Text('Panadol')),
-                                      DataCell(Text('2')),
-                                      DataCell(Text('30')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('1')),
-                                      DataCell(Text('22')),
-                                      DataCell(Text('32')),
-                                      DataCell(Text('Panadol')),
-                                      DataCell(Text('2')),
-                                      DataCell(Text('30')),
-                                    ]),
-                                    DataRow(cells: [
-                                      DataCell(Text('1')),
-                                      DataCell(Text('22')),
-                                      DataCell(Text('32')),
-                                      DataCell(Text('Panadol')),
-                                      DataCell(Text('2')),
-                                      DataCell(Text('30')),
-                                    ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                    // DataRow(cells: [
-                                    //   DataCell(Text('1')),
-                                    //   DataCell(Text('22')),
-                                    //   DataCell(Text('32')),
-                                    //   DataCell(Text('Panadol')),
-                                    //   DataCell(Text('2')),
-                                    //   DataCell(Text('30')),
-                                    // ]),
-                                  ]),
+                                  child: DataTable(
+                                    columns: const [
+                                      DataColumn(label: Text("Sales ID")),
+                                      DataColumn(label: Text("Date")),
+                                      DataColumn(label: Text("Customer")),
+                                      DataColumn(label: Text("Amount")),
+                                    ],
+
+                                    rows: [
+                                      for (var i = 0;
+                                          i < recentOrders.length;
+                                          i++)
+                                        DataRow(
+                                            cells: [
+                                              DataCell(Text(recentOrders[i]
+                                                      ["saleId"]
+                                                  .toString())),
+                                              DataCell(Text(recentOrders[i]
+                                                      ['saleDate']
+                                                  .toString()
+                                                  .split(" ")[0])),
+                                              DataCell(Text(recentOrders[i]
+                                                      ['customerPhone']
+                                                  .toString())),
+                                              DataCell(Text(recentOrders[i]
+                                                      ['saleAmount']
+                                                  .toString())),
+                                            ],
+                                            onLongPress: () {
+                                              print(recentOrders[i]["saleId"]);
+                                            }),
+                                    ], //rows
+                                  ),
                                 ),
                               ),
                             ),
@@ -282,5 +240,28 @@ class _SalesState extends State<Sales> {
                         ),
                       ])))
             ])));
+  }
+
+  Future<List> getRecentOrders() async {
+    var orders = await Firestore.instance
+        .collection("Sales")
+        .orderBy("saleDate", descending: true)
+        .limit(10)
+        .get();
+
+    // Creating Sale objects from the documents in the snapshot
+    orders.asMap().entries.map((entry) {
+      setState(() {
+        recentOrders.add({
+          "saleId": entry.value.id,
+          "saleDate": entry.value["saleDate"],
+          "customerPhone": entry.value["customerPhone"],
+          "saleAmount": entry.value["saleAmount"],
+          "saleProducts": entry.value["saleProducts"],
+        });
+      });
+    }).toList();
+
+    return Future<List>.value(recentOrders);
   }
 }

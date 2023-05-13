@@ -706,7 +706,8 @@ class _newOrderState extends State<newOrder> {
                 // ignore: unused_local_variable
 
                 Navigator.pop(context);
-                if (await Flutter_api().addOrder(selectedProducts, totalBill) ==
+                if (await Flutter_api()
+                        .addOrder(selectedProducts, totalBill, Phone_number) ==
                     true) {
                   setState(() {
                     selectedProducts.clear();
