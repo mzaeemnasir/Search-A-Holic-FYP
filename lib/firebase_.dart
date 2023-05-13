@@ -213,7 +213,6 @@ class Flutter_api {
     var email = await getEmail();
     var time = DateTime.now();
     var saleId = await generateStoreId(time.toString());
-    Timestamp timeStamp = Timestamp.fromDateTime(time);
 
     Map saleProducts = Map();
 
@@ -236,7 +235,7 @@ class Flutter_api {
       Firestore.instance.collection("Sales").document(saleId).set({
         "customerPhone": "Not Set",
         "saleAmount": totalBill,
-        "saleDate": timeStamp,
+        "saleDate": time,
         "saleProducts": saleProducts,
       });
       return Future<bool>.value(true);
