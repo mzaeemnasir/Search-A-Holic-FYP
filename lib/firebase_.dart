@@ -214,6 +214,7 @@ class Flutter_api {
     var email = await getEmail();
     var time = DateTime.now();
     var saleId = await generateStoreId(time.toString());
+    var storeId = await generateStoreId(email);
 
     Map saleProducts = Map();
 
@@ -233,7 +234,7 @@ class Flutter_api {
     }
 
     try {
-      Firestore.instance.collection("Sales").document(saleId).set({
+      Firestore.instance.collection(storeId).document(saleId).set({
         "customerPhone": phoneNo.toString(),
         "saleAmount": totalBill,
         "saleDate": time,
