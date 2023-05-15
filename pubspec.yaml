@@ -62,7 +62,6 @@ dependencies:
 
   d_chart: ^2.2.11
 
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter

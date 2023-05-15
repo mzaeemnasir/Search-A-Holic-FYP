@@ -45,7 +45,7 @@ class _SalesState extends State<Sales> {
 
   late List recentOrders = [];
 
-  late List products = [];
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -232,7 +232,11 @@ class _SalesState extends State<Sales> {
                                             ],
                                             onLongPress: () {
                                               // showing invoice Dialog
-                                              invoiceDiagloge();
+                                              invoiceDiagloge(
+                                                  recentOrders[i]["saleId"],
+                                                  recentOrders[i]
+                                                      ["saleProducts"],
+                                                  recentOrders[i]);
                                             }),
                                     ], //rows
                                   ),
@@ -274,13 +278,13 @@ class _SalesState extends State<Sales> {
   // Show Invoice
 
   // Invoice Dialoge
-  Future invoiceDiagloge() => showDialog(
+  Future invoiceDiagloge(String saleId, Map products, Map sel) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Padding(
-            padding: EdgeInsets.only(left: 150),
+            padding: EdgeInsets.only(left: 0),
             child: Text(
-              "INVOICE",
+              "INVOICE PRODUCTS",
               style: TextStyle(fontSize: 24, color: Colors.black),
             ),
           ),
@@ -288,7 +292,8 @@ class _SalesState extends State<Sales> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 0),
-                child: Text("Date & Time: date",
+                child: Text(
+                    "Date & Time: ${sel['saleDate'].toString().split(" ")[0]}",
                     style: const TextStyle(fontSize: 14, color: Colors.black)),
               ),
               const Divider(
@@ -296,7 +301,7 @@ class _SalesState extends State<Sales> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 175),
-                child: Text("Customer#: _emailController.text",
+                child: Text("Customer#: ${sel['customerPhone']}",
                     style: const TextStyle(fontSize: 14, color: Colors.black)),
               ),
               const Divider(
@@ -307,30 +312,16 @@ class _SalesState extends State<Sales> {
                 height: MediaQuery.of(context).size.height * 0.2,
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Scrollbar(
+                  controller: _scrollController,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: products.length + 1,
+                    itemCount: products.length,
                     itemBuilder: (context, index) {
-                      if (index == products.length) {
-                        return ListTile(
-                          title: const Text("Total Bill"),
-                          trailing: Text("Rs. 5000"),
-                          // Total Bill
-                        );
-                      } else {
-                        var price = "{products[index]}";
-                        var quantity = "{products[index]}";
-
-                        return ListTile(
-                          title: Text(products[index]),
-                          subtitle: Text(
-                              "Rs. {products[index][Price]} x {selectedProducts[index][Quantity]}"),
-                          // ignore: unnecessary_new
-                          trailing: new Text(
-                              "Rs. ${int.parse(price) * int.parse(quantity)}"),
-                          // Total Bill
-                        );
-                      }
+                      print(index.toString());
+                      return ListTile(
+                        title: Text(products.keys.toList()[index]),
+                        subtitle: Text("x ${products.values.toList()[index]}"),
+                      );
                     },
                   ),
                 ),
@@ -362,21 +353,11 @@ class _SalesState extends State<Sales> {
                   title: const Text(
                     'Total Amount',
                   ),
-                  trailing: Text('totalBill'),
+                  trailing: Text('Rs. ${sel['saleAmount']}'),
                 ),
               ),
               const Divider(
                 thickness: 2,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text("Thank You for choosing Store_name",
-                    style: const TextStyle(fontSize: 11, color: Colors.black)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: Text("For feedback @ Email",
-                    style: const TextStyle(fontSize: 11, color: Colors.black)),
               ),
 
               // Add more Text widgets for additional lines of data
