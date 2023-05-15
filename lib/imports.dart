@@ -12,3 +12,4 @@ export 'package:searchaholic/dashboard.dart';
 export 'package:searchaholic/firebase_.dart';
 export 'package:searchaholic/registration.dart';
 export 'package:searchaholic/system.dart';
+export 'apicalls.dart';

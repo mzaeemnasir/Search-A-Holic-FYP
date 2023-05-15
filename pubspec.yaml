@@ -56,6 +56,10 @@ dependencies:
   url_launcher: ^6.1.10
   crypto: ^3.0.2
   csv: ^5.0.1
+  geolocator: ^9.0.2
+  permission_handler: ^10.2.0
+  geocoder: ^0.2.1
+
   d_chart: ^2.2.11
 
   

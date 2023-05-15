@@ -1,6 +1,4 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
-
-import 'dart:convert';
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, avoid_function_literals_in_foreach_calls, depend_on_referenced_packages
 
 import 'package:firedart/firedart.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +6,6 @@ import 'package:quickalert/quickalert.dart';
 import 'package:searchaholic/orderCard.dart';
 import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
-import 'package:e_invoice_generator/e_invoice_generator.dart';
 import 'package:intl/intl.dart';
 import 'package:share_whatsapp/share_whatsapp.dart';
 import 'imports.dart';
@@ -46,13 +43,14 @@ class _newOrderState extends State<newOrder> {
     var data1 = data.document('Store Details');
     var data2 = await data1.get();
 
+    late String full_address;
+
     setState(() {
       Store_name = data2['storeName'];
       Email = data2['email'];
       Phone_number = data2['phNo'];
-      address_l1 = data2['lat'];
-      address_l2 = data2['long'];
-      //password = data2['password'];
+      address_l1 = data2['storeLocation'].latitude;
+      address_l2 = data2['storeLocation'].longitude;
     });
   }
 
@@ -69,7 +67,6 @@ class _newOrderState extends State<newOrder> {
   void initState() {
     super.initState();
     totalBill = 0;
-
     products.clear();
     searchProducts.clear();
     getProducts().then((value) => {
@@ -510,15 +507,16 @@ class _newOrderState extends State<newOrder> {
                                             getDateandTime();
 
                                             QuickAlert.show(
-                                              context: context,
-                                              type: QuickAlertType.warning,
-                                              title:
-                                                  'Prescription Confirmation',
-                                              text:
-                                                  'Have you checked the prescription?',
-                                              onConfirmBtnTap: () =>
-                                                  invoiceDiagloge(),
-                                            );
+                                                context: context,
+                                                type: QuickAlertType.warning,
+                                                title:
+                                                    'Prescription Confirmation',
+                                                text:
+                                                    'Have you checked the prescription?',
+                                                onConfirmBtnTap: () => {
+                                                      Navigator.pop(context),
+                                                      invoiceDiagloge(),
+                                                    });
                                           }
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -700,14 +698,6 @@ class _newOrderState extends State<newOrder> {
                 if (await updateProductsQuantity()) {
                   print("Products Quantity Updated Successfully");
                 }
-
-                setState(() {
-                  // Updating the product quantity in firebase
-                  selectedProducts.clear();
-                  totalBill = 0;
-
-                  print("Bill ${selectedProducts}");
-                });
                 shareWhatsapp.share(
                   text: msg,
                   // change with real whatsapp number
@@ -716,7 +706,8 @@ class _newOrderState extends State<newOrder> {
                 // ignore: unused_local_variable
 
                 Navigator.pop(context);
-                if (await Flutter_api().addOrder(selectedProducts, totalBill) ==
+                if (await Flutter_api()
+                        .addOrder(selectedProducts, totalBill, Phone_number) ==
                     true) {
                   setState(() {
                     selectedProducts.clear();
@@ -877,6 +868,24 @@ class _newOrderState extends State<newOrder> {
           ],
         ),
       );
+
+  // Record Sales
+
+  void recordSales() {
+    // Structure
+    // Sales -> StoreId -> SalesId -> Sales Details
+
+    var email = Flutter_api().getEmail();
+    var storeId = Flutter_api().generateStoreId(email);
+
+    // Getting the Current Date and Time
+    var now = DateTime.now(); // yyyy-MM-dd hh:mm:ss
+    var date = DateFormat('yyyy-MM-dd').format(now);
+    var time = DateFormat('hh:mm:ss').format(now);
+
+    // Generating the Sales Id with the Date and Time
+    var salesId = Flutter_api().generateStoreId(now.toString());
+  }
 
   void searchQuery(String query) {
     if (query.isNotEmpty) {

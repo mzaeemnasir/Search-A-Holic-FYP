@@ -2,6 +2,8 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:convert';
 import 'package:alert/alert.dart';
+import 'package:firedart/generated/google/protobuf/timestamp.pb.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'imports.dart';
@@ -94,13 +96,14 @@ class Flutter_api {
       final manager = managers.document("Store Details");
       print("Created New Document");
       // Adding the data to the document
+
       await manager.set({
         'email': email,
         'storeName': storeName,
-        'lat': lat,
-        'long': long,
         'phNo': phNo,
         'password': password,
+        "storeLocation": GeoPoint(double.parse(lat), double.parse(long)),
+        "storeId": await generateStoreId(email),
       });
       print("Data Added");
       return Future<bool>.value(true);
@@ -116,6 +119,10 @@ class Flutter_api {
 
     try {
       Document x = await getAllProducts();
+      if (x == null) {
+        print("No Products");
+        return Future<bool>.value(false);
+      }
       Map<String, dynamic> data =
           x.map; //Maping the data to the data variable (Map<String, dynamic>)
 
@@ -202,21 +209,40 @@ class Flutter_api {
   }
 
   // Add Order
-  Future<bool> addOrder(List<dynamic> selectedProc, var totalBill) async {
+  Future<bool> addOrder(
+      List<dynamic> selectedProc, var totalBill, var phoneNo) async {
     var email = await getEmail();
-    print(email);
+    var time = DateTime.now();
+    var saleId = await generateStoreId(time.toString());
+    var storeId = await generateStoreId(email);
+
+    Map saleProducts = Map();
+
+    // Storing the products in the map in key value pair key == productName value == quantity
+
+    for (var i = 0; i < selectedProc.length; i++) {
+      // if product is already in saleProducts then add the quantity
+      if (saleProducts.containsKey(selectedProc[i]["Name"])) {
+        int prevQty = int.parse(saleProducts[selectedProc[i]["Name"]]);
+        int newQty = prevQty + int.parse(selectedProc[i]["Quantity"]);
+        saleProducts[selectedProc[i]["Name"]] = newQty.toString();
+        continue;
+      }
+      saleProducts.addAll({
+        selectedProc[i]["Name"]: selectedProc[i]["Quantity"],
+      });
+    }
+
     try {
-      Firestore.instance
-          .collection(email)
-          .document("Order")
-          .collection("orders")
-          .add({
-        'products': selectedProc,
-        'totalBill': totalBill,
+      Firestore.instance.collection(storeId).document(saleId).set({
+        "customerPhone": phoneNo.toString(),
+        "saleAmount": totalBill,
+        "saleDate": time,
+        "saleProducts": saleProducts,
       });
       return Future<bool>.value(true);
     } catch (e) {
-      print("Not Connected to the Internet");
+      print(e);
       return Future<bool>.value(false);
     }
   }
@@ -396,9 +422,18 @@ class Flutter_api {
 
   Future<Document> getAllProducts() async {
     final storeId = generateStoreId(await getEmail());
-    Document data =
-        await Firestore.instance.collection("Products").document(storeId).get();
-    return Future<Document>.value(data);
+
+    try {
+      Document data = await Firestore.instance
+          .collection("Products")
+          .document(storeId)
+          .get();
+
+      return Future<Document>.value(data);
+    } catch (e) {
+      print("No Products Found");
+      return Future<Document>.value(null);
+    }
   }
 }
 

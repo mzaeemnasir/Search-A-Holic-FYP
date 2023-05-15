@@ -185,23 +185,24 @@ class _Product extends State<Product> {
     Flutter_api().getAllProducts().then(
           (value) => {
             value,
-            value.map.forEach((key, value) {
-              setState(() {
-                try {
-                  products.add({
-                    "Name": value['Name'],
-                    "Price": value['Price'],
-                    "Quantity": value['Quantity'],
-                    "StoreId": value['StoreId'],
-                    "ProductId": value['ProductId'],
-                    "Type": value['Type'],
-                    "id": key,
-                  });
-                } catch (e) {
-                  print(e);
-                }
-              });
-            })
+            if (value != null)
+              value.map.forEach((key, value) {
+                setState(() {
+                  try {
+                    products.add({
+                      "Name": value['Name'],
+                      "Price": value['Price'],
+                      "Quantity": value['Quantity'],
+                      "StoreId": value['StoreId'],
+                      "ProductId": value['ProductId'],
+                      "Type": value['Type'],
+                      "id": key,
+                    });
+                  } catch (e) {
+                    print(e);
+                  }
+                });
+              })
           },
         );
   }
