@@ -31,6 +31,7 @@ class _biChartsState extends State<biCharts> {
   String email = "";
 
   Map<DateTime, int> dataMap = {};
+  Map<String, int> dailyDataMap = {};
 
   @override
   void initState() {
@@ -510,7 +511,6 @@ class _biChartsState extends State<biCharts> {
   // Get Store Sale data
 
   Future<void> getData() async {
-    print("GEt Data");
     var email = await Flutter_api().getEmail();
     var storeId = await Flutter_api().generateStoreId(email);
 
@@ -522,7 +522,15 @@ class _biChartsState extends State<biCharts> {
       dataMap[i['saleDate']] = i['saleAmount'];
     }
 
-    print(dataMap);
+    // adding data but Aggregating Date to dailyDataMap
+    for (var i in dataMap.keys) {
+      if (dailyDataMap.containsKey(i.toString().split(" ")[0])) {
+        dailyDataMap[i.toString().split(" ")[0]] =
+            dailyDataMap[i.toString().split(" ")[0]]! + dataMap[i]!;
+      } else {
+        dailyDataMap[i.toString().split(" ")[0]] = dataMap[i]!;
+      }
+    }
   }
 }
 
