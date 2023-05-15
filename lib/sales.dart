@@ -1,4 +1,5 @@
 import 'package:firedart/firestore/firestore.dart';
+import 'package:firedart/generated/google/firestore/v1/document.pb.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:searchaholic/imports.dart';
@@ -204,10 +205,10 @@ class _SalesState extends State<Sales> {
                                       borderRadius: BorderRadius.circular(10)),
                                   child: DataTable(
                                     columns: const [
-                                      DataColumn(label: Text("Sales ID")),
-                                      DataColumn(label: Text("Date")),
                                       DataColumn(label: Text("Customer")),
+                                      DataColumn(label: Text("Date")),
                                       DataColumn(label: Text("Amount")),
+                                      DataColumn(label: Text("Sales ID")),
                                     ],
 
                                     rows: [
@@ -217,17 +218,17 @@ class _SalesState extends State<Sales> {
                                         DataRow(
                                             cells: [
                                               DataCell(Text(recentOrders[i]
-                                                      ["saleId"]
+                                                      ["customerPhone"]
                                                   .toString())),
                                               DataCell(Text(recentOrders[i]
                                                       ['saleDate']
                                                   .toString()
                                                   .split(" ")[0])),
                                               DataCell(Text(recentOrders[i]
-                                                      ['customerPhone']
+                                                      ['saleAmount']
                                                   .toString())),
                                               DataCell(Text(recentOrders[i]
-                                                      ['saleAmount']
+                                                      ['saleId']
                                                   .toString())),
                                             ],
                                             onLongPress: () {
