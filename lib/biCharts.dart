@@ -33,10 +33,17 @@ class _biChartsState extends State<biCharts> {
   Map<DateTime, int> dataMap = {};
   Map<String, int> dailyDataMap = {};
 
+  late List<Salesdata> Salesdata1 = [];
+  late List<SalesData> Salesdata2 = [];
+
   @override
   void initState() {
     super.initState();
-    getData();
+    getData().then((value) => {
+          setState(() {
+            Salesdata1 = value;
+          })
+        });
   }
 
   // @override
@@ -444,12 +451,12 @@ class _biChartsState extends State<biCharts> {
                                           title: AxisTitle(text: "Sales Date")),
                                       primaryYAxis: NumericAxis(
                                           title: AxisTitle(
-                                            text: "Sale in Lack's",
+                                            text: "Sale in Rupees",
                                           ),
-                                          labelFormat: "{value} lac"),
+                                          labelFormat: "{value} Rs"),
                                       series: <ChartSeries>[
                                         ColumnSeries<Salesdata, String>(
-                                            dataSource: getSalesdata(),
+                                            dataSource: Salesdata1,
                                             xValueMapper:
                                                 (Salesdata sales, _) => sales.x,
                                             yValueMapper:
@@ -483,22 +490,16 @@ class _biChartsState extends State<biCharts> {
                                           series: <
                                               LineSeries<SalesData, String>>[
                                             LineSeries<SalesData, String>(
-                                                dataSource: <SalesData>[
-                                                  SalesData('Jan', 23),
-                                                  SalesData('Feb', 28),
-                                                  SalesData('Mar', 34),
-                                                  SalesData('Apr', 32),
-                                                  SalesData('May', 40)
-                                                ],
+                                                dataSource: Salesdata2,
                                                 xValueMapper:
                                                     (SalesData sales, _) =>
                                                         sales.year,
                                                 yValueMapper:
                                                     (SalesData sales, _) =>
-                                                        sales.sales,
+                                                        sales.sale,
                                                 // Enable data label
                                                 dataLabelSettings:
-                                                    DataLabelSettings(
+                                                    const DataLabelSettings(
                                                         isVisible: true))
                                           ]))),
                             ],
@@ -510,7 +511,7 @@ class _biChartsState extends State<biCharts> {
 
   // Get Store Sale data
 
-  Future<void> getData() async {
+  Future<List<Salesdata>> getData() async {
     var email = await Flutter_api().getEmail();
     var storeId = await Flutter_api().generateStoreId(email);
 
@@ -531,28 +532,32 @@ class _biChartsState extends State<biCharts> {
         dailyDataMap[i.toString().split(" ")[0]] = dataMap[i]!;
       }
     }
-  }
 
-  dynamic getSalesdata() {
-    List<Salesdata> Salesdata1 = [
-      Salesdata("21", 32.5),
-      Salesdata("22", 42.5),
-      Salesdata("23", 12.5),
-      Salesdata("24", 82.5),
-    ];
-    return Salesdata1;
+    List<Salesdata> Salesdata1 = [];
+    List<SalesData> Salesdata2 = [];
+    setState(() {
+      for (var i in dailyDataMap.keys) {
+        Salesdata1.add(Salesdata(i.toString(), dailyDataMap[i]!));
+      }
+
+      for (var i in dataMap.keys) {
+        Salesdata2.add(SalesData(i.toString(), dataMap[i]!));
+      }
+    });
+    return Future<List<Salesdata>>.value(Salesdata1);
   }
 }
 
 class Salesdata {
   String x;
-  double y;
+  int y;
 
   Salesdata(this.x, this.y);
 }
 
 class SalesData {
-  SalesData(this.year, this.sales);
-  final String year;
-  final double sales;
+  String year;
+  int sale;
+
+  SalesData(this.year, this.sale);
 }
