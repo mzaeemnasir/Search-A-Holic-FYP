@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firedart/firedart.dart';
 import 'package:firedart/generated/google/firestore/v1/document.pb.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -28,6 +29,15 @@ class _biChartsState extends State<biCharts> {
   var sale = 0.0;
   var orders = 0.0;
   String email = "";
+
+  Map<DateTime, int> dataMap = {};
+  Map<String, int> dailyDataMap = {};
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   // @override
   // void initState() {
@@ -496,6 +506,31 @@ class _biChartsState extends State<biCharts> {
                         )
                       ]))),
             ])));
+  }
+
+  // Get Store Sale data
+
+  Future<void> getData() async {
+    var email = await Flutter_api().getEmail();
+    var storeId = await Flutter_api().generateStoreId(email);
+
+    // Getting Sales Data
+
+    var salesData = await Firestore.instance.collection(storeId).get();
+
+    for (var i in salesData) {
+      dataMap[i['saleDate']] = i['saleAmount'];
+    }
+
+    // adding data but Aggregating Date to dailyDataMap
+    for (var i in dataMap.keys) {
+      if (dailyDataMap.containsKey(i.toString().split(" ")[0])) {
+        dailyDataMap[i.toString().split(" ")[0]] =
+            dailyDataMap[i.toString().split(" ")[0]]! + dataMap[i]!;
+      } else {
+        dailyDataMap[i.toString().split(" ")[0]] = dataMap[i]!;
+      }
+    }
   }
 }
 
