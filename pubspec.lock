@@ -85,6 +85,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  community_charts_common:
+    dependency: transitive
+    description:
+      name: community_charts_common
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  community_charts_flutter:
+    dependency: transitive
+    description:
+      name: community_charts_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   convert:
     dependency: transitive
     description:
@@ -131,8 +145,7 @@ packages:
     dependency: "direct main"
     description:
       name: d_chart
-      sha256: da1e1155dcd5082690890a276da38b36f74bdd834082a0aa7f3159532d691e0c
-      url: "https://pub.dev"
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.11"
   desktop_window:
