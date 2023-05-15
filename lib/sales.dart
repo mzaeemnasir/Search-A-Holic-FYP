@@ -45,6 +45,8 @@ class _SalesState extends State<Sales> {
 
   late List recentOrders = [];
 
+  late List products = [];
+
   @override
   void initState() {
     super.initState();
@@ -229,7 +231,8 @@ class _SalesState extends State<Sales> {
                                                   .toString())),
                                             ],
                                             onLongPress: () {
-                                              print(recentOrders[i]["saleId"]);
+                                              // showing invoice Dialog
+                                              invoiceDiagloge();
                                             }),
                                     ], //rows
                                   ),
@@ -243,8 +246,11 @@ class _SalesState extends State<Sales> {
   }
 
   Future<List> getRecentOrders() async {
+    var email = await Flutter_api().getEmail();
+    var storeId = await Flutter_api().generateStoreId(email);
+
     var orders = await Firestore.instance
-        .collection("Sales")
+        .collection(storeId)
         .orderBy("saleDate", descending: true)
         .limit(10)
         .get();
@@ -264,4 +270,132 @@ class _SalesState extends State<Sales> {
 
     return Future<List>.value(recentOrders);
   }
+
+  // Show Invoice
+
+  // Invoice Dialoge
+  Future invoiceDiagloge() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Padding(
+            padding: EdgeInsets.only(left: 150),
+            child: Text(
+              "INVOICE",
+              style: TextStyle(fontSize: 24, color: Colors.black),
+            ),
+          ),
+          content: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 0),
+                child: Text("Date & Time: date",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 175),
+                child: Text("Customer#: _emailController.text",
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Scrollbar(
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: products.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == products.length) {
+                        return ListTile(
+                          title: const Text("Total Bill"),
+                          trailing: Text("Rs. 5000"),
+                          // Total Bill
+                        );
+                      } else {
+                        var price = "{products[index]}";
+                        var quantity = "{products[index]}";
+
+                        return ListTile(
+                          title: Text(products[index]),
+                          subtitle: Text(
+                              "Rs. {products[index][Price]} x {selectedProducts[index][Quantity]}"),
+                          // ignore: unnecessary_new
+                          trailing: new Text(
+                              "Rs. ${int.parse(price) * int.parse(quantity)}"),
+                          // Total Bill
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: Text(
+                    'Total discount',
+                  ),
+                  trailing: Text('0'),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: Text(
+                    'Sales Tax %',
+                  ),
+                  trailing: Text('0'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 05),
+                child: ListTile(
+                  dense: true,
+                  title: const Text(
+                    'Total Amount',
+                  ),
+                  trailing: Text('totalBill'),
+                ),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text("Thank You for choosing Store_name",
+                    style: const TextStyle(fontSize: 11, color: Colors.black)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Text("For feedback @ Email",
+                    style: const TextStyle(fontSize: 11, color: Colors.black)),
+              ),
+
+              // Add more Text widgets for additional lines of data
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: const Text("Ok"),
+            ),
+          ],
+        ),
+      );
 }
