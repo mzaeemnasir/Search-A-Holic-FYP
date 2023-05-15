@@ -493,7 +493,9 @@ class _biChartsState extends State<biCharts> {
                                                 dataSource: Salesdata2,
                                                 xValueMapper:
                                                     (SalesData sales, _) =>
-                                                        sales.year,
+                                                        sales.year
+                                                            .toString()
+                                                            .split("-")[0],
                                                 yValueMapper:
                                                     (SalesData sales, _) =>
                                                         sales.sale,
@@ -534,7 +536,6 @@ class _biChartsState extends State<biCharts> {
     }
 
     List<Salesdata> Salesdata1 = [];
-    List<SalesData> Salesdata2 = [];
     setState(() {
       for (var i in dailyDataMap.keys) {
         Salesdata1.add(Salesdata(i.toString(), dailyDataMap[i]!));
