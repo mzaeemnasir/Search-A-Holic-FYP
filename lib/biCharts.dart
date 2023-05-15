@@ -534,12 +534,12 @@ class _biChartsState extends State<biCharts> {
   }
 
   dynamic getSalesdata() {
-    List<Salesdata> Salesdata1 = [];
-    var keys = dailyDataMap.keys.toList();
-    var values = dailyDataMap.values.toList();
-    for (var i = 0; i < dailyDataMap.length; i++) {
-      Salesdata1.add(Salesdata(keys[i], values[i] as double));
-    }
+    List<Salesdata> Salesdata1 = [
+      Salesdata("21", 32.5),
+      Salesdata("22", 42.5),
+      Salesdata("23", 12.5),
+      Salesdata("24", 82.5),
+    ];
     return Salesdata1;
   }
 }
