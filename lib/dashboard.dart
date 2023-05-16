@@ -61,9 +61,9 @@ class _DashboardState extends State<Dashboard> {
   @override
 // Update State
 
-  var revenue = 0.0;
-  var sale = 0.0;
-  var orders = 0.0;
+  //var revenue = 0.0;
+  //var sale = 0.0;
+  //var orders = 0.0;
   String email = "";
 
   @override
@@ -175,18 +175,18 @@ class _DashboardState extends State<Dashboard> {
                                                   55,
                                             ),
                                           ),
-                                          Text(
-                                            "Rs. " + revenue.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: "Montserrat",
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  80,
-                                            ),
-                                          )
+                                          // Text(
+                                          //   "Rs. " + revenue.toString(),
+                                          //   style: TextStyle(
+                                          //     color: Colors.black,
+                                          //     fontFamily: "Montserrat",
+                                          //     fontWeight: FontWeight.w300,
+                                          //     fontSize: MediaQuery.of(context)
+                                          //             .size
+                                          //             .width /
+                                          //         80,
+                                          //   ),
+                                          // )
                                         ],
                                       ),
 
@@ -252,18 +252,18 @@ class _DashboardState extends State<Dashboard> {
                                                   55,
                                             ),
                                           ),
-                                          Text(
-                                            "Rs. " + sale.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: "Montserrat",
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  80,
-                                            ),
-                                          )
+                                          // Text(
+                                          //   "Rs. " + sale.toString(),
+                                          //   style: TextStyle(
+                                          //     color: Colors.black,
+                                          //     fontFamily: "Montserrat",
+                                          //     fontWeight: FontWeight.w300,
+                                          //     fontSize: MediaQuery.of(context)
+                                          //             .size
+                                          //             .width /
+                                          //         80,
+                                          //   ),
+                                          // )
                                         ],
                                       ),
 
@@ -329,18 +329,18 @@ class _DashboardState extends State<Dashboard> {
                                                   55,
                                             ),
                                           ),
-                                          Text(
-                                            "Rs. " + orders.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: "Montserrat",
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  80,
-                                            ),
-                                          )
+                                          // Text(
+                                          //   "Rs. " + orders.toString(),
+                                          //   style: TextStyle(
+                                          //     color: Colors.black,
+                                          //     fontFamily: "Montserrat",
+                                          //     fontWeight: FontWeight.w300,
+                                          //     fontSize: MediaQuery.of(context)
+                                          //             .size
+                                          //             .width /
+                                          //         80,
+                                          //   ),
+                                          // )
                                         ],
                                       ),
 

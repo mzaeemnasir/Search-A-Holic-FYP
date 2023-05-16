@@ -67,186 +67,190 @@ class _SalesState extends State<Sales> {
             child: Row(children: [
               const Sidebar(),
               Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.04,
-                        right: MediaQuery.of(context).size.width * 0.04,
-                      ),
-                      child: Column(children: [
-                        const Padding(padding: EdgeInsets.only(top: 20)),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.057,
-                          ),
-                          child: Text("Sales Report",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w600,
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 45,
-                              )),
-                        ),
+                  child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      children: <Widget>[
+                    // Padding(
+                    //     padding: EdgeInsets.only(
+                    //       left: MediaQuery.of(context).size.width * 0.04,
+                    //       right: MediaQuery.of(context).size.width * 0.04,
+                    //     ),
+                    //     child: Column(children: [
+                    //       const Padding(padding: EdgeInsets.only(top: 20)),
+                    //       Padding(
+                    //         padding: EdgeInsets.only(
+                    //           top: MediaQuery.of(context).size.height * 0.057,
+                    //         ),
+                    //         child: Text("Sales Report",
+                    //             style: TextStyle(
+                    //               fontFamily: "Montserrat",
+                    //               fontWeight: FontWeight.w600,
+                    //               fontSize:
+                    //                   MediaQuery.of(context).size.width / 45,
+                    //             )),
+                    //       ),
 
-                        ///Items & Inventory card
-                        Flexible(
+                    //       ///Items & Inventory card
+                    //       Flexible(
+                    //         child: Padding(
+                    //           padding: EdgeInsets.only(
+                    //             top: MediaQuery.of(context).size.height * 0.017,
+                    //             bottom: MediaQuery.of(context).size.height * 0.02,
+                    //           ),
+                    //           child: SizedBox(
+                    //             height: MediaQuery.of(context).size.width * 0.16,
+                    //             child: Card(
+                    //                 elevation: 2,
+                    //                 shape: RoundedRectangleBorder(
+                    //                     borderRadius: BorderRadius.circular(10)),
+                    //                 child: Padding(
+                    //                   padding: EdgeInsets.fromLTRB(
+                    //                     MediaQuery.of(context).size.width * 0.02,
+                    //                     MediaQuery.of(context).size.height *
+                    //                         0.022,
+                    //                     MediaQuery.of(context).size.width * 0.02,
+                    //                     MediaQuery.of(context).size.height *
+                    //                         0.022,
+                    //                   ),
+
+                    //                   ///Everything is wrapped into a listview to prevent overflows
+                    //                   child: ListView(
+                    //                     children: [
+                    //                       ///1°st row of buttons
+                    //                       Row(
+                    //                         mainAxisAlignment:
+                    //                             MainAxisAlignment.center,
+                    //                         children: [
+                    //                           ///New order
+                    //                           textbox2(
+                    //                               context,
+                    //                               "Today",
+                    //                               const Color.fromRGBO(
+                    //                                   152, 156, 228, 1),
+                    //                               const Color.fromRGBO(
+                    //                                   139, 48, 167, 1),
+                    //                               newOrder),
+
+                    //                           ///Padding
+                    //                           SizedBox(
+                    //                             width: MediaQuery.of(context)
+                    //                                     .size
+                    //                                     .width *
+                    //                                 0.03,
+                    //                           ),
+
+                    //                           ///Search product
+                    //                           textbox2(
+                    //                               context,
+                    //                               "Last Month",
+                    //                               const Color.fromRGBO(
+                    //                                   163, 130, 238, 0.886),
+                    //                               const Color.fromRGBO(
+                    //                                   41, 11, 177, 1),
+                    //                               searchProduct),
+
+                    //                           ///Padding
+                    //                           SizedBox(
+                    //                             width: MediaQuery.of(context)
+                    //                                     .size
+                    //                                     .width *
+                    //                                 0.03,
+                    //                           ),
+
+                    //                           ///Add product
+                    //                           textbox2(
+                    //                               context,
+                    //                               "Last Year",
+                    //                               const Color.fromRGBO(
+                    //                                   255, 236, 244, 1),
+                    //                               const Color.fromRGBO(
+                    //                                   8, 64, 64, 1),
+                    //                               addProduct),
+                    //                         ],
+                    //                       ),
+
+                    //                       ///Padding
+
+                    //                       ///2°nd row of buttons
+                    //                     ],
+                    //                   ),
+                    //                 )),
+                    //           ),
+                    //         ),
+                    //       ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Card(
+                        color: Colors.white70,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        margin: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          " Sales Details ",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontFamily: "Montserrat",
+                            fontWeight: FontWeight.w400,
+                            fontSize: MediaQuery.of(context).size.width / 35,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      width: 1000,
+                      child: Flexible(
+                        child: Scrollbar(
                           child: Padding(
                             padding: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height * 0.017,
                               bottom: MediaQuery.of(context).size.height * 0.02,
                             ),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width * 0.16,
-                              child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      MediaQuery.of(context).size.width * 0.02,
-                                      MediaQuery.of(context).size.height *
-                                          0.022,
-                                      MediaQuery.of(context).size.width * 0.02,
-                                      MediaQuery.of(context).size.height *
-                                          0.022,
-                                    ),
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: DataTable(
+                                columns: const [
+                                  DataColumn(label: Text("Customer")),
+                                  DataColumn(label: Text("Date")),
+                                  DataColumn(label: Text("Amount")),
+                                  DataColumn(label: Text("Sales ID")),
+                                ],
 
-                                    ///Everything is wrapped into a listview to prevent overflows
-                                    child: ListView(
-                                      children: [
-                                        ///1°st row of buttons
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            ///New order
-                                            textbox2(
-                                                context,
-                                                "Today",
-                                                const Color.fromRGBO(
-                                                    152, 156, 228, 1),
-                                                const Color.fromRGBO(
-                                                    139, 48, 167, 1),
-                                                newOrder),
-
-                                            ///Padding
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.03,
-                                            ),
-
-                                            ///Search product
-                                            textbox2(
-                                                context,
-                                                "Last Month",
-                                                const Color.fromRGBO(
-                                                    163, 130, 238, 0.886),
-                                                const Color.fromRGBO(
-                                                    41, 11, 177, 1),
-                                                searchProduct),
-
-                                            ///Padding
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.03,
-                                            ),
-
-                                            ///Add product
-                                            textbox2(
-                                                context,
-                                                "Last Year",
-                                                const Color.fromRGBO(
-                                                    255, 236, 244, 1),
-                                                const Color.fromRGBO(
-                                                    8, 64, 64, 1),
-                                                addProduct),
-                                          ],
-                                        ),
-
-                                        ///Padding
-
-                                        ///2°nd row of buttons
-                                      ],
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Sales Details",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w400,
-                              fontSize: MediaQuery.of(context).size.width / 60,
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: 1000,
-                          child: Flexible(
-                            child: Scrollbar(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.017,
-                                  bottom:
-                                      MediaQuery.of(context).size.height * 0.02,
-                                ),
-                                child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: DataTable(
-                                    columns: const [
-                                      DataColumn(label: Text("Customer")),
-                                      DataColumn(label: Text("Date")),
-                                      DataColumn(label: Text("Amount")),
-                                      DataColumn(label: Text("Sales ID")),
-                                    ],
-
-                                    rows: [
-                                      for (var i = 0;
-                                          i < recentOrders.length;
-                                          i++)
-                                        DataRow(
-                                            cells: [
-                                              DataCell(Text(recentOrders[i]
-                                                      ["customerPhone"]
-                                                  .toString())),
-                                              DataCell(Text(recentOrders[i]
-                                                      ['saleDate']
-                                                  .toString()
-                                                  .split(" ")[0])),
-                                              DataCell(Text(recentOrders[i]
-                                                      ['saleAmount']
-                                                  .toString())),
-                                              DataCell(Text(recentOrders[i]
-                                                      ['saleId']
-                                                  .toString())),
-                                            ],
-                                            onLongPress: () {
-                                              // showing invoice Dialog
-                                              invoiceDiagloge(
-                                                  recentOrders[i]["saleId"],
-                                                  recentOrders[i]
-                                                      ["saleProducts"],
-                                                  recentOrders[i]);
-                                            }),
-                                    ], //rows
-                                  ),
-                                ),
+                                rows: [
+                                  for (var i = 0; i < recentOrders.length; i++)
+                                    DataRow(
+                                        cells: [
+                                          DataCell(Text(recentOrders[i]
+                                                  ["customerPhone"]
+                                              .toString())),
+                                          DataCell(Text(recentOrders[i]
+                                                  ['saleDate']
+                                              .toString()
+                                              .split(" ")[0])),
+                                          DataCell(Text(recentOrders[i]
+                                                  ['saleAmount']
+                                              .toString())),
+                                          DataCell(Text(recentOrders[i]
+                                                  ['saleId']
+                                              .toString())),
+                                        ],
+                                        onLongPress: () {
+                                          // showing invoice Dialog
+                                          invoiceDiagloge(
+                                              recentOrders[i]["saleId"],
+                                              recentOrders[i]["saleProducts"],
+                                              recentOrders[i]);
+                                        }),
+                                ], //rows
                               ),
                             ),
                           ),
                         ),
-                      ])))
+                      ),
+                    ),
+                  ]))
             ])));
   }
 
