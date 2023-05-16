@@ -352,12 +352,20 @@ class _AddProduct extends State<AddProduct> {
     );
   }
 
-  Map<String, dynamic> addDataToMap(Map<String, dynamic> map) {
+  Future<Map<String, dynamic>> addDataToMap(
+      Map<String, dynamic> map, String email) async {
     // _productName.text, _productPrice.text,
     //     _productQty.text, _productType.text
 
     // Generating key of the Product
     final productId = Flutter_api().generateProductId(_productName.text);
+
+    var Details = await Firestore.instance
+        .collection(email)
+        .document("Store Details")
+        .get();
+
+    print(Details);
 
     map.putIfAbsent(
         productId,
@@ -365,12 +373,17 @@ class _AddProduct extends State<AddProduct> {
               "Name": _productName.text,
               "Price": _productPrice.text,
               "Quantity": _productQty.text,
-              "Expiry Date": dateinput.text,
+              "Expire": dateinput.text,
+              "storeEmail": email,
               "Type": _productType.text,
+              "ProductID": productId,
+              "StoreId": Details["storeId"],
+              "StoreLocation": Details["storeLocation"],
+              "StoreName": Details["storeName"],
               "Category": _productCategory.text,
             });
 
-    return map;
+    return Future<Map<String, dynamic>>.value(map);
   }
 
   Future<bool> addProduct() async {
@@ -379,7 +392,7 @@ class _AddProduct extends State<AddProduct> {
     final storeId = Flutter_api().generateStoreId(email);
 
     // Add Product to the Map
-    final map = addDataToMap(DATA.map);
+    final map = await addDataToMap(DATA.map, email);
 
     // Update the Database
     await Firestore.instance.collection("Products").document(storeId).set(map);

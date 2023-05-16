@@ -294,8 +294,18 @@ class _EditProduct extends State<EditProduct> {
   }
 }
 
-Map<String, dynamic> updataingMapValues(String name, String price, String qty,
-    String type, String email, String productID, Map<String, dynamic> map) {
+Map<String, dynamic> updataingMapValues(
+    String name,
+    String price,
+    String qty,
+    String type,
+    String email,
+    String productID,
+    Map<String, dynamic> map,
+    Map productData) {
+  print("-----------------");
+  print(productData);
+
   map.update(
       productID,
       (value) => {
@@ -303,6 +313,13 @@ Map<String, dynamic> updataingMapValues(String name, String price, String qty,
             "Price": double.parse(price),
             "Quantity": int.parse(qty),
             "Type": type,
+            "Category": productData["Category"],
+            "Expire": productData["Expire"],
+            "ProductId": productID,
+            "StoreId": productData["StoreId"],
+            "StoreLocation": productData["StoreLocation"],
+            "StoreName": productData["StoreName"],
+            "storeEmail": email,
           });
 
   return map;
@@ -312,9 +329,13 @@ Future<bool> updateProduct(String name, String price, String qty, String type,
     String email, String productID) async {
   var x = Flutter_api().generateStoreId(email);
   final DATA = await Flutter_api().getAllProducts();
+  var product =
+      await Firestore.instance.collection("Products").document(x).get();
 
-  final map =
-      updataingMapValues(name, price, qty, type, email, productID, DATA.map);
+  Map productData = product.map[productID];
+
+  final map = updataingMapValues(
+      name, price, qty, type, email, productID, DATA.map, productData);
 
   // Updating the Product
   await Firestore.instance.collection("Products").document(x).set(map);
@@ -342,6 +363,7 @@ Future<List> getProduct(String productID, String email) async {
                   "Type": value['Type'],
                   "Expiry": value['Expiry'],
                   "Category": value['Category'],
+                  "storeEmail": email,
                   "StoreId": value['StoreId'],
                   "StoreLocation": value['StoreLocation'],
                   "StoreName": value['StoreName'],
