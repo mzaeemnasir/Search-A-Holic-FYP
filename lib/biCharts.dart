@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firedart/firedart.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:firedart/generated/google/firestore/v1/document.pb.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -12,6 +14,7 @@ import 'package:searchaholic/product.dart';
 import 'package:searchaholic/sidebar.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 import 'imports.dart';
 import 'dart:convert';
 
@@ -59,456 +62,149 @@ class _biChartsState extends State<biCharts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Form(
-            key: formkey,
-            child: Row(children: [
-              Sidebar(),
-              Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.04,
-                        right: MediaQuery.of(context).size.width * 0.015,
+        body: Row(children: [
+      const Sidebar(),
+      Expanded(
+          child: ListView(
+        padding: const EdgeInsets.all(8),
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width * 0.04,
+              right: MediaQuery.of(context).size.width * 0.015,
+            ),
+            child: Column(children: [
+              const Padding(padding: EdgeInsets.only(top: 20)),
+              Padding(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.057,
+                  ),
+                  child: Text("Report's",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontWeight: FontWeight.w600,
+                        fontSize: MediaQuery.of(context).size.width / 35,
+                      )))
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Card(
+                color: Colors.white70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(left: 20),
+                child: Text(
+                  " Daily Sales Report ",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: MediaQuery.of(context).size.width / 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.74,
+              width: MediaQuery.of(context).size.width * 0.90,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(left: 20),
+                child: SfCartesianChart(
+                  title: ChartTitle(text: "Daily Sales"),
+                  primaryXAxis:
+                      CategoryAxis(title: AxisTitle(text: "Sales Date")),
+                  primaryYAxis: NumericAxis(
+                      title: AxisTitle(
+                        text: "Sale in Rupees",
                       ),
-                      child: Column(children: [
-                        const Padding(padding: EdgeInsets.only(top: 20)),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.057,
-                          ),
-                          child: Text("Report's",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w600,
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 45,
-                              )),
-                        ),
-
-                        ///Today's report
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Generate Report's",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w400,
-                              fontSize: MediaQuery.of(context).size.width / 55,
-                            ),
-                          ),
-                        ),
-
-                        ///Today's report card
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.017,
-                            bottom: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.width * 0.10,
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                // mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ///Revenue
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.width *
-                                          0.01,
-                                      bottom:
-                                          MediaQuery.of(context).size.width *
-                                              0.01,
-                                      left: MediaQuery.of(context).size.width *
-                                          0.01,
-                                      right: MediaQuery.of(context).size.width *
-                                          0.01,
-                                    ),
-                                    child: Card(
-                                      elevation: 1,
-                                      color: Colors.grey[100],
-                                      child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              ///Text
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Hot Products",
-                                                    style: TextStyle(
-                                                      color: Colors.blue,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              55,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Rs. " + revenue.toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              80,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-
-                                              ///Padding
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.015,
-                                              ),
-
-                                              ///Icon
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.007,
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.007),
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      "images/revenue_icon.png"),
-                                                ),
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ),
-
-                                  ///Sale
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.width *
-                                          0.01,
-                                      left: MediaQuery.of(context).size.width *
-                                          0.075,
-                                      bottom:
-                                          MediaQuery.of(context).size.width *
-                                              0.01,
-                                      right: MediaQuery.of(context).size.width *
-                                          0.01,
-                                    ),
-                                    child: Card(
-                                      elevation: 1,
-                                      color: Colors.grey[100],
-                                      child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              ///Text
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Season Trend",
-                                                    style: TextStyle(
-                                                      color: Colors.blue,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              55,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Rs. " + sale.toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              80,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-
-                                              ///Padding
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.015,
-                                              ),
-
-                                              ///Icon
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.007,
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.007),
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      "images/sale_icon.png"),
-                                                ),
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ),
-
-                                  ///Orders
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.width *
-                                          0.01,
-                                      bottom:
-                                          MediaQuery.of(context).size.width *
-                                              0.01,
-                                      left: MediaQuery.of(context).size.width *
-                                          0.057,
-                                      right: MediaQuery.of(context).size.width *
-                                          0.0009,
-                                    ),
-                                    child: Card(
-                                      elevation: 1,
-                                      color: Colors.grey[100],
-                                      child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              ///Text
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Trend",
-                                                    style: TextStyle(
-                                                      color: Colors.blue,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              55,
-                                                    ),
-                                                  ),
-                                                  // Text(
-                                                  //   "Rs. " + orders.toString(),
-                                                  //   style: TextStyle(
-                                                  //     color: Colors.black,
-                                                  //     fontFamily: "Montserrat",
-                                                  //     fontWeight:
-                                                  //         FontWeight.w300,
-                                                  //     fontSize:
-                                                  //         MediaQuery.of(context)
-                                                  //                 .size
-                                                  //                 .width /
-                                                  //             80,
-                                                  //   ),
-                                                  // )
-                                                ],
-                                              ),
-
-                                              ///Padding
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.015,
-                                              ),
-
-                                              ///Icon
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.007,
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.007),
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      "images/orders_icon.png"),
-                                                ),
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Sales Report",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w400,
-                              fontSize: MediaQuery.of(context).size.width / 45,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              // top: MediaQuery.of(context).size.height * 0.015,
-                              // bottom: MediaQuery.of(context).size.height * 0.02,
-                              ),
-                          child: SizedBox(
-                              // height: MediaQuery.of(context).size.width * 0.25,
-                              // width: MediaQuery.of(context).size.width * 0.25,
-                              child: Row(
-                            children: <Widget>[
-                              // StreamBuilder(
-                              //     stream: streamdata,
-                              //     builder: ((context,
-                              //         AsyncSnapshot<
-                              //                 QuerySnapshot<
-                              //                     Map<String, dynamic>>>
-                              //             snapshot) {
-                              //       List listchart =
-                              //           snapshot.data!.docs.map((e) {
-                              //         return {
-                              //           'year': e.data()['saleDate'],
-                              //           'sales': e.data()['saleAmount'],
-                              //         };
-                              //       }).toList();
-                              //       return AspectRatio(
-                              //           aspectRatio: 16 / 9,
-                              //           child: DChartBar(
-                              //             data: [
-                              //               {
-                              //                 'id': 'bar',
-                              //                 'data': listchart,
-                              //               },
-                              //             ],
-                              //             axisLineColor: Colors.green,
-                              //             barColor: (barData, index, id) =>
-                              //                 Colors.green,
-                              //             showBarValue: true,
-                              //           ));
-                              //     }))
-                              Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.48,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.31,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    margin: const EdgeInsets.only(left: 20),
-                                    child: SfCartesianChart(
-                                      title: ChartTitle(text: "Daily Sales"),
-                                      primaryXAxis: CategoryAxis(
-                                          title: AxisTitle(text: "Sales Date")),
-                                      primaryYAxis: NumericAxis(
-                                          title: AxisTitle(
-                                            text: "Sale in Rupees",
-                                          ),
-                                          labelFormat: "{value} Rs"),
-                                      series: <ChartSeries>[
-                                        ColumnSeries<Salesdata, String>(
-                                            dataSource: Salesdata1,
-                                            xValueMapper:
-                                                (Salesdata sales, _) => sales.x,
-                                            yValueMapper:
-                                                (Salesdata sales, _) => sales.y,
-                                            dataLabelSettings:
-                                                DataLabelSettings(
-                                                    isVisible: true))
-                                      ],
-                                    ),
-                                  )),
-                              Container(
-                                  margin: const EdgeInsets.only(left: 30),
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.48,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.31,
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: SfCartesianChart(
-                                          primaryXAxis: CategoryAxis(),
-                                          // Chart title
-                                          title: ChartTitle(
-                                              text:
-                                                  'Half yearly sales analysis'),
-                                          // Enable legend
-                                          //legend: Legend(isVisible: true),
-                                          // Enable tooltip
-                                          //tooltipBehavior: _tooltipBehavior,
-                                          series: <
-                                              LineSeries<SalesData, String>>[
-                                            LineSeries<SalesData, String>(
-                                                dataSource: Salesdata2,
-                                                xValueMapper:
-                                                    (SalesData sales, _) =>
-                                                        sales.year
-                                                            .toString()
-                                                            .split("-")[0],
-                                                yValueMapper:
-                                                    (SalesData sales, _) =>
-                                                        sales.sale,
-                                                // Enable data label
-                                                dataLabelSettings:
-                                                    const DataLabelSettings(
-                                                        isVisible: true))
-                                          ]))),
-                            ],
-                          )),
-                        )
+                      labelFormat: "{value} Rs"),
+                  series: <ChartSeries>[
+                    ColumnSeries<Salesdata, String>(
+                        dataSource: Salesdata1,
+                        xValueMapper: (Salesdata sales, _) => sales.x,
+                        yValueMapper: (Salesdata sales, _) => sales.y,
+                        dataLabelSettings: DataLabelSettings(isVisible: true))
+                  ],
+                ),
+              )),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Card(
+                color: Colors.white70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(left: 20),
+                child: Text(
+                  " Live Sales Report ",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: MediaQuery.of(context).size.width / 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.88,
+              width: MediaQuery.of(context).size.width * 0.90,
+              child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.only(left: 20),
+                  child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      // Chart title
+                      title: ChartTitle(text: 'Live Sales'),
+                      // Enable legend
+                      //legend: Legend(isVisible: true),
+                      // Enable tooltip
+                      //tooltipBehavior: _tooltipBehavior,
+                      series: <LineSeries<SalesData, String>>[
+                        LineSeries<SalesData, String>(
+                            dataSource: Salesdata2,
+                            xValueMapper: (SalesData sales, _) => sales.year,
+                            yValueMapper: (SalesData sales, _) => sales.sale,
+                            // Enable data label
+                            dataLabelSettings:
+                                const DataLabelSettings(isVisible: true))
                       ]))),
-            ])));
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Card(
+                color: Colors.white70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(left: 20),
+                child: Text(
+                  " Hot Product ",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: MediaQuery.of(context).size.width / 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ) //),
+          )
+    ]));
+    //           ]))),
+    // ])));
   }
 
   // Get Store Sale data
@@ -524,7 +220,7 @@ class _biChartsState extends State<biCharts> {
     for (var i in salesData) {
       dataMap[i['saleDate']] = i['saleAmount'];
     }
-
+    //salesData.sort();
     // adding data but Aggregating Date to dailyDataMap
     for (var i in dataMap.keys) {
       if (dailyDataMap.containsKey(i.toString().split(" ")[0])) {
@@ -534,15 +230,14 @@ class _biChartsState extends State<biCharts> {
         dailyDataMap[i.toString().split(" ")[0]] = dataMap[i]!;
       }
     }
-
-    List<Salesdata> Salesdata1 = [];
+    //List<Salesdata> Salesdata1 = [];
     setState(() {
       for (var i in dailyDataMap.keys) {
         Salesdata1.add(Salesdata(i.toString(), dailyDataMap[i]!));
       }
-
       for (var i in dataMap.keys) {
-        Salesdata2.add(SalesData(i.toString(), dataMap[i]!));
+        Salesdata2.add(
+            SalesData(DateFormat.yMd().add_Hm().format(i), dataMap[i]!));
       }
     });
     return Future<List<Salesdata>>.value(Salesdata1);
