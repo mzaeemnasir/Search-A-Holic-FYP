@@ -38,10 +38,12 @@ class _biChartsState extends State<biCharts> {
 
   late List<Salesdata> Salesdata1 = [];
   late List<SalesData> Salesdata2 = [];
+  late List<hotProduct> productCounter = [];
 
   @override
   void initState() {
     super.initState();
+    getHotProduct();
     getData().then((value) => {
           setState(() {
             Salesdata1 = value;
@@ -199,12 +201,36 @@ class _biChartsState extends State<biCharts> {
               ),
             ),
           ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.90,
+              width: MediaQuery.of(context).size.width * 0.90,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(left: 20),
+                child: SfCartesianChart(
+                  title: ChartTitle(text: "Hot Product"),
+                  primaryXAxis:
+                      CategoryAxis(title: AxisTitle(text: "Product Name")),
+                  primaryYAxis: NumericAxis(
+                      title: AxisTitle(
+                        text: "Hot Product Quantity",
+                      ),
+                      labelFormat: "{value} Qty"),
+                  series: <ChartSeries>[
+                    ColumnSeries<hotProduct, String>(
+                        dataSource: productCounter,
+                        xValueMapper: (hotProduct sales, _) =>
+                            sales.productName,
+                        yValueMapper: (hotProduct sales, _) =>
+                            sales.productCount,
+                        dataLabelSettings: DataLabelSettings(isVisible: true))
+                  ],
+                ),
+              )),
         ],
-      ) //),
-          )
+      ))
     ]));
-    //           ]))),
-    // ])));
   }
 
   // Get Store Sale data
@@ -250,6 +276,43 @@ class _biChartsState extends State<biCharts> {
     });
     return Future<List<Salesdata>>.value(Salesdata1);
   }
+
+  Future<void> getHotProduct() async {
+    var storeId =
+        await Flutter_api().generateStoreId(await Flutter_api().getEmail());
+    var stores = await Firestore.instance.collection(storeId).get();
+    Map productCounter2 = {};
+    for (var store in stores) {
+      Map storeProduct = store["saleProducts"];
+      for (var product in storeProduct.keys) {
+        setState(() {
+          if (productCounter2.containsKey(product)) {
+            productCounter2[product] =
+                productCounter2[product] + int.parse(storeProduct[product]);
+          } else {
+            productCounter2[product] = int.parse(storeProduct[product]);
+          }
+        });
+      }
+    }
+
+    setState(() {
+      productCounter2.forEach((key, value) {
+        productCounter.add(hotProduct(key, value));
+      });
+
+      productCounter.sort((a, b) => b.productCount.compareTo(a.productCount));
+
+      productCounter = productCounter.sublist(0, 4);
+    });
+  }
+}
+
+class hotProduct {
+  String productName;
+  int productCount;
+
+  hotProduct(this.productName, this.productCount);
 }
 
 class Salesdata {
