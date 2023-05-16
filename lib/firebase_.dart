@@ -372,10 +372,10 @@ class Flutter_api {
   }
 
   // Uploading the File to the Data Base Against the StoreId
-  Future<bool> uploadFile(String filePath) async {
+  Future<bool> uploadFile(String filePath, String email) async {
     try {
       Map<String, dynamic> data = {};
-      String storeID = generateStoreId(await getEmail());
+      String storeID = generateStoreId(email);
       List<List<dynamic>> products = await readCsvFile(filePath);
       List<String> storeDetails = await getStoreDetails();
 
@@ -391,6 +391,7 @@ class Flutter_api {
             "Expire": products[i][4],
             "Category": products[i][5],
             "StoreId": storeID,
+            "storeEmail": email,
             "ProductId": productId,
             "StoreName": storeDetails[0],
             "StoreLocation": GeoPoint(

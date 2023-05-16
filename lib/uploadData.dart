@@ -99,8 +99,10 @@ class _UploadDataState extends State<UploadData> {
                                                 print(email);
 
                                                 Flutter_api()
-                                                    .uploadFile(result
-                                                        .files.single.path!)
+                                                    .uploadFile(
+                                                        result
+                                                            .files.single.path!,
+                                                        email)
                                                     .then((value) => {
                                                           if (value == true)
                                                             {
