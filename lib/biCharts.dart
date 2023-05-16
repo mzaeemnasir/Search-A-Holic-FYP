@@ -222,12 +222,20 @@ class _biChartsState extends State<biCharts> {
     }
     //salesData.sort();
     // adding data but Aggregating Date to dailyDataMap
-    for (var i in dataMap.keys) {
+    List<MapEntry<DateTime, int>> listMappedEntries = dataMap.entries.toList();
+
+    // Now will sort the list
+
+    listMappedEntries.sort((a, b) => a.key.compareTo(b.key));
+    final Map<DateTime, int> sortedMapData = Map.fromEntries(listMappedEntries);
+
+    print(sortedMapData);
+    for (var i in sortedMapData.keys) {
       if (dailyDataMap.containsKey(i.toString().split(" ")[0])) {
         dailyDataMap[i.toString().split(" ")[0]] =
-            dailyDataMap[i.toString().split(" ")[0]]! + dataMap[i]!;
+            dailyDataMap[i.toString().split(" ")[0]]! + sortedMapData[i]!;
       } else {
-        dailyDataMap[i.toString().split(" ")[0]] = dataMap[i]!;
+        dailyDataMap[i.toString().split(" ")[0]] = sortedMapData[i]!;
       }
     }
     //List<Salesdata> Salesdata1 = [];
@@ -235,9 +243,9 @@ class _biChartsState extends State<biCharts> {
       for (var i in dailyDataMap.keys) {
         Salesdata1.add(Salesdata(i.toString(), dailyDataMap[i]!));
       }
-      for (var i in dataMap.keys) {
+      for (var i in sortedMapData.keys) {
         Salesdata2.add(
-            SalesData(DateFormat.yMd().add_Hm().format(i), dataMap[i]!));
+            SalesData(DateFormat.yMd().add_Hm().format(i), sortedMapData[i]!));
       }
     });
     return Future<List<Salesdata>>.value(Salesdata1);
