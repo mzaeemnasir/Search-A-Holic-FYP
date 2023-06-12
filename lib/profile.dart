@@ -21,7 +21,7 @@ class _profileState extends State<profile> {
   dynamic Store_name;
   dynamic Email;
   dynamic Phone_number;
-  dynamic address_l1, address_l2;
+  dynamic address_l1;
   //dynamic password;
 
   ///getting profile data from databae
@@ -43,8 +43,7 @@ class _profileState extends State<profile> {
       Store_name = data2['storeName'];
       Email = data2['email'];
       Phone_number = data2['phNo'];
-      address_l1 = data2['lat'];
-      address_l2 = data2['long'];
+      address_l1 = data2['storeLocation'];
       //password = data2['password'];
     });
   }
@@ -151,8 +150,7 @@ class _profileState extends State<profile> {
                       maxHeight: MediaQuery.of(context).size.height,
                     ),
                     child: Text(
-                      "  Address :                    $address_l1," +
-                          "$address_l2",
+                      "  Address :    $address_l1",
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontWeight: FontWeight.w500,
@@ -186,31 +184,31 @@ class _profileState extends State<profile> {
               ),
 
               ///Edit Button
-              Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.057),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // print value is updated
-                    print("Profile Updated");
-                    /*Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditProduct(
-                                email: '',
-                                productID: '',
-                              )),
-                    );*/
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: const Text("Update",
-                      style: TextStyle(color: Colors.white)),
-                ),
-              ),
+              // Container(
+              //   margin: EdgeInsets.only(
+              //       top: MediaQuery.of(context).size.height * 0.057),
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       // print value is updated
+              //       print("Profile Updated");
+              //       /*Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => EditProduct(
+              //                   email: '',
+              //                   productID: '',
+              //                 )),
+              //       );*/
+              //     },
+              //     style: ElevatedButton.styleFrom(
+              //       primary: Colors.blue,
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(10)),
+              //     ),
+              //     child: const Text("Update",
+              //         style: TextStyle(color: Colors.white)),
+              //   ),
+              // ),
             ]),
           ),
         ),
