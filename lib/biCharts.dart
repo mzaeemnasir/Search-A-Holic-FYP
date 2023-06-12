@@ -545,43 +545,6 @@ class _biChartsState extends State<biCharts> {
     });
     return Future<List<Salesdata>>.value(Salesdata1);
   }
-
-  Future<void> getHotProduct() async {
-    var storeId =
-        await Flutter_api().generateStoreId(await Flutter_api().getEmail());
-    var stores = await Firestore.instance.collection(storeId).get();
-    Map productCounter2 = {};
-    for (var store in stores) {
-      Map storeProduct = store["saleProducts"];
-      for (var product in storeProduct.keys) {
-        setState(() {
-          if (productCounter2.containsKey(product)) {
-            productCounter2[product] =
-                productCounter2[product] + int.parse(storeProduct[product]);
-          } else {
-            productCounter2[product] = int.parse(storeProduct[product]);
-          }
-        });
-      }
-    }
-
-    setState(() {
-      productCounter2.forEach((key, value) {
-        productCounter.add(hotProduct(key, value));
-      });
-
-      productCounter.sort((a, b) => b.productCount.compareTo(a.productCount));
-
-      productCounter = productCounter.sublist(0, 6);
-    });
-  }
-}
-
-class hotProduct {
-  String productName;
-  int productCount;
-
-  hotProduct(this.productName, this.productCount);
 }
 
 class Salesdata {
